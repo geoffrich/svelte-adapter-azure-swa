@@ -44,7 +44,7 @@ When deploying to Azure, you will need to properly [configure your build](https:
 | property          | value          |
 | ----------------- | -------------- |
 | `app_location`    | `./`           |
-| `api_location`    | `/api`         |
+| `api_location`    | `api`         |
 | `output_location` | `build/static` |
 
 ## Running locally with the Azure SWA CLI
