@@ -4,6 +4,10 @@ Adapter for Svelte apps that creates an Azure Static Web App, using an Azure fun
 
 **This is beta software. Please report any issues you encounter.**
 
+## Limitations
+
+Azure Static Web Apps require an `index.html` file to be present in your build output folder, so you need to [prerender](https://kit.svelte.dev/docs#ssr-and-javascript-prerender) your root `index.svelte` route to use this adapter.
+
 ## Usage
 
 See the [demo repo](https://github.com/geoffrich/sveltekit-azure-swa-demo) for an example integration with the SvelteKit demo app.
