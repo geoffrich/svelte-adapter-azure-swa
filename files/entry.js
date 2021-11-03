@@ -17,8 +17,6 @@ export async function index(context) {
 	const { method, headers, rawBody: body } = context.req;
 	// because we proxy all requests to the render function, the original URL in the request is /api/__render
 	// this header contains the URL the user requested
-	// TODO: replace with documented solution from https://github.com/Azure/static-web-apps/issues/580
-	// not sure if this solution is stable
 	const originalUrl = headers['x-ms-original-url'];
 	const { pathname, searchParams } = new URL(originalUrl);
 
