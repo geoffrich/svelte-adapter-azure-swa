@@ -1,11 +1,9 @@
 # svelte-adapter-azure-swa
 
-| :warning: WARNING: this project is considered to be in BETA until SvelteKit is available for general use and the Adapter API is stable. Please report any issues you encounter |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| :warning: WARNING: this project is considered to be in BETA until SvelteKit is available for general use and the Adapter API is stable. Please report any issues you encounter. |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 
 Adapter for Svelte apps that creates an Azure Static Web App, using an Azure function for dynamic server rendering. If your app is purely static, you may be able to use [adapter-static](https://www.npmjs.com/package/@sveltejs/adapter-static) instead.
-
-**This is beta software. Please report any issues you encounter.**
 
 ## Limitations
 
