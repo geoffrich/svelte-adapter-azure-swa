@@ -1,5 +1,8 @@
 # svelte-adapter-azure-swa
 
+| :warning: WARNING: this adapter only works with SvelteKit versions up to `@sveltejs/kit@1.0.0-next.183`, since Azure SWA requires Node 12. Follow [this issue](https://github.com/geoffrich/svelte-adapter-azure-swa/issues/10) to be notified for when this issue is resolved. |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+
 Adapter for Svelte apps that creates an Azure Static Web App, using an Azure function for dynamic server rendering. If your app is purely static, you may be able to use [adapter-static](https://www.npmjs.com/package/@sveltejs/adapter-static) instead.
 
 **This is beta software. Please report any issues you encounter.**
@@ -48,7 +51,7 @@ When deploying to Azure, you will need to properly [configure your build](https:
 | property          | value          |
 | ----------------- | -------------- |
 | `app_location`    | `./`           |
-| `api_location`    | `api`         |
+| `api_location`    | `api`          |
 | `output_location` | `build/static` |
 
 ## Running locally with the Azure SWA CLI
