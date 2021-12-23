@@ -39,7 +39,8 @@ export default function (options) {
 				outfile: join(apiDir, 'index.js'),
 				bundle: true,
 				inject: [join(files, 'shims.js')],
-				platform: 'node'
+				platform: 'node',
+				target: 'node12'
 			};
 
 			const build_options =
