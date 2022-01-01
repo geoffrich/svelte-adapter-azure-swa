@@ -18,6 +18,9 @@ export async function index(context) {
 	// because we proxy all requests to the render function, the original URL in the request is /api/__render
 	// this header contains the URL the user requested
 	const originalUrl = headers['x-ms-original-url'];
+	if (originalUrl.endsWith('/')) {
+		originalUrl = originalUrl.slice(0, -1);
+	}
 	const { pathname, searchParams } = new URL(originalUrl);
 
 	const encoding = headers['content-encoding'] || 'utf-8';
