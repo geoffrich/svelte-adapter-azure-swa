@@ -1,8 +1,10 @@
-// TODO hardcoding the relative location makes this brittle
-// Update once https://github.com/sveltejs/kit/pull/2579 merged
-import { init, render } from '../output/server/app.js';
+import { __fetch_polyfill } from '@sveltejs/kit/install-fetch';
+import { App } from 'APP';
+import { manifest } from 'MANIFEST';
 
-init();
+__fetch_polyfill();
+
+const app = new App(manifest);
 
 /**
  * @typedef {import('@azure/functions').AzureFunction} AzureFunction
@@ -18,16 +20,15 @@ export async function index(context) {
 	// because we proxy all requests to the render function, the original URL in the request is /api/__render
 	// this header contains the URL the user requested
 	const originalUrl = headers['x-ms-original-url'];
-	const { pathname, searchParams } = new URL(originalUrl);
+	const url = new URL(originalUrl);
 
 	const encoding = headers['content-encoding'] || 'utf-8';
 	const rawBody = typeof body === 'string' ? Buffer.from(body, encoding) : body;
 
-	const rendered = await render({
+	const rendered = await app.render({
+		url,
 		method,
 		headers,
-		path: pathname,
-		query: searchParams,
 		rawBody
 	});
 
