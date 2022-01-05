@@ -1,9 +1,6 @@
 # svelte-adapter-azure-swa
 
- :stop_sign: IMPORTANT: due to breaking changes to the adapter API introduced by [SvelteKit next-208](https://github.com/sveltejs/kit/blob/master/packages/kit/CHANGELOG.md#100-next208), this adapter will only work with SvelteKit versions up to next-206. You can track the work to support the latest SvelteKit version in [this issue](https://github.com/geoffrich/svelte-adapter-azure-swa/issues/6). For now, you will need to manually pin to a supported version to use this adapter. See [this comment](https://github.com/geoffrich/svelte-adapter-azure-swa/issues/14#issuecomment-1003452028) for more details.
-
-| :warning: WARNING: this project is considered to be in BETA until SvelteKit is available for general use and the Adapter API is stable. Please report any issues you encounter. |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+> :warning: WARNING: this project is considered to be in BETA until SvelteKit is available for general use and the Adapter API is stable. Please report any issues you encounter.
 
 Adapter for Svelte apps that creates an Azure Static Web App, using an Azure function for dynamic server rendering. If your app is purely static, you may be able to use [adapter-static](https://www.npmjs.com/package/@sveltejs/adapter-static) instead.
 
