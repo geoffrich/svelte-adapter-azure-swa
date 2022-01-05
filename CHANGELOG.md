@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.0](https://www.github.com/geoffrich/svelte-adapter-azure-swa/compare/v0.1.0...v0.2.0) (2022-01-05)
+
+
+### Features
+
+* support SK next-208 ([2a8a5f9](https://www.github.com/geoffrich/svelte-adapter-azure-swa/commit/2a8a5f9726dc7204050788b6c6d806636c762d18))
+
 ## 0.1.0 (2021-12-23)
 
 
