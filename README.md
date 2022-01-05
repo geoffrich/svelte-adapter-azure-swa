@@ -56,11 +56,9 @@ When deploying to Azure, you will need to properly [configure your build](https:
 
 ## Running locally with the Azure SWA CLI
 
-**Local SWA debugging is currently broken** due to the following SWA CLI issues: [261](https://github.com/Azure/static-web-apps-cli/issues/261) and [286](https://github.com/Azure/static-web-apps-cli/issues/286)
-
 You can debug using the [Azure Static Web Apps CLI](https://github.com/Azure/static-web-apps-cli). Note that the CLI is currently in preview and you may encounter issues.
 
-To run the CLI, install `@azure/static-web-apps-cli` and add a `swa-cli.config.json` to your project (see sample below). Run `swa start` to start the emulator. See the CLI docs for more information on usage.
+To run the CLI, install `@azure/static-web-apps-cli` and the [Azure Functions Core Tools](https://github.com/Azure/static-web-apps-cli#serve-both-the-static-app-and-api) and add a `swa-cli.config.json` to your project (see sample below). Run `npm run build` to build your project and `swa start` to start the emulator. See the [CLI docs](https://github.com/Azure/static-web-apps-cli) for more information on usage.
 
 ### Sample `swa-cli.config.json`
 
