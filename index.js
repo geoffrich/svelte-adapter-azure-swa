@@ -8,7 +8,7 @@ import esbuild from 'esbuild';
  */
 
 /** @type {import('.')} */
-export default function () {
+export default function ({ debug = false } = {}) {
 	return {
 		name: 'adapter-azure-swa',
 
@@ -40,7 +40,8 @@ export default function () {
 			builder.copy(join(files, 'entry.js'), entry, {
 				replace: {
 					APP: `${relativePath}/app.js`,
-					MANIFEST: './manifest.js'
+					MANIFEST: './manifest.js',
+					DEBUG: debug.toString()
 				}
 			});
 
