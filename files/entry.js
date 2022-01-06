@@ -2,6 +2,9 @@ import { __fetch_polyfill } from '@sveltejs/kit/install-fetch';
 import { App } from 'APP';
 import { manifest } from 'MANIFEST';
 
+// replaced at build time
+const debug = DEBUG;
+
 __fetch_polyfill();
 
 const app = new App(manifest);
@@ -24,20 +27,36 @@ export async function index(context) {
 
 	const encoding = headers['content-encoding'] || 'utf-8';
 	const rawBody = typeof body === 'string' ? Buffer.from(body, encoding) : body;
-
-	const rendered = await app.render({
+	const request = {
 		url,
 		method,
 		headers,
 		rawBody
-	});
+	};
+
+	log(`Request: ${JSON.stringify(request)}`);
+
+	const rendered = await app.render(request);
 
 	const { status, headers: resHeaders, body: resBody } = rendered;
 
-	context.res = {
+	const response = {
 		status,
 		body: resBody,
 		headers: resHeaders,
 		rawBody
 	};
+
+	log(`Response: ${JSON.stringify(response)}`);
+
+	context.res = response;
+
+	/**
+	 * @param {string} message
+	 */
+	function log(message) {
+		if (debug) {
+			context.log(message);
+		}
+	}
 }
