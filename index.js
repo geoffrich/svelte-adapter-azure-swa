@@ -7,13 +7,27 @@ import esbuild from 'esbuild';
  * @typedef {import('esbuild').BuildOptions} BuildOptions
  */
 
+const ssrFunctionRoute = '/api/__render';
+
 /** @type {import('.')} */
 export default function ({ debug = false } = {}) {
 	return {
 		name: 'adapter-azure-swa',
 
-		// implementation based on the vercel adapter
 		async adapt(builder) {
+			const swaConfig = {
+				routes: [
+					{
+						route: '*',
+						methods: ['POST', 'PUT', 'DELETE'],
+						rewrite: ssrFunctionRoute
+					}
+				],
+				navigationFallback: {
+					rewrite: ssrFunctionRoute
+				}
+			};
+
 			const tmp = builder.getBuildDirectory('azure-tmp');
 			const publish = 'build';
 			const staticDir = join(publish, 'static');
@@ -26,9 +40,26 @@ export default function ({ debug = false } = {}) {
 			builder.rimraf(apiDir);
 
 			builder.log.minor('Prerendering static pages...');
-			await builder.prerender({
+			const prerendered = await builder.prerender({
 				dest: staticDir
 			});
+
+			if (!prerendered.paths.includes('/')) {
+				// Azure SWA requires an index.html to be present
+				// If the root was not pre-rendered, add a placeholder index.html
+				// Route all requests for the index to the SSR function
+				writeFileSync(`${staticDir}/index.html`, '');
+				swaConfig.routes.push(
+					{
+						route: '/index.html',
+						rewrite: ssrFunctionRoute
+					},
+					{
+						route: '/',
+						rewrite: ssrFunctionRoute
+					}
+				);
+			}
 
 			const files = fileURLToPath(new URL('./files', import.meta.url));
 
@@ -52,10 +83,7 @@ export default function ({ debug = false } = {}) {
 				})};\n`
 			);
 
-			builder.copy(
-				join(files, 'staticwebapp.config.json'),
-				join(publish, 'staticwebapp.config.json')
-			);
+			writeFileSync(`${publish}/staticwebapp.config.json`, JSON.stringify(swaConfig));
 
 			builder.copy(join(files, 'api'), apiDir);
 
