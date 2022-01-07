@@ -34,7 +34,9 @@ export async function index(context) {
 		rawBody
 	};
 
-	log(`Request: ${JSON.stringify(request)}`);
+	if (debug) {
+		context.log(`Request: ${JSON.stringify(request)}`);
+	}
 
 	const rendered = await app.render(request);
 
@@ -47,16 +49,9 @@ export async function index(context) {
 		rawBody
 	};
 
-	log(`Response: ${JSON.stringify(response)}`);
+	if (debug) {
+		context.log(`Response: ${JSON.stringify(response)}`);
+	}
 
 	context.res = response;
-
-	/**
-	 * @param {string} message
-	 */
-	function log(message) {
-		if (debug) {
-			context.log(message);
-		}
-	}
 }
