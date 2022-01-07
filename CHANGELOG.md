@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.3.0](https://www.github.com/geoffrich/svelte-adapter-azure-swa/compare/v0.2.0...v0.3.0) (2022-01-07)
+
+
+### Features
+
+* add debug setting to log request info ([581bdf3](https://www.github.com/geoffrich/svelte-adapter-azure-swa/commit/581bdf3b2955b0906f6c18fe0c1ef0cba925c8d0))
+* allow index.html to be dynamic ([1a089e1](https://www.github.com/geoffrich/svelte-adapter-azure-swa/commit/1a089e1e51797ea906263bdbdf50b41a05d3fd8d))
+
 ## [0.2.0](https://www.github.com/geoffrich/svelte-adapter-azure-swa/compare/v0.1.0...v0.2.0) (2022-01-05)
 
 
