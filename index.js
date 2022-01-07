@@ -15,6 +15,7 @@ export default function ({ debug = false } = {}) {
 		name: 'adapter-azure-swa',
 
 		async adapt(builder) {
+			/** @type {import('./types/swa').StaticWebAppConfig} */
 			const swaConfig = {
 				routes: [
 					{
