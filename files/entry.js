@@ -7,6 +7,7 @@ const debug = DEBUG;
 
 __fetch_polyfill();
 
+/** @type {import('@sveltejs/kit').App} */
 const app = new App(manifest);
 
 /**
@@ -25,8 +26,7 @@ export async function index(context) {
 	const originalUrl = headers['x-ms-original-url'];
 	const url = new URL(originalUrl);
 
-	const encoding = headers['content-encoding'] || 'utf-8';
-	const rawBody = typeof body === 'string' ? Buffer.from(body, encoding) : body;
+	const rawBody = typeof body === 'string' ? Buffer.from(body, 'utf-8') : body;
 	const request = {
 		url,
 		method,
