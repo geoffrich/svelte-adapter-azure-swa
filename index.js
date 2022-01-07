@@ -22,6 +22,12 @@ export default function ({ debug = false } = {}) {
 						route: '*',
 						methods: ['POST', 'PUT', 'DELETE'],
 						rewrite: ssrFunctionRoute
+					},
+					{
+						route: `/${builder.appDir}/*`,
+						headers: {
+							'cache-control': 'public, immutable, max-age=31536000'
+						}
 					}
 				],
 				navigationFallback: {
