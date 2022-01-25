@@ -36,6 +36,7 @@ export default function ({ debug = false, extendStaticWebAppConfig = undefined }
 			const swaConfig = {
 				...extendStaticWebAppConfig,
 				routes: [
+					...(extendStaticWebAppConfig || { routes: [] }).routes,
 					{
 						route: '*',
 						methods: ['POST', 'PUT', 'DELETE'],
