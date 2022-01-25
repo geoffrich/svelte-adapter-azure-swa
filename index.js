@@ -9,14 +9,32 @@ import esbuild from 'esbuild';
 
 const ssrFunctionRoute = '/api/__render';
 
+/**
+ * Validate the static web app configuration does not override the minimum config for the adapter to work correctly.
+ * @param config {import('./types/swa').ExtendStaticWebAppConfig} 
+ * */
+function validateExtendConfig(config) {
+	if (config) {
+		if ('navigationFallback' in config) {
+			throw new Error("Cannot override navigationFallback since is used for SSR and endpoints.");
+		}
+		if (config.routes && config.routes.find(route => route.route === '*')) {
+			throw new Error("Cannot override catch-all route.");
+		}
+	}
+}
+
 /** @type {import('.')} */
-export default function ({ debug = false } = {}) {
+export default function ({ debug = false, extendStaticWebAppConfig = undefined } = {}) {
 	return {
 		name: 'adapter-azure-swa',
 
 		async adapt(builder) {
+			validateExtendConfig(extendStaticWebAppConfig);
+
 			/** @type {import('./types/swa').StaticWebAppConfig} */
 			const swaConfig = {
+				...extendStaticWebAppConfig,
 				routes: [
 					{
 						route: '*',
