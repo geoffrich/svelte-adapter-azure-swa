@@ -25,7 +25,7 @@ function validateCustomConfig(config) {
 }
 
 /** @type {import('.')} */
-export default function ({ debug = false, customStaticWebAppConfig = undefined } = {}) {
+export default function ({ debug = false, customStaticWebAppConfig = {} } = {}) {
 	return {
 		name: 'adapter-azure-swa',
 
@@ -36,7 +36,7 @@ export default function ({ debug = false, customStaticWebAppConfig = undefined }
 			const swaConfig = {
 				...customStaticWebAppConfig,
 				routes: [
-					...(customStaticWebAppConfig || { routes: [] }).routes,
+					...(customStaticWebAppConfig && customStaticWebAppConfig.routes || []),
 					{
 						route: '*',
 						methods: ['POST', 'PUT', 'DELETE'],
