@@ -7,7 +7,7 @@ export interface StaticWebAppConfig {
 	mimeTypes?: Record<string, string>;
 }
 
-export type ExtendStaticWebAppConfig = Omit<StaticWebAppConfig, 'navigationFallback'>;
+export type CustomStaticWebAppConfig = Omit<StaticWebAppConfig, 'navigationFallback'>;
 
 export interface Route {
 	route: string;

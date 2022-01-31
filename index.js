@@ -11,32 +11,32 @@ const ssrFunctionRoute = '/api/__render';
 
 /**
  * Validate the static web app configuration does not override the minimum config for the adapter to work correctly.
- * @param config {import('./types/swa').ExtendStaticWebAppConfig} 
+ * @param config {import('./types/swa').CustomStaticWebAppConfig} 
  * */
-function validateExtendConfig(config) {
+function validateCustomConfig(config) {
 	if (config) {
 		if ('navigationFallback' in config) {
-			throw new Error("Cannot override navigationFallback since is used for SSR and endpoints.");
+			throw new Error('Cannot override navigationFallback since is used for SSR and endpoints.');
 		}
 		if (config.routes && config.routes.find(route => route.route === '*')) {
-			throw new Error("Cannot override catch-all route.");
+			throw new Error('Cannot override catch-all route.');
 		}
 	}
 }
 
 /** @type {import('.')} */
-export default function ({ debug = false, extendStaticWebAppConfig = undefined } = {}) {
+export default function ({ debug = false, customStaticWebAppConfig = undefined } = {}) {
 	return {
 		name: 'adapter-azure-swa',
 
 		async adapt(builder) {
-			validateExtendConfig(extendStaticWebAppConfig);
+			validateCustomConfig(customStaticWebAppConfig);
 
 			/** @type {import('./types/swa').StaticWebAppConfig} */
 			const swaConfig = {
-				...extendStaticWebAppConfig,
+				...customStaticWebAppConfig,
 				routes: [
-					...(extendStaticWebAppConfig || { routes: [] }).routes,
+					...(customStaticWebAppConfig || { routes: [] }).routes,
 					{
 						route: '*',
 						methods: ['POST', 'PUT', 'DELETE'],

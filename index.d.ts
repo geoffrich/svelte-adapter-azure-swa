@@ -1,8 +1,8 @@
 import { Adapter } from '@sveltejs/kit';
-import { ExtendStaticWebAppConfig } from './types/swa';
+import { CustomStaticWebAppConfig } from './types/swa';
 
 declare function plugin(opts?: {
 	debug?: boolean;
-	extendStaticWebAppConfig?: ExtendStaticWebAppConfig;
+	customStaticWebAppConfig?: CustomStaticWebAppConfig;
 }): Adapter;
 export = plugin;
