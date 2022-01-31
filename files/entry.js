@@ -27,12 +27,11 @@ export async function index(context) {
 	const url = new URL(originalUrl);
 
 	const rawBody = typeof body === 'string' ? Buffer.from(body, 'utf-8') : body;
-	const request = {
-		url,
+	const request = new Request(url.toString(), {
 		method,
-		headers,
-		rawBody
-	};
+		headers: new Headers(headers),
+		body: rawBody
+	});
 
 	if (debug) {
 		context.log(`Request: ${JSON.stringify(request)}`);
@@ -40,7 +39,14 @@ export async function index(context) {
 
 	const rendered = await app.render(request);
 
-	const { status, headers: resHeaders, body: resBody } = rendered;
+	const { status } = rendered;
+	const resBody = await rendered.text();
+	/** @type {Record<string, string>} */
+	const resHeaders = {};
+	rendered.headers.forEach((value, key) => {
+		resHeaders[key] = value;
+	});
+
 
 	const response = {
 		status,
