@@ -65,3 +65,46 @@ To run the CLI, install `@azure/static-web-apps-cli` and the [Azure Functions Co
 	}
 }
 ```
+
+## Extending generated SWA Config
+
+To modify the generated `staticwebapp.config.json`, simply pass the desired configuration to the adapter in your `svelte.config.js`:
+
+```js
+import azure from 'svelte-adapter-azure-swa';
+
+export default {
+	kit: {
+		...
+		adapter: azure({
+			customStaticWebAppConfig: {{
+			customStaticWebAppConfig: {
+				routes: [
+					{
+						route: '/login',
+						allowedRoles: ['admin']
+					}
+				],
+				globalHeaders: {
+					'X-Content-Type-Options': 'nosniff',
+					'X-Frame-Options': 'DENY',
+					'Content-Security-Policy': "default-src https: 'unsafe-eval' 'unsafe-inline'; object-src 'none'",
+				},
+				mimeTypes: {
+					'.json': 'text/json'
+				},
+				responseOverrides: {
+					"401": {
+						'redirect': '/login',
+						'statusCode': 302
+					},
+				}
+			}
+		})
+	}
+};
+```
+
+You can read more about the available configuration options in the [documentation](https://docs.microsoft.com/en-us/azure/static-web-apps/configuration).
+
+**Note:** You cannot override the default catch-all route (`route: '*'`) nor the `navigationFallback` options as they are critical for server side rendering.
