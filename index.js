@@ -16,10 +16,10 @@ const ssrFunctionRoute = '/api/__render';
 function validateCustomConfig(config) {
 	if (config) {
 		if ('navigationFallback' in config) {
-			throw new Error('Cannot override navigationFallback since is used for SSR and endpoints.');
+			throw new Error('customStaticWebAppConfig cannot override navigationFallback.');
 		}
 		if (config.routes && config.routes.find((route) => route.route === '*')) {
-			throw new Error('Cannot override catch-all route.');
+			throw new Error(`customStaticWebAppConfig cannot override '*' route.`);
 		}
 	}
 }
