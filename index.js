@@ -11,14 +11,14 @@ const ssrFunctionRoute = '/api/__render';
 
 /**
  * Validate the static web app configuration does not override the minimum config for the adapter to work correctly.
- * @param config {import('./types/swa').CustomStaticWebAppConfig} 
+ * @param config {import('./types/swa').CustomStaticWebAppConfig}
  * */
 function validateCustomConfig(config) {
 	if (config) {
 		if ('navigationFallback' in config) {
 			throw new Error('Cannot override navigationFallback since is used for SSR and endpoints.');
 		}
-		if (config.routes && config.routes.find(route => route.route === '*')) {
+		if (config.routes && config.routes.find((route) => route.route === '*')) {
 			throw new Error('Cannot override catch-all route.');
 		}
 	}
@@ -32,11 +32,15 @@ export default function ({ debug = false, customStaticWebAppConfig = {} } = {}) 
 		async adapt(builder) {
 			validateCustomConfig(customStaticWebAppConfig);
 
+			if (!customStaticWebAppConfig.routes) {
+				customStaticWebAppConfig.routes = [];
+			}
+
 			/** @type {import('./types/swa').StaticWebAppConfig} */
 			const swaConfig = {
 				...customStaticWebAppConfig,
 				routes: [
-					...(customStaticWebAppConfig && customStaticWebAppConfig.routes || []),
+					...customStaticWebAppConfig.routes,
 					{
 						route: '*',
 						methods: ['POST', 'PUT', 'DELETE'],
