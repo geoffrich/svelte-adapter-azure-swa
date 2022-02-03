@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.4.0](https://www.github.com/geoffrich/svelte-adapter-azure-swa/compare/v0.3.0...v0.4.0) (2022-02-03)
+
+
+### Features
+
+* add customStaticWebAppConfig option ([#28](https://www.github.com/geoffrich/svelte-adapter-azure-swa/issues/28)) ([70702ff](https://www.github.com/geoffrich/svelte-adapter-azure-swa/commit/70702ff00842b6ddf53a6a44a1c6dc56c6e3371b))
+* add immutable cache headers to hashed assets ([66e4cc4](https://www.github.com/geoffrich/svelte-adapter-azure-swa/commit/66e4cc4f520dabeb57050db805073dd98b482c2e))
+* support SvelteKit 1.0.0-next.234 ([#29](https://www.github.com/geoffrich/svelte-adapter-azure-swa/issues/29)) ([61c374d](https://www.github.com/geoffrich/svelte-adapter-azure-swa/commit/61c374d7deb2ce0af2a503b6cdaaab9aa762b3c3))
+
 ## [0.3.0](https://www.github.com/geoffrich/svelte-adapter-azure-swa/compare/v0.2.0...v0.3.0) (2022-01-07)
 
 
