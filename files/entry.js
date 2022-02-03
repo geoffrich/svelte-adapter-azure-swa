@@ -27,7 +27,7 @@ export async function index(context) {
 	}
 
 	const rendered = await app.render(request);
-	const response = toResponse(rendered);
+	const response = await toResponse(rendered);
 
 	if (debug) {
 		context.log(`Response: ${JSON.stringify(response)}`);
