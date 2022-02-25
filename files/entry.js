@@ -7,7 +7,6 @@ const debug = DEBUG;
 
 __fetch_polyfill();
 
-/** @type {import('@sveltejs/kit').Server} */
 const server = new Server(manifest);
 
 /**
