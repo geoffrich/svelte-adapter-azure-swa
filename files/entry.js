@@ -65,7 +65,7 @@ function toRequest(context) {
  */
 async function toResponse(rendered) {
 	const { status } = rendered;
-	const resBody = await rendered.text();
+	const resBody = new Uint8Array(await rendered.arrayBuffer());
 
 	/** @type {Record<string, string>} */
 	const resHeaders = {};
@@ -76,6 +76,7 @@ async function toResponse(rendered) {
 	return {
 		status,
 		body: resBody,
-		headers: resHeaders
+		headers: resHeaders,
+		isRaw: true
 	};
 }
