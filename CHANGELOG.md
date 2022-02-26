@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.5.0](https://www.github.com/geoffrich/svelte-adapter-azure-swa/compare/v0.4.0...v0.5.0) (2022-02-26)
+
+
+### Features
+
+* support SvelteKit 1.0.0-next.287 ([#33](https://www.github.com/geoffrich/svelte-adapter-azure-swa/issues/33)) ([b79ab95](https://www.github.com/geoffrich/svelte-adapter-azure-swa/commit/b79ab95e20f9be2c231b5492cfc975b19222f935))
+
+
+### Bug Fixes
+
+* allow returning binary responses from endpoints ([#32](https://www.github.com/geoffrich/svelte-adapter-azure-swa/issues/32)) ([e0070cb](https://www.github.com/geoffrich/svelte-adapter-azure-swa/commit/e0070cb802539c46235cd81edfe949a3de8e9edd))
+
 ## [0.4.0](https://www.github.com/geoffrich/svelte-adapter-azure-swa/compare/v0.3.0...v0.4.0) (2022-02-03)
 
 
