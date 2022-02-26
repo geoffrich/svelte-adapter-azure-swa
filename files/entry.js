@@ -1,11 +1,11 @@
-import { __fetch_polyfill } from '@sveltejs/kit/install-fetch';
+import { installFetch } from '@sveltejs/kit/install-fetch';
 import { Server } from 'SERVER';
 import { manifest } from 'MANIFEST';
 
 // replaced at build time
 const debug = DEBUG;
 
-__fetch_polyfill();
+installFetch();
 
 const server = new Server(manifest);
 
