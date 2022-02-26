@@ -1,14 +1,13 @@
-import { __fetch_polyfill } from '@sveltejs/kit/install-fetch';
-import { App } from 'APP';
+import { installFetch } from '@sveltejs/kit/install-fetch';
+import { Server } from 'SERVER';
 import { manifest } from 'MANIFEST';
 
 // replaced at build time
 const debug = DEBUG;
 
-__fetch_polyfill();
+installFetch();
 
-/** @type {import('@sveltejs/kit').App} */
-const app = new App(manifest);
+const server = new Server(manifest);
 
 /**
  * @typedef {import('@azure/functions').AzureFunction} AzureFunction
@@ -26,7 +25,7 @@ export async function index(context) {
 		context.log(`Request: ${JSON.stringify(request)}`);
 	}
 
-	const rendered = await app.render(request);
+	const rendered = await server.respond(request);
 	const response = await toResponse(rendered);
 
 	if (debug) {

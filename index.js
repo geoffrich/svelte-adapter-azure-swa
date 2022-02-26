@@ -100,7 +100,7 @@ export default function ({ debug = false, customStaticWebAppConfig = {} } = {}) 
 
 			builder.copy(join(files, 'entry.js'), entry, {
 				replace: {
-					APP: `${relativePath}/app.js`,
+					SERVER: `${relativePath}/index.js`,
 					MANIFEST: './manifest.js',
 					DEBUG: debug.toString()
 				}
