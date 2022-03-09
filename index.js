@@ -68,6 +68,7 @@ export default function ({ debug = false, customStaticWebAppConfig = {} } = {}) 
 			builder.rimraf(tmp);
 			builder.rimraf(publish);
 			builder.rimraf(apiDir);
+			builder.mkdirp(publish);
 
 			if (!builder.prerendered.paths.includes('/')) {
 				// Azure SWA requires an index.html to be present
