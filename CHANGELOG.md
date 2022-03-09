@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.0](https://www.github.com/geoffrich/svelte-adapter-azure-swa/compare/v0.5.0...v0.6.0) (2022-03-09)
+
+
+### Features
+
+* support SvelteKit 1.0.0-next.292 ([db1ffc6](https://www.github.com/geoffrich/svelte-adapter-azure-swa/commit/db1ffc65ed362708627819cb7e627b268d007e8a))
+
 ## [0.5.0](https://www.github.com/geoffrich/svelte-adapter-azure-swa/compare/v0.4.0...v0.5.0) (2022-02-26)
 
 
