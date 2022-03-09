@@ -47,7 +47,7 @@ export default function ({ debug = false, customStaticWebAppConfig = {} } = {}) 
 						rewrite: ssrFunctionRoute
 					},
 					{
-						route: `/${builder.appDir}/*`,
+						route: `/${builder.config.kit.appDir}/*`,
 						headers: {
 							'cache-control': 'public, immutable, max-age=31536000'
 						}
@@ -68,13 +68,9 @@ export default function ({ debug = false, customStaticWebAppConfig = {} } = {}) 
 			builder.rimraf(tmp);
 			builder.rimraf(publish);
 			builder.rimraf(apiDir);
+			builder.mkdirp(publish);
 
-			builder.log.minor('Prerendering static pages...');
-			const prerendered = await builder.prerender({
-				dest: staticDir
-			});
-
-			if (!prerendered.paths.includes('/')) {
+			if (!builder.prerendered.paths.includes('/')) {
 				// Azure SWA requires an index.html to be present
 				// If the root was not pre-rendered, add a placeholder index.html
 				// Route all requests for the index to the SSR function
@@ -131,6 +127,7 @@ export default function ({ debug = false, customStaticWebAppConfig = {} } = {}) 
 			builder.log.minor('Copying assets...');
 			builder.writeStatic(staticDir);
 			builder.writeClient(staticDir);
+			builder.writePrerendered(staticDir);
 		}
 	};
 }
