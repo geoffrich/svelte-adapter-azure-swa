@@ -127,6 +127,7 @@ export default function ({ debug = false, customStaticWebAppConfig = {} } = {}) 
 			builder.log.minor('Copying assets...');
 			builder.writeStatic(staticDir);
 			builder.writeClient(staticDir);
+			builder.writePrerendered(staticDir);
 		}
 	};
 }
