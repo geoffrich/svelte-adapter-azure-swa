@@ -68,24 +68,6 @@ export default function ({ debug = false, customStaticWebAppConfig = {} } = {}) 
 			builder.rimraf(tmp);
 			builder.rimraf(publish);
 			builder.rimraf(apiDir);
-			builder.mkdirp(publish);
-
-			if (!builder.prerendered.paths.includes('/')) {
-				// Azure SWA requires an index.html to be present
-				// If the root was not pre-rendered, add a placeholder index.html
-				// Route all requests for the index to the SSR function
-				writeFileSync(`${staticDir}/index.html`, '');
-				swaConfig.routes.push(
-					{
-						route: '/index.html',
-						rewrite: ssrFunctionRoute
-					},
-					{
-						route: '/',
-						rewrite: ssrFunctionRoute
-					}
-				);
-			}
 
 			const files = fileURLToPath(new URL('./files', import.meta.url));
 
@@ -109,8 +91,6 @@ export default function ({ debug = false, customStaticWebAppConfig = {} } = {}) 
 				})};\n`
 			);
 
-			writeFileSync(`${publish}/staticwebapp.config.json`, JSON.stringify(swaConfig));
-
 			builder.copy(join(files, 'api'), apiDir);
 
 			/** @type {BuildOptions} */
@@ -128,6 +108,25 @@ export default function ({ debug = false, customStaticWebAppConfig = {} } = {}) 
 			builder.writeStatic(staticDir);
 			builder.writeClient(staticDir);
 			builder.writePrerendered(staticDir);
+
+			if (!builder.prerendered.paths.includes('/')) {
+				// Azure SWA requires an index.html to be present
+				// If the root was not pre-rendered, add a placeholder index.html
+				// Route all requests for the index to the SSR function
+				writeFileSync(`${staticDir}/index.html`, '');
+				swaConfig.routes.push(
+					{
+						route: '/index.html',
+						rewrite: ssrFunctionRoute
+					},
+					{
+						route: '/',
+						rewrite: ssrFunctionRoute
+					}
+				);
+			}
+
+			writeFileSync(`${publish}/staticwebapp.config.json`, JSON.stringify(swaConfig));
 		}
 	};
 }
