@@ -1,5 +1,12 @@
 # Changelog
 
+### [0.6.1](https://www.github.com/geoffrich/svelte-adapter-azure-swa/compare/v0.6.0...v0.6.1) (2022-03-11)
+
+
+### Bug Fixes
+
+* prevent file not found error when index not prerendered ([#39](https://www.github.com/geoffrich/svelte-adapter-azure-swa/issues/39)) ([0e7960a](https://www.github.com/geoffrich/svelte-adapter-azure-swa/commit/0e7960ac8f8dd2f4df8bb14afb627c79f7c68714))
+
 ## [0.6.0](https://www.github.com/geoffrich/svelte-adapter-azure-swa/compare/v0.5.0...v0.6.0) (2022-03-09)
 
 
