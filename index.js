@@ -74,6 +74,7 @@ export default function ({ debug = false, customStaticWebAppConfig = {} } = {}) 
 				// Azure SWA requires an index.html to be present
 				// If the root was not pre-rendered, add a placeholder index.html
 				// Route all requests for the index to the SSR function
+				builder.mkdirp(staticDir);
 				writeFileSync(`${staticDir}/index.html`, '');
 				swaConfig.routes.push(
 					{
