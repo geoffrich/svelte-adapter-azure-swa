@@ -28,7 +28,8 @@ function validateCustomConfig(config) {
 export default function ({
 	debug = false,
 	customStaticWebAppConfig = {},
-	esbuildOptions = {}
+	esbuildOptions = {},
+	allowedRoles = ['anonymous']
 } = {}) {
 	return {
 		name: 'adapter-azure-swa',
@@ -48,13 +49,15 @@ export default function ({
 					{
 						route: '*',
 						methods: ['POST', 'PUT', 'DELETE'],
-						rewrite: ssrFunctionRoute
+						rewrite: ssrFunctionRoute,
+						allowedRoles: allowedRoles
 					},
 					{
 						route: `/${builder.config.kit.appDir}/immutable/*`,
 						headers: {
 							'cache-control': 'public, immutable, max-age=31536000'
-						}
+						},
+						allowedRoles: allowedRoles
 					}
 				],
 				navigationFallback: {
@@ -130,14 +133,23 @@ export default function ({
 				swaConfig.routes.push(
 					{
 						route: '/index.html',
-						rewrite: ssrFunctionRoute
+						rewrite: ssrFunctionRoute,
+						allowedRoles: allowedRoles
 					},
 					{
 						route: '/',
-						rewrite: ssrFunctionRoute
+						rewrite: ssrFunctionRoute,
+						allowedRoles: allowedRoles
 					}
 				);
 			}
+
+			swaConfig.routes.push(
+				{
+					route: '*',
+					allowedRoles: allowedRoles
+				}
+			);
 
 			writeFileSync(`${publish}/staticwebapp.config.json`, JSON.stringify(swaConfig));
 		}
