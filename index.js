@@ -47,7 +47,7 @@ export default function ({ debug = false, customStaticWebAppConfig = {} } = {}) 
 						rewrite: ssrFunctionRoute
 					},
 					{
-						route: `/${builder.config.kit.appDir}/*`,
+						route: `/${builder.config.kit.appDir}/immutable/*`,
 						headers: {
 							'cache-control': 'public, immutable, max-age=31536000'
 						}
