@@ -5,6 +5,7 @@ export interface StaticWebAppConfig {
 	globalHeaders?: Record<string, string>;
 	responseOverrides?: Record<OverridableResponseCodes, ResponseOverride>;
 	mimeTypes?: Record<string, string>;
+	platform?: Platform;
 }
 
 export type CustomStaticWebAppConfig = Omit<StaticWebAppConfig, 'navigationFallback'>;
@@ -42,3 +43,7 @@ export interface ResponseOverride {
 }
 
 export type OverridableResponseCodes = '400' | '401' | '403' | '404';
+
+export interface Platform {
+	apiRuntime: string;
+}

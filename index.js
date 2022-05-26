@@ -55,6 +55,9 @@ export default function ({ debug = false, customStaticWebAppConfig = {} } = {}) 
 				],
 				navigationFallback: {
 					rewrite: ssrFunctionRoute
+				},
+				platform: {
+					apiRuntime: 'node:16'
 				}
 			};
 
@@ -99,7 +102,7 @@ export default function ({ debug = false, customStaticWebAppConfig = {} } = {}) 
 				outfile: join(apiDir, 'index.js'),
 				bundle: true,
 				platform: 'node',
-				target: 'node12'
+				target: 'node16'
 			};
 
 			await esbuild.build(default_options);
