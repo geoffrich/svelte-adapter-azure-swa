@@ -1,4 +1,4 @@
-import { writeFileSync } from 'fs';
+import { writeFileSync, existsSync } from 'fs';
 import { join, posix } from 'path';
 import { fileURLToPath } from 'url';
 import esbuild from 'esbuild';
@@ -60,6 +60,12 @@ export default function ({ debug = false, customStaticWebAppConfig = {} } = {}) 
 					apiRuntime: 'node:16'
 				}
 			};
+
+			if (!existsSync(join('api', 'package.json'))) {
+				throw new Error(
+					'You need to create a package.json in your `api` directory. See the adapter README for details.'
+				);
+			}
 
 			const tmp = builder.getBuildDirectory('azure-tmp');
 			const publish = 'build';
