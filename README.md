@@ -23,7 +23,7 @@ export default {
 };
 ```
 
-You will need to create an `api/` folder in your project root containing a [`host.json`](https://docs.microsoft.com/en-us/azure/azure-functions/functions-host-json) (see sample below). The adapter will output the `render` Azure function for SSR in that folder. The `api` folder needs to be in your repo so that Azure can recognize the API at build time. However, you can add `api/render` to your .gitignore so that the generated function is not in source control.
+You will need to create an `api/` folder in your project root containing a [`host.json`](https://docs.microsoft.com/en-us/azure/azure-functions/functions-host-json) and a `package.json` (see samples below). The adapter will output the `render` Azure function for SSR in that folder. The `api` folder needs to be in your repo so that Azure can recognize the API at build time. However, you can add `api/render` to your .gitignore so that the generated function is not in source control.
 
 ### Sample `host.json`
 
@@ -35,6 +35,14 @@ You will need to create an `api/` folder in your project root containing a [`hos
 		"version": "[2.*, 3.0.0)"
 	}
 }
+```
+
+### Sample `package.json`
+
+It's okay for this to be empty. Not including it causes the Azure Function build to fail.
+
+```json
+{}
 ```
 
 ## Azure configuration
