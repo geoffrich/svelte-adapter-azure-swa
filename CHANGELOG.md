@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.7.0](https://www.github.com/geoffrich/svelte-adapter-azure-swa/compare/v0.6.1...v0.7.0) (2022-06-11)
+
+
+### Features
+
+* handle polyfill breaking change ([51baba9](https://www.github.com/geoffrich/svelte-adapter-azure-swa/commit/51baba98416687b0a1436e644ec67dd3d18fcf92))
+* target node 16 ([4b1b68f](https://www.github.com/geoffrich/svelte-adapter-azure-swa/commit/4b1b68fb87f4a4fb534d69a65f8940a1f83c0de9))
+* throw error if API package.json does not exist ([fd60cb2](https://www.github.com/geoffrich/svelte-adapter-azure-swa/commit/fd60cb276e2c847a46fe5f02cf9f42c9be723c7b))
+* update immutable directory ([b729d3b](https://www.github.com/geoffrich/svelte-adapter-azure-swa/commit/b729d3bea0ba32d955fc3d1a60f3fd61ebbbbcc6))
+
+
+### Bug Fixes
+
+* update types to support ESNext ([4cd7535](https://www.github.com/geoffrich/svelte-adapter-azure-swa/commit/4cd7535fb1c162f19bb5df71fea70302a6402562))
+
 ### [0.6.1](https://www.github.com/geoffrich/svelte-adapter-azure-swa/compare/v0.6.0...v0.6.1) (2022-03-11)
 
 
