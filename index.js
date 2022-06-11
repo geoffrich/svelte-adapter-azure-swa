@@ -24,7 +24,7 @@ function validateCustomConfig(config) {
 	}
 }
 
-/** @type {import('.')} */
+/** @type {import('.').default} */
 export default function ({ debug = false, customStaticWebAppConfig = {} } = {}) {
 	return {
 		name: 'adapter-azure-swa',
