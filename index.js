@@ -25,7 +25,11 @@ function validateCustomConfig(config) {
 }
 
 /** @type {import('.').default} */
-export default function ({ debug = false, customStaticWebAppConfig = {} } = {}) {
+export default function ({
+	debug = false,
+	customStaticWebAppConfig = {},
+	esbuildOptions = {}
+} = {}) {
 	return {
 		name: 'adapter-azure-swa',
 
@@ -104,6 +108,7 @@ export default function ({ debug = false, customStaticWebAppConfig = {} } = {}) 
 
 			/** @type {BuildOptions} */
 			const default_options = {
+				...esbuildOptions,
 				entryPoints: [entry],
 				outfile: join(apiDir, 'index.js'),
 				bundle: true,
