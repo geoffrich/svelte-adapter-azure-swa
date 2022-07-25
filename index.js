@@ -114,7 +114,6 @@ export default function ({ debug = false, customStaticWebAppConfig = {} } = {}) 
 			await esbuild.build(default_options);
 
 			builder.log.minor('Copying assets...');
-			builder.writeStatic(staticDir);
 			builder.writeClient(staticDir);
 			builder.writePrerendered(staticDir);
 
