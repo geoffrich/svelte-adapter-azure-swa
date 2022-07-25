@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.0](https://www.github.com/geoffrich/svelte-adapter-azure-swa/compare/v0.7.0...v0.8.0) (2022-07-25)
+
+
+### Features
+
+* remove call to writeStatic ([0d88a6f](https://www.github.com/geoffrich/svelte-adapter-azure-swa/commit/0d88a6f2ee6e8a039bc3fc8ae799b40131d3d147))
+
 ## [0.7.0](https://www.github.com/geoffrich/svelte-adapter-azure-swa/compare/v0.6.1...v0.7.0) (2022-06-11)
 
 
