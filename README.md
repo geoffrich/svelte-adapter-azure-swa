@@ -117,3 +117,24 @@ export default {
 	}
 };
 ```
+
+### esbuildOptions
+
+An object containing additional [Esbuild options](https://esbuild.github.io/api/#build-api). Currently supports: [external](https://esbuild.github.io/api/#external) and [keepNames](https://esbuild.github.io/api/#keep-names). 
+
+
+```js
+import azure from 'svelte-adapter-azure-swa';
+
+export default {
+	kit: {
+		...
+		adapter: azure({
+			esbuildOptions: {
+				external: ['fsevents'],
+				keepNames: true
+			}
+		})
+	}
+};
+```

@@ -108,12 +108,13 @@ export default function ({
 
 			/** @type {BuildOptions} */
 			const default_options = {
-				...esbuildOptions,
 				entryPoints: [entry],
 				outfile: join(apiDir, 'index.js'),
 				bundle: true,
 				platform: 'node',
-				target: 'node16'
+				target: 'node16',
+				keepNames: esbuildOptions.keepNames,
+				external: esbuildOptions.external
 			};
 
 			await esbuild.build(default_options);
