@@ -113,7 +113,6 @@ export default function ({
 				bundle: true,
 				platform: 'node',
 				target: 'node16',
-				keepNames: esbuildOptions.keepNames,
 				external: esbuildOptions.external
 			};
 

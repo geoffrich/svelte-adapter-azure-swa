@@ -5,7 +5,7 @@ import esbuild from 'esbuild';
 type Options = {
 	debug?: boolean;
 	customStaticWebAppConfig?: CustomStaticWebAppConfig;
-	esbuildOptions?: Pick<esbuild.BuildOptions, 'external' | 'keepNames'>;
+	esbuildOptions?: Pick<esbuild.BuildOptions, 'external'>;
 };
 
 export default function plugin(options?: Options): Adapter;

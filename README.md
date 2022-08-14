@@ -120,7 +120,7 @@ export default {
 
 ### esbuildOptions
 
-An object containing additional [Esbuild options](https://esbuild.github.io/api/#build-api). Currently supports: [external](https://esbuild.github.io/api/#external) and [keepNames](https://esbuild.github.io/api/#keep-names). 
+An object containing additional [Esbuild options](https://esbuild.github.io/api/#build-api). Currently only supports [external](https://esbuild.github.io/api/#external). 
 
 
 ```js
@@ -131,8 +131,7 @@ export default {
 		...
 		adapter: azure({
 			esbuildOptions: {
-				external: ['fsevents'],
-				keepNames: true
+				external: ['fsevents']
 			}
 		})
 	}
