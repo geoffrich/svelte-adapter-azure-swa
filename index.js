@@ -119,7 +119,6 @@ export default function ({
 			await esbuild.build(default_options);
 
 			builder.log.minor('Copying assets...');
-			builder.writeStatic(staticDir);
 			builder.writeClient(staticDir);
 			builder.writePrerendered(staticDir);
 
