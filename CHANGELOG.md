@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.0](https://www.github.com/geoffrich/svelte-adapter-azure-swa/compare/v0.8.0...v0.9.0) (2022-08-17)
+
+
+### Features
+
+* add `esbuildOptions` to config ([#51](https://www.github.com/geoffrich/svelte-adapter-azure-swa/issues/51)) ([c076f04](https://www.github.com/geoffrich/svelte-adapter-azure-swa/commit/c076f0485b1d14c778111eb74ab4eea87ca8c2b2))
+
 ## [0.8.0](https://www.github.com/geoffrich/svelte-adapter-azure-swa/compare/v0.7.0...v0.8.0) (2022-07-25)
 
 
