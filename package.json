@@ -28,11 +28,11 @@
 		"url": "https://github.com/geoffrich/svelte-adapter-azure-swa/issues"
 	},
 	"peerDependencies": {
-		"@sveltejs/kit": "^1.0.0-next.380"
+		"@sveltejs/kit": "^1.0.0-next.395"
 	},
 	"devDependencies": {
 		"@azure/functions": "^1.2.3",
-		"@sveltejs/kit": "^1.0.0-next.380",
+		"@sveltejs/kit": "^1.0.0-next.395",
 		"@types/node": "^17.0.5",
 		"prettier": "^2.4.1"
 	},
