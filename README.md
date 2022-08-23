@@ -137,3 +137,68 @@ export default {
 	}
 };
 ```
+
+### allowedRoles
+
+An array of strings containing the roles allowed to access the app. For e.g. if the app needs to be restrictied it's possible to use a [custom role](https://docs.microsoft.com/en-us/azure/static-web-apps/authentication-authorization). *Notice* this only supports securing the complete app. If specific routes should be secured it's best to implement custom authentication within the app itself.
+
+```js
+export default {
+	kit: {
+		...
+		adapter: azure({
+			allowedRoles: ['authenticated'],
+			customStaticWebAppConfig: {
+				routes: [
+					{
+						route: "/.auth/login/facebook",
+						statusCode: 404
+					},
+					{
+						route: "/.auth/login/github",
+						statusCode: 404
+					},
+					{
+						route: "/.auth/login/google",
+						statusCode: 404
+					},
+					{
+						route: "/.auth/login/twitter",
+						statusCode: 404
+					},
+					{
+						route: "/.auth/*",
+						allowedRoles: [
+							"anonymous"
+						]
+					},
+					{
+						route: '/login',
+						allowedRoles: [
+							"anonymous"
+						],
+						rewrite: "/.auth/login/aad",
+					}
+				],
+				responseOverrides: {
+					'401': {
+						'redirect': '/login',
+						'statusCode': 302
+					}
+				},
+				auth: {
+					identityProviders: {
+						azureActiveDirectory: {
+							registration: {
+								openIdIssuer: "AAD_ISSUER",
+								clientIdSettingName: "AAD_CLIENT_ID",
+								clientSecretSettingName: "AAD_CLIENT_SECRET"
+							}
+						}
+					}
+				}
+			}
+		})
+	}
+}
+```

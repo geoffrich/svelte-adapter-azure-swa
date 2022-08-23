@@ -6,6 +6,7 @@ type Options = {
 	debug?: boolean;
 	customStaticWebAppConfig?: CustomStaticWebAppConfig;
 	esbuildOptions?: Pick<esbuild.BuildOptions, 'external'>;
+	allowedRoles?: string[];
 };
 
 export default function plugin(options?: Options): Adapter;
