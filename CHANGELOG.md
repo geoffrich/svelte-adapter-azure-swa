@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.10.0](https://www.github.com/geoffrich/svelte-adapter-azure-swa/compare/v0.9.0...v0.10.0) (2022-08-23)
+
+
+### Features
+
+* initialize `env` ([#58](https://www.github.com/geoffrich/svelte-adapter-azure-swa/issues/58)) ([88df929](https://www.github.com/geoffrich/svelte-adapter-azure-swa/commit/88df929f215e588e94fbaa984e78f98e0b3a4278))
+
 ## [0.9.0](https://www.github.com/geoffrich/svelte-adapter-azure-swa/compare/v0.8.0...v0.9.0) (2022-08-17)
 
 
