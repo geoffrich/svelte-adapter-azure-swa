@@ -216,7 +216,8 @@ export default function ({
 				route: `/${builder.config.kit.appDir}/immutable/*`,
 				headers: {
 					'cache-control': 'public, immutable, max-age=31536000'
-				}
+				},
+				methods: undefined
 			});
 
 			if (!builder.prerendered.paths.includes('/')) {
@@ -228,14 +229,16 @@ export default function ({
 					swaConfig.routes.push({
 						rewrite: ssrFunctionRoute,
 						...wildcardRoute,
-						route: '/index.html'
+						route: '/index.html',
+						methods: undefined
 					});
 				}
 				if (!handledRoutes['/']) {
 					swaConfig.routes.push({
 						rewrite: ssrFunctionRoute,
 						...wildcardRoute,
-						route: '/'
+						route: '/',
+						methods: undefined
 					});
 				}
 			}
