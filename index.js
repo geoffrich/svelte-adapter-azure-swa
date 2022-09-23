@@ -9,9 +9,9 @@ import esbuild from 'esbuild';
 
 const ssrFunctionRoute = '/api/__render';
 // These are the methods that don't have to be SSR if they were pre-rendered.
-const staticMethods = ['GET','HEAD','OPTIONS'];
+const staticMethods = ['GET', 'HEAD', 'OPTIONS'];
 // These are the methods that must always be SSR.
-const ssrMethods = ['CONNECT','DELETE','PATCH','POST','PUT','TRACE'];
+const ssrMethods = ['CONNECT', 'DELETE', 'PATCH', 'POST', 'PUT', 'TRACE'];
 // This is the phrase that will be replaced with ssrFunctionRoute in custom configurations that use it.
 const ssrTrigger = 'ssr';
 
@@ -112,8 +112,13 @@ export default function ({
 				customStaticWebAppConfig.routes = [];
 			}
 
-			/** @type {Record<string,boolean>} */
-			let handledRoutes = {};
+			/** @type {Record<string,import('./types/swa').HttpMethod[]>} */
+			let handledRoutes = {
+				'*': [],
+				'/': [],
+				'/*': [],
+				'/index.html': []
+			};
 			/** @type {import('./types/swa').Route} */
 			let wildcardRoute = {};
 			for (const route of customStaticWebAppConfig.routes) {
@@ -122,15 +127,24 @@ export default function ({
 						'A route pattern is required for each route. https://learn.microsoft.com/en-us/azure/static-web-apps/configuration#routes'
 					);
 				}
-				handledRoutes[route.route] = true;
-				const methods = route.methods || [];
+				const methods = route.methods || [...staticMethods, ...ssrMethods];
+				if (
+					handledRoutes[route.route] &&
+					handledRoutes[route.route].some((i) => methods.includes(i))
+				) {
+					throw new Error(
+						'There is a route that conflicts with another route. https://learn.microsoft.com/en-us/azure/static-web-apps/configuration#routes'
+					);
+				}
+				handledRoutes[route.route] = [...(handledRoutes[route.route] || []), ...methods];
 				if (route.rewrite === ssrTrigger) {
 					route.rewrite = ssrFunctionRoute;
 				}
 				if (['/*', '*'].includes(route.route)) {
 					wildcardRoute = route;
 				}
-				if (methods.length === 0) {
+				if (methods.length === staticMethods.length + ssrMethods.length) {
+					// Either method isn't specified in this route, or all methods are.
 					if (
 						['/index.html', '/'].includes(route.route) &&
 						!builder.prerendered.paths.includes('/')
@@ -200,17 +214,24 @@ export default function ({
 				}
 			}
 
-			// Now that the specified rules have been processed, let's make sure the wildcard for SSR is there.
-			if (!handledRoutes['*'] && !handledRoutes['/*']) {
-				handledRoutes['*'];
+			// Now that the specified rules have been processed, let's make sure the wildcard is there for each SSR method.
+			const wildcardMethods = handledRoutes['*'].concat(
+				handledRoutes['/*'].filter((i) => handledRoutes['*'].indexOf(i) < 0)
+			);
+			const missingWildcardMethods = ssrMethods.filter((i) => !wildcardMethods.includes(i));
+			if (missingWildcardMethods.length > 0) {
+				handledRoutes['*'] = missingWildcardMethods;
 				swaConfig.routes.push({
-					route: '*',
-					methods: ssrMethods,
-					rewrite: ssrFunctionRoute
+					rewrite: ssrFunctionRoute,
+					...wildcardRoute,
+					methods: missingWildcardMethods
 				});
 			}
 
-			handledRoutes[`/${builder.config.kit.appDir}/immutable/*`] = true;
+			handledRoutes[`/${builder.config.kit.appDir}/immutable/*`] = [
+				...staticMethods,
+				...ssrMethods
+			];
 			swaConfig.routes.push({
 				...wildcardRoute,
 				route: `/${builder.config.kit.appDir}/immutable/*`,
@@ -225,7 +246,7 @@ export default function ({
 				// If the root was not pre-rendered, add a placeholder index.html
 				// Route all requests for the index to the SSR function
 				writeFileSync(`${staticDir}/index.html`, '');
-				if (!handledRoutes['/index.html']) {
+				if (!staticMethods.every((i) => handledRoutes['/index.html'].includes(i))) {
 					swaConfig.routes.push({
 						rewrite: ssrFunctionRoute,
 						...wildcardRoute,
@@ -233,7 +254,7 @@ export default function ({
 						methods: undefined
 					});
 				}
-				if (!handledRoutes['/']) {
+				if (!staticMethods.every((i) => handledRoutes['/'].includes(i))) {
 					swaConfig.routes.push({
 						rewrite: ssrFunctionRoute,
 						...wildcardRoute,
