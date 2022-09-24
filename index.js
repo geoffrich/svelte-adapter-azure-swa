@@ -153,7 +153,7 @@ export default function ({
 					) {
 						// The root route must be fully SSR because it was not rendered. No need to split the route.
 						swaConfig.routes.push({
-							rewrite: ssrFunctionRoute,
+							rewrite: route.redirect ? route.rewrite : ssrFunctionRoute,
 							...route
 						});
 					} else {
@@ -163,7 +163,7 @@ export default function ({
 							methods: staticMethods
 						});
 						swaConfig.routes.push({
-							rewrite: ssrFunctionRoute,
+							rewrite: route.redirect ? route.rewrite : ssrFunctionRoute,
 							...route,
 							methods: ssrMethods
 						});
@@ -173,7 +173,7 @@ export default function ({
 					if (routeSSRMethods.length === methods.length) {
 						// This route is only for SSR methods, so we'll rewrite the single rule.
 						swaConfig.routes.push({
-							rewrite: ssrFunctionRoute,
+							rewrite: route.redirect ? route.rewrite : ssrFunctionRoute,
 							...route
 						});
 					} else {
@@ -183,13 +183,13 @@ export default function ({
 						) {
 							// This special route must be SSR because it was not pre-rendered.
 							swaConfig.routes.push({
-								rewrite: ssrFunctionRoute,
+								rewrite: route.redirect ? route.rewrite : ssrFunctionRoute,
 								...route
 							});
 						} else {
 							// This route is for some methods that must be SSR, but not all. We'll split it.
 							swaConfig.routes.push({
-								rewrite: ssrFunctionRoute,
+								rewrite: route.redirect ? route.rewrite : ssrFunctionRoute,
 								...route,
 								methods: routeSSRMethods
 							});
@@ -206,7 +206,7 @@ export default function ({
 					) {
 						// This special route must be SSR because it was not pre-rendered.
 						swaConfig.routes.push({
-							rewrite: ssrFunctionRoute,
+							rewrite: route.redirect ? route.rewrite : ssrFunctionRoute,
 							...route
 						});
 					} else {
@@ -249,7 +249,7 @@ export default function ({
 				writeFileSync(`${staticDir}/index.html`, '');
 				if (!staticMethods.every((i) => handledRoutes['/index.html'].includes(i))) {
 					swaConfig.routes.push({
-						rewrite: ssrFunctionRoute,
+						rewrite: wildcardRoute.redirect ? wildcardRoute.rewrite : ssrFunctionRoute,
 						...wildcardRoute,
 						route: '/index.html',
 						methods: undefined
@@ -257,7 +257,7 @@ export default function ({
 				}
 				if (!staticMethods.every((i) => handledRoutes['/'].includes(i))) {
 					swaConfig.routes.push({
-						rewrite: ssrFunctionRoute,
+						rewrite: wildcardRoute.redirect ? wildcardRoute.rewrite : ssrFunctionRoute,
 						...wildcardRoute,
 						route: '/',
 						methods: undefined
