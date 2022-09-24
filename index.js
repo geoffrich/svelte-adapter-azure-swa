@@ -114,13 +114,14 @@ export default function ({
 
 			/** @type {Record<string,import('./types/swa').HttpMethod[]>} */
 			let handledRoutes = {
-				'*': [],
 				'/': [],
 				'/*': [],
 				'/index.html': []
 			};
 			/** @type {import('./types/swa').Route} */
-			let wildcardRoute = {};
+			let wildcardRoute = {
+				route: '/*'
+			};
 			for (const route of customStaticWebAppConfig.routes) {
 				if (route.route === undefined || !route.route.length) {
 					throw new Error(
@@ -141,6 +142,7 @@ export default function ({
 					route.rewrite = ssrFunctionRoute;
 				}
 				if (['/*', '*'].includes(route.route)) {
+					route.route = '/*';
 					wildcardRoute = route;
 				}
 				if (methods.length === staticMethods.length + ssrMethods.length) {
@@ -215,12 +217,11 @@ export default function ({
 			}
 
 			// Now that the specified rules have been processed, let's make sure the wildcard is there for each SSR method.
-			const wildcardMethods = handledRoutes['*'].concat(
-				handledRoutes['/*'].filter((i) => handledRoutes['*'].indexOf(i) < 0)
+			const missingWildcardMethods = ssrMethods.filter(
+				(i) => !(wildcardRoute.methods || []).includes(i)
 			);
-			const missingWildcardMethods = ssrMethods.filter((i) => !wildcardMethods.includes(i));
 			if (missingWildcardMethods.length > 0) {
-				handledRoutes['*'] = missingWildcardMethods;
+				handledRoutes['/*'] = missingWildcardMethods;
 				swaConfig.routes.push({
 					rewrite: ssrFunctionRoute,
 					...wildcardRoute,
