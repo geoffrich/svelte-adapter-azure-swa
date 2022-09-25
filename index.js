@@ -34,42 +34,13 @@ export default function ({
 		name: 'adapter-azure-swa',
 
 		async adapt(builder) {
-			validateCustomConfig(customStaticWebAppConfig);
-
-			if (!customStaticWebAppConfig.routes) {
-				customStaticWebAppConfig.routes = [];
-			}
-
-			/** @type {import('./types/swa').StaticWebAppConfig} */
-			const swaConfig = {
-				...customStaticWebAppConfig,
-				routes: [
-					...customStaticWebAppConfig.routes,
-					{
-						route: '*',
-						methods: ['POST', 'PUT', 'DELETE'],
-						rewrite: ssrFunctionRoute
-					},
-					{
-						route: `/${builder.config.kit.appDir}/immutable/*`,
-						headers: {
-							'cache-control': 'public, immutable, max-age=31536000'
-						}
-					}
-				],
-				navigationFallback: {
-					rewrite: ssrFunctionRoute
-				},
-				platform: {
-					apiRuntime: 'node:16'
-				}
-			};
-
 			if (!existsSync(join('api', 'package.json'))) {
 				throw new Error(
 					'You need to create a package.json in your `api` directory. See the adapter README for details.'
 				);
 			}
+
+			const swaConfig = generateConfig(customStaticWebAppConfig, builder.config.kit.appDir);
 
 			const tmp = builder.getBuildDirectory('azure-tmp');
 			const publish = 'build';
@@ -142,4 +113,44 @@ export default function ({
 			writeFileSync(`${publish}/staticwebapp.config.json`, JSON.stringify(swaConfig));
 		}
 	};
+}
+
+/**
+ * @param {import('./types/swa').CustomStaticWebAppConfig} customStaticWebAppConfig
+ * @param {string} appDir
+ * @returns {import('./types/swa').StaticWebAppConfig}
+ */
+export function generateConfig(customStaticWebAppConfig, appDir) {
+	validateCustomConfig(customStaticWebAppConfig);
+
+	if (!customStaticWebAppConfig.routes) {
+		customStaticWebAppConfig.routes = [];
+	}
+
+	/** @type {import('./types/swa').StaticWebAppConfig} */
+	const swaConfig = {
+		...customStaticWebAppConfig,
+		routes: [
+			...customStaticWebAppConfig.routes,
+			{
+				route: '*',
+				methods: ['POST', 'PUT', 'DELETE'],
+				rewrite: ssrFunctionRoute
+			},
+			{
+				route: `/${appDir}/immutable/*`,
+				headers: {
+					'cache-control': 'public, immutable, max-age=31536000'
+				}
+			}
+		],
+		navigationFallback: {
+			rewrite: ssrFunctionRoute
+		},
+		platform: {
+			apiRuntime: 'node:16'
+		}
+	};
+
+	return swaConfig;
 }
