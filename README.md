@@ -122,7 +122,6 @@ export default {
 
 An object containing additional [esbuild options](https://esbuild.github.io/api/#build-api). Currently only supports [external](https://esbuild.github.io/api/#external). If you require additional options to be exposed, plese [open an issue](https://github.com/geoffrich/svelte-adapter-azure-swa/issues).
 
-
 ```js
 import azure from 'svelte-adapter-azure-swa';
 
