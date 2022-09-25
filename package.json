@@ -42,5 +42,11 @@
 	},
 	"dependencies": {
 		"esbuild": "^0.13.4"
-	}
+	},
+	"files": [
+		"files",
+		"index.js",
+		"index.d.ts",
+		"types"
+	]
 }
