@@ -17,9 +17,9 @@ vi.mock('esbuild', () => ({
 }));
 
 describe('generateConfig', () => {
-	test('no custom config', () => {
-		const result = generateConfig({}, 'appDir');
-		expect(result).toStrictEqual({
+	test('no custom config with static root', () => {
+		const result = generateConfig({}, 'appDir', false);
+		expect(result).toEqual({
 			navigationFallback: {
 				rewrite: '/api/__render'
 			},
@@ -28,7 +28,7 @@ describe('generateConfig', () => {
 			},
 			routes: [
 				{
-					methods: ['POST', 'PUT', 'DELETE'],
+					methods: ['CONNECT', 'DELETE', 'PATCH', 'POST', 'PUT', 'TRACE'],
 					rewrite: '/api/__render',
 					route: '*'
 				},
@@ -42,13 +42,37 @@ describe('generateConfig', () => {
 		});
 	});
 
-	test('throws errors for invalid custom config', () => {
-		expect(() => generateConfig({ navigationFallback: {} })).toThrowError(
-			'cannot override navigationFallback'
-		);
-		expect(() => generateConfig({ routes: [{ route: '*' }] })).toThrowError(
-			"cannot override '*' route"
-		);
+	test('no custom config without static root', () => {
+		const result = generateConfig({}, 'appDir', true);
+		expect(result).toEqual({
+			navigationFallback: {
+				rewrite: '/api/__render'
+			},
+			platform: {
+				apiRuntime: 'node:16'
+			},
+			routes: [
+				{
+					methods: ['CONNECT', 'DELETE', 'PATCH', 'POST', 'PUT', 'TRACE'],
+					rewrite: '/api/__render',
+					route: '*'
+				},
+				{
+					headers: {
+						'cache-control': 'public, immutable, max-age=31536000'
+					},
+					route: '/appDir/immutable/*'
+				},
+				{
+					rewrite: '/api/__render',
+					route: '/index.html'
+				},
+				{
+					rewrite: '/api/__render',
+					route: '/'
+				}
+			]
+		});
 	});
 
 	test('accepts custom config', () => {
@@ -56,6 +80,84 @@ describe('generateConfig', () => {
 			globalHeaders: { 'X-Foo': 'bar' }
 		});
 		expect(result.globalHeaders).toStrictEqual({ 'X-Foo': 'bar' });
+	});
+
+	test('allowedRoles in custom wildcard route spreads to all routes', () => {
+		const result = generateConfig(
+			{
+				routes: [
+					{
+						route: '*',
+						allowedRoles: ['authenticated']
+					}
+				]
+			},
+			'appDir',
+			true
+		);
+		expect(result.routes.every((r) => r.allowedRoles[0] === 'authenticated')).toBeTruthy();
+	});
+
+	test('rewrite ssr in wildcard route forces SSR rewriting', () => {
+		const result = generateConfig(
+			{
+				routes: [
+					{
+						route: '*',
+						rewrite: 'ssr'
+					}
+				]
+			},
+			'appDir',
+			true
+		);
+		expect(result.routes.every((r) => r.rewrite === '/api/__render')).toBeTruthy();
+	});
+
+	test('rewrite undefined in wildcard route disables SSR rewriting', () => {
+		const result = generateConfig(
+			{
+				routes: [
+					{
+						route: '*',
+						rewrite: undefined
+					}
+				]
+			},
+			'appDir',
+			true
+		);
+		expect(result.routes.every((r) => r.rewrite === undefined)).toBeTruthy();
+		expect(result.navigationFallback.rewrite).toBeUndefined();
+	});
+
+	test('custom route does not accidentally override rewriting of SSR methods', () => {
+		const result = generateConfig(
+			{
+				routes: [
+					{
+						route: '/api',
+						allowedRoles: ['authenticated']
+					}
+				]
+			},
+			'appDir',
+			true
+		);
+		const apiRoutes = result.routes.filter((r) => r.route === '/api');
+		expect(apiRoutes).toEqual([
+			{
+				route: '/api',
+				allowedRoles: ['authenticated'],
+				methods: ['GET', 'HEAD', 'OPTIONS']
+			},
+			{
+				rewrite: '/api/__render',
+				route: '/api',
+				allowedRoles: ['authenticated'],
+				methods: ['CONNECT', 'DELETE', 'PATCH', 'POST', 'PUT', 'TRACE']
+			}
+		]);
 	});
 });
 
