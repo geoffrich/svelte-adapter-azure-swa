@@ -82,7 +82,7 @@ An object containing additional Azure SWA [configuration options](https://docs.m
 
 It can be useful to understand what's happening 'under the hood'. All requests for dynamic responses must be rewritten for the server-side rendering (SSR) function to render the page. If a request is not rewritten properly, bad things can happen. If the method requires a dynamic response (such as a `POST` request), SWA will respond with a `405` error. If the request method is `GET` but the file was not pre-rendered, SWA will use the `navigationFallback` rule to rewrite the request, which will fail if not set correctly.
 
-This adapter will ensure several routes are defined, along with `navigationFallback`, so dynamic rendering will occur correctly. If you define a catch-all wildcard route (`route: '/*'` or `route: '*'`), those settings will be used by every route this adapter creates. This will allow you to set a default `allowedRoles`, among other things. If you override the `rewrite` key of that route, you may force or prevent SSR from taking place. 
+This adapter will ensure several routes are defined, along with `navigationFallback`, so dynamic rendering will occur correctly. If you define a catch-all wildcard route (`route: '/*'` or `route: '*'`), those settings will be used by every route this adapter creates. This will allow you to set a default `allowedRoles`, among other things. If you override the `rewrite` key of that route, you may force or prevent SSR from taking place.
 
 If you want to force a route to deliver only dynamically-generated responses, set `rewrite: 'ssr'` inside the route. Files that are not rendered by SvelteKit, such as static assets, may be inaccessible if you do this. Conversely, set `rewrite: undefined` to disable SSR in a route.
 
@@ -127,7 +127,6 @@ export default {
 ### esbuildOptions
 
 An object containing additional [esbuild options](https://esbuild.github.io/api/#build-api). Currently only supports [external](https://esbuild.github.io/api/#external). If you require additional options to be exposed, plese [open an issue](https://github.com/geoffrich/svelte-adapter-azure-swa/issues).
-
 
 ```js
 import azure from 'svelte-adapter-azure-swa';
