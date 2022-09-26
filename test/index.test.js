@@ -131,6 +131,22 @@ describe('generateConfig', () => {
 		expect(result.navigationFallback.rewrite).toBeUndefined();
 	});
 
+	test('exclude folder from SSR rewriting', () => {
+		const result = generateConfig(
+			{
+				navigationFallback: {
+					exclude: ['images/*.{png,jpg,gif}', '/css/*']
+				}
+			},
+			'appDir',
+			true
+		);
+		expect(result.navigationFallback).toEqual({
+			rewrite: '/api/__render',
+			exclude: ['images/*.{png,jpg,gif}', '/css/*']
+		});
+	});
+
 	test('custom route does not accidentally override rewriting of SSR methods', () => {
 		const result = generateConfig(
 			{
