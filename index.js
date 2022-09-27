@@ -104,7 +104,7 @@ export default function ({
 }
 
 /**
- * @param {import('./types/swa').CustomStaticWebAppConfig} customStaticWebAppConfig Custom configuration
+ * @param {import('./types/swa').StaticWebAppConfig} customStaticWebAppConfig Custom configuration
  * @param {string} appDir Path of App directory
  * @param {boolean} ssrRoot True if path '/' was not pre-rendered
  * @returns {import('./types/swa').StaticWebAppConfig}

@@ -1,10 +1,10 @@
 import { Adapter } from '@sveltejs/kit';
-import { CustomStaticWebAppConfig } from './types/swa';
+import { StaticWebAppConfig } from './types/swa';
 import esbuild from 'esbuild';
 
 type Options = {
 	debug?: boolean;
-	customStaticWebAppConfig?: CustomStaticWebAppConfig;
+	customStaticWebAppConfig?: StaticWebAppConfig;
 	esbuildOptions?: Pick<esbuild.BuildOptions, 'external'>;
 };
 

@@ -8,8 +8,6 @@ export interface StaticWebAppConfig {
 	platform?: Platform;
 }
 
-export type CustomStaticWebAppConfig = StaticWebAppConfig;
-
 export interface Route {
 	route: string;
 	methods?: HttpMethod[];
