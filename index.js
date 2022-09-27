@@ -83,21 +83,14 @@ export default function ({
 			builder.writeClient(staticDir);
 			builder.writePrerendered(staticDir);
 
-			let ssrRoot = false;
 			if (!builder.prerendered.paths.includes('/')) {
 				// Azure SWA requires an index.html to be present
 				// If the root was not pre-rendered, add a placeholder index.html
 				// Route all requests for the index to the SSR function
 				writeFileSync(`${staticDir}/index.html`, '');
-
-				ssrRoot = true;
 			}
 
-			const swaConfig = generateConfig(
-				customStaticWebAppConfig,
-				builder.config.kit.appDir,
-				ssrRoot
-			);
+			const swaConfig = generateConfig(builder, customStaticWebAppConfig);
 
 			writeFileSync(`${publish}/staticwebapp.config.json`, JSON.stringify(swaConfig));
 		}
@@ -106,15 +99,12 @@ export default function ({
 }
 
 /**
+ * @param {import('@sveltejs/kit').Builder} builder A reference to the SvelteKit builder
  * @param {import('./types/swa').StaticWebAppConfig} customStaticWebAppConfig Custom configuration
- * @param {string} appDir Path of App directory
- * @param {boolean} ssrRoot True if path '/' was not pre-rendered
  * @returns {import('./types/swa').StaticWebAppConfig}
  */
-export function generateConfig(customStaticWebAppConfig, appDir, ssrRoot) {
-
-  customStaticWebAppConfig = customStaticWebAppConfig || [];
-
+export function generateConfig(builder, customStaticWebAppConfig = {}) {
+	builder.log.minor(`Generating Configuration (staticwebapp.config.json)...`);
 	/** @type {import('./types/swa').StaticWebAppConfig} */
 	const swaConfig = {
 		...customStaticWebAppConfig,
@@ -133,11 +123,6 @@ export function generateConfig(customStaticWebAppConfig, appDir, ssrRoot) {
 		swaConfig.navigationFallback.rewrite = ssrFunctionRoute;
 	}
 
-	if (swaConfig.navigationFallback.rewrite !== ssrFunctionRoute) {
-		builder.log.warn(
-			`Setting navigationFallback.rewrite to a value other than '${ssrTrigger}' will prevent SSR!`
-		);
-	}
 	/** @type {Record<string,import('./types/swa').HttpMethod[]>} */
 	let handledRoutes = {
 		'*': [],
@@ -221,7 +206,7 @@ export function generateConfig(customStaticWebAppConfig, appDir, ssrRoot) {
 				}
 			}
 		} else {
-			if (['/index.html', '/'].includes(route.route) && ssrRoot) {
+			if (['/index.html', '/'].includes(route.route) && !builder.prerendered.paths.includes('/')) {
 				// This special route must be SSR because it was not pre-rendered.
 				swaConfig.routes.push({
 					rewrite: route.redirect ? route.rewrite : ssrFunctionRoute,
@@ -254,16 +239,16 @@ export function generateConfig(customStaticWebAppConfig, appDir, ssrRoot) {
 		swaConfig.navigationFallback.rewrite = wildcardRoute.rewrite;
 	}
 
-	handledRoutes[`/${appDir}/immutable/*`] = [...staticMethods, ...ssrMethods];
+	handledRoutes[`/${builder.config.kit.appDir}/immutable/*`] = [...staticMethods, ...ssrMethods];
 	swaConfig.routes.push({
 		...wildcardRoute,
-		route: `/${appDir}/immutable/*`,
+		route: `/${builder.config.kit.appDir}/immutable/*`,
 		headers: {
 			'cache-control': 'public, immutable, max-age=31536000'
 		},
 		methods: undefined
 	});
-	if (ssrRoot) {
+	if (!builder.prerendered.paths.includes('/')) {
 		if (!staticMethods.every((i) => handledRoutes['/index.html'].includes(i))) {
 			swaConfig.routes.push({
 				rewrite: wildcardRoute.redirect ? wildcardRoute.rewrite : ssrFunctionRoute,
@@ -280,6 +265,12 @@ export function generateConfig(customStaticWebAppConfig, appDir, ssrRoot) {
 				methods: undefined
 			});
 		}
+	}
+
+	if (swaConfig.navigationFallback.rewrite !== ssrFunctionRoute) {
+		builder.log.warn(
+			`Custom configuration has navigationFallback.rewrite set to a value other than '${ssrTrigger}'. SSR will fail unless a route specifies it.`
+		);
 	}
 
 	return swaConfig;
