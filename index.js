@@ -21,7 +21,8 @@ export default function ({
 	customStaticWebAppConfig = {},
 	esbuildOptions = {}
 } = {}) {
-	return {
+	/** @type {import('@sveltejs/kit').Adapter} */
+	const adapter = {
 		name: 'adapter-azure-swa',
 
 		async adapt(builder) {
@@ -101,6 +102,7 @@ export default function ({
 			writeFileSync(`${publish}/staticwebapp.config.json`, JSON.stringify(swaConfig));
 		}
 	};
+	return adapter;
 }
 
 /**
