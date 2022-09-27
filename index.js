@@ -14,6 +14,8 @@ const staticMethods = ['GET', 'HEAD', 'OPTIONS'];
 const ssrMethods = ['CONNECT', 'DELETE', 'PATCH', 'POST', 'PUT', 'TRACE'];
 // This is the phrase that will be replaced with ssrFunctionRoute in custom configurations that use it.
 const ssrTrigger = 'ssr';
+// Default version of node to target
+const nodeVersion = 'node:16';
 
 /** @type {import('.').default} */
 export default function ({
@@ -67,13 +69,21 @@ export default function ({
 
 			builder.copy(join(files, 'api'), apiDir);
 
+			const apiRuntime = (customStaticWebAppConfig.platform || {}).apiRuntime || nodeVersion;
+			const apiRuntimeParts = apiRuntime.match(/^node:(\d\d)$/);
+			if (apiRuntimeParts === null) {
+				throw new Error(
+					`The configuration key platform.apiRuntime, if included, must be a supported Node version such as 'node:16'. It is currently '${apiRuntime}'.`
+				);
+			}
+
 			/** @type {BuildOptions} */
 			const default_options = {
 				entryPoints: [entry],
 				outfile: join(apiDir, 'index.js'),
 				bundle: true,
 				platform: 'node',
-				target: 'node16',
+				target: `node${apiRuntimeParts[1]}`,
 				external: esbuildOptions.external
 			};
 
@@ -113,8 +123,8 @@ export function generateConfig(builder, customStaticWebAppConfig = {}) {
 			...customStaticWebAppConfig.navigationFallback
 		},
 		platform: {
-			...customStaticWebAppConfig.platform,
-			apiRuntime: 'node:16'
+			apiRuntime: nodeVersion,
+			...customStaticWebAppConfig.platform
 		},
 		routes: []
 	};

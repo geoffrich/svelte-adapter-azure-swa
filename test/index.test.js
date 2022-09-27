@@ -2,7 +2,7 @@ import { expect, describe, test, vi } from 'vitest';
 import azureAdapter, { generateConfig } from '../index';
 import { writeFileSync, existsSync } from 'fs';
 import { jsonMatching, toMatchJSON } from './json';
-import { build } from 'esbuild';
+import esbuild from 'esbuild';
 
 expect.extend({ jsonMatching, toMatchJSON });
 
@@ -189,6 +189,49 @@ describe('adapt', () => {
 		const adapter = azureAdapter();
 		const builder = getMockBuilder();
 		await expect(adapter.adapt(builder)).rejects.toThrowError('You need to create a package.json');
+	});
+
+	test('throws error for invalid platform.apiRuntime', async () => {
+		const adapter = azureAdapter({
+			customStaticWebAppConfig: {
+				platform: {
+					apiRuntime: 'dotnet:3.1'
+				}
+			}
+		});
+		const builder = getMockBuilder();
+		await expect(adapter.adapt(builder)).rejects.toThrowError(
+			`The configuration key platform.apiRuntime, if included, must be a supported Node version such as 'node:16'. It is currently 'dotnet:3.1'.`
+		);
+	});
+
+	test('changes target for valid platform.apiRuntime', async () => {
+		vi.clearAllMocks();
+		const adapter = azureAdapter({
+			customStaticWebAppConfig: {
+				platform: {
+					apiRuntime: 'node:14'
+				}
+			}
+		});
+		const builder = getMockBuilder();
+		await adapter.adapt(builder);
+
+		expect(esbuild.build).toHaveBeenCalledWith(
+			expect.objectContaining({
+				target: 'node14'
+			})
+		);
+		expect(writeFileSync).toHaveBeenCalledWith(
+			expect.stringContaining('staticwebapp.config.json'),
+			expect.jsonMatching(
+				expect.objectContaining({
+					platform: expect.objectContaining({
+						apiRuntime: 'node:14'
+					})
+				})
+			)
+		);
 	});
 
 	test('adds index.html when root not prerendered', async () => {
