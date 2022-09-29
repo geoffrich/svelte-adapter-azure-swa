@@ -26,7 +26,14 @@ export async function index(context) {
 		context.log(`Request: ${JSON.stringify(request)}`);
 	}
 
-	const rendered = await server.respond(request);
+	const [ip_address] = (request.headers.get('x-forwarded-for') || '').split(':') || undefined;
+
+	const rendered = await server.respond(request, {
+		getClientAddress() {
+			return ip_address;
+		}
+	});
+
 	const response = await toResponse(rendered);
 
 	if (debug) {
