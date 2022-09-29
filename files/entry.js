@@ -1,6 +1,7 @@
 import { installPolyfills } from '@sveltejs/kit/node/polyfills';
 import { Server } from 'SERVER';
 import { manifest } from 'MANIFEST';
+import * as set_cookie_parser from 'set-cookie-parser';
 
 // replaced at build time
 const debug = DEBUG;
@@ -69,14 +70,23 @@ async function toResponse(rendered) {
 
 	/** @type {Record<string, string>} */
 	const resHeaders = {};
+
+	const resCookies = [];
+
 	rendered.headers.forEach((value, key) => {
-		resHeaders[key] = value;
+		if (key === 'set-cookie') {
+			const cookieStrings = set_cookie_parser.splitCookiesString(value);
+			resCookies.push(...set_cookie_parser.parse(cookieStrings));
+		} else {
+			resHeaders[key] = value;
+		}
 	});
 
 	return {
 		status,
 		body: resBody,
 		headers: resHeaders,
+		cookies: resCookies,
 		isRaw: true
 	};
 }
