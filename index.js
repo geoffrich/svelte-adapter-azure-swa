@@ -114,7 +114,7 @@ export default function ({
  * @returns {import('./types/swa').StaticWebAppConfig}
  */
 export function generateConfig(builder, customStaticWebAppConfig = {}) {
-	builder.log.minor(`Generating Configuration (staticwebapp.config.json)...`);
+	builder.log.minor(`Generating static web app config...`);
 	/** @type {import('./types/swa').StaticWebAppConfig} */
 	const swaConfig = {
 		...customStaticWebAppConfig,
