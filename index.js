@@ -84,6 +84,7 @@ export default function ({
 				bundle: true,
 				platform: 'node',
 				target: 'node16',
+				sourcemap: 'linked',
 				external: esbuildOptions.external
 			};
 

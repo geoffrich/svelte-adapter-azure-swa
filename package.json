@@ -42,7 +42,7 @@
 		"vitest": "^0.23.4"
 	},
 	"dependencies": {
-		"esbuild": "^0.13.4",
+		"esbuild": "^0.15.7",
 		"set-cookie-parser": "^2.5.1"
 	},
 	"files": [
