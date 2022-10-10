@@ -6,7 +6,7 @@ Adapter for Svelte apps that creates an Azure Static Web App, using an Azure fun
 
 ## Usage
 
-See the [demo repo](https://github.com/geoffrich/sveltekit-azure-swa-demo) for an example integration with the SvelteKit demo app.
+See the [demo folder](https://github.com/geoffrich/svelte-adapter-azure-swa/tree/main/demo) for an example integration with the SvelteKit demo app.
 
 Run `npm install -D svelte-adapter-azure-swa`.
 
