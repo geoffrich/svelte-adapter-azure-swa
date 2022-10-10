@@ -1,6 +1,7 @@
 import { installPolyfills } from '@sveltejs/kit/node/polyfills';
 import { Server } from 'SERVER';
 import { manifest } from 'MANIFEST';
+import { splitCookiesFromHeaders } from './headers';
 
 // replaced at build time
 const debug = DEBUG;
@@ -67,16 +68,13 @@ async function toResponse(rendered) {
 	const { status } = rendered;
 	const resBody = new Uint8Array(await rendered.arrayBuffer());
 
-	/** @type {Record<string, string>} */
-	const resHeaders = {};
-	rendered.headers.forEach((value, key) => {
-		resHeaders[key] = value;
-	});
+	const { headers, cookies } = splitCookiesFromHeaders(rendered.headers);
 
 	return {
 		status,
 		body: resBody,
-		headers: resHeaders,
+		headers,
+		cookies,
 		isRaw: true
 	};
 }
