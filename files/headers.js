@@ -8,7 +8,7 @@ import * as set_cookie_parser from 'set-cookie-parser';
  *   cookies: set_cookie_parser.Cookie[]
  * }}
  */
-export function split_cookies_from_headers(headers) {
+export function splitCookiesFromHeaders(headers) {
 	/** @type {Record<string, string>} */
 	const resHeaders = {};
 

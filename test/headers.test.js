@@ -1,6 +1,6 @@
 import { installPolyfills } from '@sveltejs/kit/node/polyfills';
 import { expect, describe, test } from 'vitest';
-import { split_cookies_from_headers } from '../files/headers';
+import { splitCookiesFromHeaders } from '../files/headers';
 
 installPolyfills();
 
@@ -10,7 +10,7 @@ describe('header processing', () => {
 		headers.append('Location', '/');
 		headers.append('Content-Type', 'application/json');
 
-		const cookies = split_cookies_from_headers(headers);
+		const cookies = splitCookiesFromHeaders(headers);
 
 		expect(cookies).toEqual({
 			cookies: [],
@@ -33,7 +33,7 @@ describe('header processing', () => {
 		headers.append('Set-Cookie', `key2=val2; Expires=${exp2}`);
 		headers.append('Set-Cookie', `key3=val3; Expires=${exp3}`);
 
-		const cookies = split_cookies_from_headers(headers);
+		const cookies = splitCookiesFromHeaders(headers);
 
 		expect(cookies).toStrictEqual({
 			headers: {},
