@@ -1,0 +1,29 @@
+{
+	"name": "sveltekit-azure-swa-demo",
+	"version": "0.1.0",
+	"scripts": {
+		"prepare": "cd .. && npm i",
+		"dev": "vite dev",
+		"build": "vite build",
+		"preview": "vite preview",
+		"check": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json",
+		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json --watch"
+	},
+	"engines": {
+		"npm": ">=8.7.0 < 9",
+		"node": ">=16.14.0 < 17"
+	},
+	"devDependencies": {
+		"@fontsource/fira-mono": "^4.5.0",
+		"@neoconfetti/svelte": "^1.0.0",
+		"@sveltejs/adapter-auto": "next",
+		"@sveltejs/kit": "next",
+		"@types/cookie": "^0.5.1",
+		"svelte": "^3.46.0",
+		"svelte-adapter-azure-swa": "file:..",
+		"svelte-check": "^2.7.1",
+		"typescript": "^4.7.4",
+		"vite": "^3.1.0"
+	},
+	"type": "module"
+}
