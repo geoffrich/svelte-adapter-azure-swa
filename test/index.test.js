@@ -205,12 +205,26 @@ describe('adapt', () => {
 		);
 	});
 
-	test('changes target for valid platform.apiRuntime', async () => {
+	test('throws error for invalid node version', async () => {
+		const adapter = azureAdapter({
+			customStaticWebAppConfig: {
+				platform: {
+					apiRuntime: 'node:15'
+				}
+			}
+		});
+		const builder = getMockBuilder();
+		await expect(adapter.adapt(builder)).rejects.toThrowError(
+			`The minimum node version supported by SvelteKit is 16, please change configuration key platform.runTime from 'node:15' to a supported version like 'node:16' or remove it entirely.`
+		);
+	});
+
+	test('changes target for valid node version', async () => {
 		vi.clearAllMocks();
 		const adapter = azureAdapter({
 			customStaticWebAppConfig: {
 				platform: {
-					apiRuntime: 'node:14'
+					apiRuntime: 'node:17'
 				}
 			}
 		});
@@ -219,7 +233,7 @@ describe('adapt', () => {
 
 		expect(esbuild.build).toHaveBeenCalledWith(
 			expect.objectContaining({
-				target: 'node14'
+				target: 'node17'
 			})
 		);
 		expect(writeFileSync).toHaveBeenCalledWith(
@@ -227,7 +241,7 @@ describe('adapt', () => {
 			expect.jsonMatching(
 				expect.objectContaining({
 					platform: expect.objectContaining({
-						apiRuntime: 'node:14'
+						apiRuntime: 'node:17'
 					})
 				})
 			)

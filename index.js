@@ -70,10 +70,14 @@ export default function ({
 			builder.copy(join(files, 'api'), apiDir);
 
 			const apiRuntime = (customStaticWebAppConfig.platform || {}).apiRuntime || nodeVersion;
-			const apiRuntimeParts = apiRuntime.match(/^node:(\d\d)$/);
+			const apiRuntimeParts = apiRuntime.match(/^node:(\d+)$/);
 			if (apiRuntimeParts === null) {
 				throw new Error(
 					`The configuration key platform.apiRuntime, if included, must be a supported Node version such as 'node:16'. It is currently '${apiRuntime}'.`
+				);
+			} else if (parseInt(apiRuntimeParts[1]) < 16) {
+				throw new Error(
+					`The minimum node version supported by SvelteKit is 16, please change configuration key platform.runTime from '${apiRuntime}' to a supported version like 'node:16' or remove it entirely.`
 				);
 			}
 
@@ -84,7 +88,7 @@ export default function ({
 				bundle: true,
 				platform: 'node',
 				target: `node${apiRuntimeParts[1]}`,
-        sourcemap: 'linked',
+				sourcemap: 'linked',
 				external: esbuildOptions.external
 			};
 
