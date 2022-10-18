@@ -68,6 +68,8 @@ export default function ({
 				}
 			});
 
+      builder.copy(join(files, 'api'), apiDir);
+
 			writeFileSync(
 				`${tmp}/manifest.js`,
 				`export const manifest = ${builder.generateManifest({
