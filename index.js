@@ -60,7 +60,7 @@ export default function ({
 			// use posix because of https://github.com/sveltejs/kit/pull/3200
 			const relativePath = posix.relative(tmp, builder.getServerDirectory());
 
-			builder.copy(join(files, 'entry.js'), entry, {
+			builder.copy(files, tmp, {
 				replace: {
 					SERVER: `${relativePath}/index.js`,
 					MANIFEST: './manifest.js',
@@ -68,14 +68,14 @@ export default function ({
 				}
 			});
 
+      builder.copy(join(files, 'api'), apiDir);
+
 			writeFileSync(
 				`${tmp}/manifest.js`,
 				`export const manifest = ${builder.generateManifest({
 					relativePath
 				})};\n`
 			);
-
-			builder.copy(join(files, 'api'), apiDir);
 
 			/** @type {BuildOptions} */
 			const default_options = {
