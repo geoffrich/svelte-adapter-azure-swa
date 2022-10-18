@@ -4,6 +4,8 @@ This is a repo demonstrating how to use [svelte-adapter-azure-swa](https://www.n
 
 This demo uses the local version of the adapter to make testing unreleased changes easier. In your app, you should install `svelte-adapter-azure-swa` from npm.
 
+[Deployed demo](https://polite-desert-00b80111e.2.azurestaticapps.net/)
+
 ## Developing
 
 Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
