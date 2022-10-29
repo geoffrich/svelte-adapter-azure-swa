@@ -1,6 +1,6 @@
 import { expect, describe, test, vi } from 'vitest';
 import azureAdapter, { generateConfig } from '../index';
-import { writeFileSync } from 'fs';
+import { writeFileSync, existsSync } from 'fs';
 import { jsonMatching, toMatchJSON } from './json';
 
 expect.extend({ jsonMatching, toMatchJSON });
@@ -80,6 +80,14 @@ describe('adapt', () => {
 		expect(builder.copy).not.toBeCalledWith(expect.stringContaining('api'), 'custom/api');
 	});
 
+	test('logs warning when custom api directory set and required file does not exist', async () => {
+		vi.mocked(existsSync).mockImplementationOnce(() => false);
+		const adapter = azureAdapter({ apiDir: 'custom/api' });
+		const builder = getMockBuilder();
+		await adapter.adapt(builder);
+		expect(builder.log.warn).toBeCalled();
+	});
+
 	test('adds index.html when root not prerendered', async () => {
 		const adapter = azureAdapter();
 		const builder = getMockBuilder();
@@ -116,7 +124,8 @@ function getMockBuilder() {
 			}
 		},
 		log: {
-			minor: vi.fn()
+			minor: vi.fn(),
+			warn: vi.fn()
 		},
 		prerendered: {
 			paths: ['/']

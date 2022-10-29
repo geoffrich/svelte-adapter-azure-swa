@@ -23,28 +23,6 @@ export default {
 };
 ```
 
-You will need to create an `api/` folder in your project root containing a [`host.json`](https://docs.microsoft.com/en-us/azure/azure-functions/functions-host-json) and a `package.json` (see samples below). The adapter will output the `render` Azure function for SSR in that folder. The `api` folder needs to be in your repo so that Azure can recognize the API at build time. However, you can add `api/render` to your .gitignore so that the generated function is not in source control.
-
-### Sample `host.json`
-
-```json
-{
-	"version": "2.0",
-	"extensionBundle": {
-		"id": "Microsoft.Azure.Functions.ExtensionBundle",
-		"version": "[2.*, 3.0.0)"
-	}
-}
-```
-
-### Sample `package.json`
-
-It's okay for this to be empty. Not including it causes the Azure Function build to fail.
-
-```json
-{}
-```
-
 ## Azure configuration
 
 When deploying to Azure, you will need to properly [configure your build](https://docs.microsoft.com/en-us/azure/static-web-apps/build-configuration?tabs=github-actions) so that both the static files and API are deployed.
@@ -52,7 +30,7 @@ When deploying to Azure, you will need to properly [configure your build](https:
 | property          | value          |
 | ----------------- | -------------- |
 | `app_location`    | `./`           |
-| `api_location`    | `api`          |
+| `api_location`    | `build/server` |
 | `output_location` | `build/static` |
 
 ## Running locally with the Azure SWA CLI
@@ -75,6 +53,50 @@ To run the CLI, install `@azure/static-web-apps-cli` and the [Azure Functions Co
 ```
 
 ## Options
+
+### apiDir
+
+The directory where the `render` Azure function for SSR will be placed. Most of the time, you shouldn't need to set this.
+
+By default, the adapter will output the `render` Azure function for SSR in the `build/server` folder. If you want to output it to a different directory instead (e.g. if you have additional Azure functions to deploy), you can set this option.
+
+```js
+import azure from 'svelte-adapter-azure-swa';
+
+export default {
+	kit: {
+		...
+		adapter: azure({
+			apiDir: 'custom/api'
+		})
+	}
+};
+```
+
+If you set this option, you will also need to create a `host.json` and `package.json` in your API directory. The adapter normally generates these files by default, but skips them when a custom API directory is provided to prevent overwriting any existing files. You can see the default files the adapter generates in [this directory](https://github.com/geoffrich/svelte-adapter-azure-swa/tree/main/files/api).
+
+For instance, by default the adapter outputs these files...
+
+```
+build/
+└── server/
+    ├── render/
+    │   ├── function.json
+    │   └── index.js
+    ├── host.json
+    ├── local.settings.json
+    └── package.json
+```
+
+... but only outputs these files when a custom API directory is provided:
+
+```
+custom/
+└── api/
+    └── render/
+        ├── function.json
+        └── index.js
+```
 
 ### customStaticWebAppConfig
 
