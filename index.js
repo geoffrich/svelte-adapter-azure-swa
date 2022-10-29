@@ -34,18 +34,12 @@ export default function ({
 		name: 'adapter-azure-swa',
 
 		async adapt(builder) {
-			if (!existsSync(join('api', 'package.json'))) {
-				throw new Error(
-					'You need to create a package.json in your `api` directory. See the adapter README for details.'
-				);
-			}
-
 			const swaConfig = generateConfig(customStaticWebAppConfig, builder.config.kit.appDir);
 
 			const tmp = builder.getBuildDirectory('azure-tmp');
 			const publish = 'build';
 			const staticDir = join(publish, 'static');
-			const apiDir = join('api', 'render');
+			const apiDir = join(publish, 'server');
 			const entry = `${tmp}/entry.js`;
 			builder.log.minor(`Publishing to "${publish}"`);
 
@@ -68,7 +62,7 @@ export default function ({
 				}
 			});
 
-      builder.copy(join(files, 'api'), apiDir);
+			builder.copy(join(files, 'api'), apiDir);
 
 			writeFileSync(
 				`${tmp}/manifest.js`,
@@ -80,7 +74,7 @@ export default function ({
 			/** @type {BuildOptions} */
 			const default_options = {
 				entryPoints: [entry],
-				outfile: join(apiDir, 'index.js'),
+				outfile: join(apiDir, 'render', 'index.js'),
 				bundle: true,
 				platform: 'node',
 				target: 'node16',

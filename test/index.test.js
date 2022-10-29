@@ -68,14 +68,6 @@ describe('adapt', () => {
 		expect(builder.writeClient).toBeCalled();
 	});
 
-	test('throws error when no package.json', async () => {
-		existsSync.mockImplementationOnce(() => false);
-
-		const adapter = azureAdapter();
-		const builder = getMockBuilder();
-		await expect(adapter.adapt(builder)).rejects.toThrowError('You need to create a package.json');
-	});
-
 	test('adds index.html when root not prerendered', async () => {
 		const adapter = azureAdapter();
 		const builder = getMockBuilder();
