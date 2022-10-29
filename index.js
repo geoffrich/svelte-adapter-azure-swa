@@ -83,8 +83,10 @@ export default function ({
 				}
 			});
 
-			// if the user specified a custom API directory, assume they are creating the required function files themselves
-			if (!customApiDir) {
+			if (customApiDir) {
+				checkForMissingFiles();
+			} else {
+				// if the user specified a custom API directory, assume they are creating the required function files themselves
 				builder.copy(join(files, 'api'), apiDir);
 			}
 
@@ -131,6 +133,20 @@ export default function ({
 			}
 
 			writeFileSync(`${publish}/staticwebapp.config.json`, JSON.stringify(swaConfig));
+
+			/**
+			 * Check for missing files when a custom API directory is provided.
+			 */
+			function checkForMissingFiles() {
+				const requiredFiles = ['host.json', 'package.json'];
+				for (const file of requiredFiles) {
+					if (!existsSync(join(customApiDir, file))) {
+						builder.log.warn(
+							`Warning: apiDir set but ${file} does not exist. You will need to create this file yourself. See the docs for more information: https://github.com/geoffrich/svelte-adapter-azure-swa#apidir`
+						);
+					}
+				}
+			}
 		}
 	};
 }
