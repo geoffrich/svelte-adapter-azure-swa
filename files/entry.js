@@ -1,7 +1,7 @@
 import { installPolyfills } from '@sveltejs/kit/node/polyfills';
 import { Server } from 'SERVER';
 import { manifest } from 'MANIFEST';
-import { splitCookiesFromHeaders } from './headers';
+import { getClientIPFromHeaders, splitCookiesFromHeaders } from './headers';
 
 // replaced at build time
 const debug = DEBUG;
@@ -27,7 +27,14 @@ export async function index(context) {
 		context.log(`Request: ${JSON.stringify(request)}`);
 	}
 
-	const rendered = await server.respond(request);
+	const ipAddress = getClientIPFromHeaders(request.headers);
+
+	const rendered = await server.respond(request, {
+		getClientAddress() {
+			return ipAddress;
+		}
+	});
+
 	const response = await toResponse(rendered);
 
 	if (debug) {
