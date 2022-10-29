@@ -9,6 +9,25 @@ import esbuild from 'esbuild';
 
 const ssrFunctionRoute = '/api/__render';
 
+const functionJson = `
+{
+	"bindings": [
+		{
+			"authLevel": "anonymous",
+			"type": "httpTrigger",
+			"direction": "in",
+			"name": "req",
+			"route": "__render"
+		},
+		{
+			"type": "http",
+			"direction": "out",
+			"name": "res"
+		}
+	]
+}
+`;
+
 /**
  * Validate the static web app configuration does not override the minimum config for the adapter to work correctly.
  * @param config {import('./types/swa').CustomStaticWebAppConfig}
@@ -40,6 +59,7 @@ export default function ({
 			const publish = 'build';
 			const staticDir = join(publish, 'static');
 			const apiDir = join(publish, 'server');
+			const functionDir = join(apiDir, 'render');
 			const entry = `${tmp}/entry.js`;
 			builder.log.minor(`Publishing to "${publish}"`);
 
@@ -74,7 +94,7 @@ export default function ({
 			/** @type {BuildOptions} */
 			const default_options = {
 				entryPoints: [entry],
-				outfile: join(apiDir, 'render', 'index.js'),
+				outfile: join(functionDir, 'index.js'),
 				bundle: true,
 				platform: 'node',
 				target: 'node16',
@@ -83,6 +103,7 @@ export default function ({
 			};
 
 			await esbuild.build(default_options);
+			writeFileSync(join(functionDir, 'function.json'), functionJson);
 
 			builder.log.minor('Copying assets...');
 			builder.writeClient(staticDir);
