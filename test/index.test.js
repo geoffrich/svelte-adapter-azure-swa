@@ -1,6 +1,6 @@
 import { expect, describe, test, vi } from 'vitest';
 import azureAdapter, { generateConfig } from '../index';
-import { writeFileSync, existsSync } from 'fs';
+import { writeFileSync } from 'fs';
 import { jsonMatching, toMatchJSON } from './json';
 
 expect.extend({ jsonMatching, toMatchJSON });
@@ -66,6 +66,18 @@ describe('adapt', () => {
 		await adapter.adapt(builder);
 		expect(builder.writePrerendered).toBeCalled();
 		expect(builder.writeClient).toBeCalled();
+		expect(builder.copy).toBeCalledWith(expect.stringContaining('api'), 'build/server');
+	});
+
+	test('writes to custom api directory', async () => {
+		const adapter = azureAdapter({ apiDir: 'custom/api' });
+		const builder = getMockBuilder();
+		await adapter.adapt(builder);
+		expect(writeFileSync).toBeCalledWith(
+			'custom/api/render/function.json',
+			expect.stringContaining('__render')
+		);
+		expect(builder.copy).not.toBeCalledWith(expect.stringContaining('api'), 'custom/api');
 	});
 
 	test('adds index.html when root not prerendered', async () => {

@@ -47,7 +47,8 @@ function validateCustomConfig(config) {
 export default function ({
 	debug = false,
 	customStaticWebAppConfig = {},
-	esbuildOptions = {}
+	esbuildOptions = {},
+	apiDir: customApiDir = undefined
 } = {}) {
 	return {
 		name: 'adapter-azure-swa',
@@ -58,7 +59,7 @@ export default function ({
 			const tmp = builder.getBuildDirectory('azure-tmp');
 			const publish = 'build';
 			const staticDir = join(publish, 'static');
-			const apiDir = join(publish, 'server');
+			const apiDir = customApiDir || join(publish, 'server');
 			const functionDir = join(apiDir, 'render');
 			const entry = `${tmp}/entry.js`;
 			builder.log.minor(`Publishing to "${publish}"`);
@@ -82,7 +83,10 @@ export default function ({
 				}
 			});
 
-			builder.copy(join(files, 'api'), apiDir);
+			// if the user specified a custom API directory, assume they are creating the required function files themselves
+			if (!customApiDir) {
+				builder.copy(join(files, 'api'), apiDir);
+			}
 
 			writeFileSync(
 				`${tmp}/manifest.js`,
