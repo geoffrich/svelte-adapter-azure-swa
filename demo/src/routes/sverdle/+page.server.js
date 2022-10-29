@@ -2,7 +2,8 @@ import { invalid } from '@sveltejs/kit';
 import { words, allowed } from './words.server';
 
 /** @type {import('./$types').PageServerLoad} */
-export const load = ({ cookies }) => {
+export const load = (event) => {
+	const { cookies } = event;
 	const game = new Game(cookies.get('sverdle'));
 
 	return {
@@ -20,7 +21,8 @@ export const load = ({ cookies }) => {
 		/**
 		 * The correct answer, revealed if the game is over
 		 */
-		answer: game.answers.length >= 6 ? game.answer : null
+		answer: game.answers.length >= 6 ? game.answer : null,
+		ipAddress: event.getClientAddress()
 	};
 };
 

@@ -75,6 +75,7 @@
 
 <svelte:window on:keydown={keydown} />
 
+<h1>{data.ipAddress}</h1>
 <form method="POST" action="?/enter" use:enhance>
 	<a class="how-to-play" href="/sverdle/how-to-play">How to play</a>
 
