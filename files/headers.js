@@ -35,8 +35,8 @@ export function splitCookiesFromHeaders(headers) {
 export function getClientIPFromHeaders(headers) {
 	/** @type {string} */
 	const resHeader = headers.get('x-forwarded-for') ?? '127.0.0.1';
-  const [origin] = resHeader.split(', ');
-  const [ipAddress] = origin.split(':');
+	const [origin] = resHeader.split(', ');
+	const [ipAddress] = origin.split(':');
 
 	return ipAddress;
 }

@@ -6,7 +6,7 @@
 	"type": "module",
 	"scripts": {
 		"format": "npm run check-format -- --write",
-		"check-format": "prettier --check . --ignore-path .gitignore",
+		"check-format": "prettier --check .",
 		"test": "vitest",
 		"test:coverage": "vitest run --coverage"
 	},

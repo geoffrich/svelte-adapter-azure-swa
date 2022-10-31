@@ -68,7 +68,7 @@ export default function ({
 				}
 			});
 
-      builder.copy(join(files, 'api'), apiDir);
+			builder.copy(join(files, 'api'), apiDir);
 
 			writeFileSync(
 				`${tmp}/manifest.js`,
