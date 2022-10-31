@@ -17,4 +17,5 @@ jobs:
         with:
           node-version: '16.x'
       - run: npm ci
+      - run: npm run check-format
       - run: npm test
