@@ -4,6 +4,7 @@ import { manifest } from 'MANIFEST';
 import { getClientIPFromHeaders, splitCookiesFromHeaders } from './headers';
 
 // replaced at build time
+// @ts-expect-error
 const debug = DEBUG;
 
 installPolyfills();
