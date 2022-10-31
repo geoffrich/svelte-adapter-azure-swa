@@ -66,7 +66,6 @@ export default function ({
 
 			builder.rimraf(tmp);
 			builder.rimraf(publish);
-			builder.rimraf(apiDir);
 
 			const files = fileURLToPath(new URL('./files', import.meta.url));
 
