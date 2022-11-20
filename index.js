@@ -60,7 +60,7 @@ export default function ({
 			const publish = 'build';
 			const staticDir = join(publish, 'static');
 			const apiDir = customApiDir || join(publish, 'server');
-			const functionDir = join(apiDir, 'render');
+			const functionDir = join(apiDir, '__render');
 			const entry = `${tmp}/entry.js`;
 			builder.log.minor(`Publishing to "${publish}"`);
 
