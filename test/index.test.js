@@ -74,7 +74,7 @@ describe('adapt', () => {
 		const builder = getMockBuilder();
 		await adapter.adapt(builder);
 		expect(writeFileSync).toBeCalledWith(
-			'custom/api/__render/function.json',
+			'custom/api/sk_render/function.json',
 			expect.stringContaining('__render')
 		);
 		expect(builder.copy).not.toBeCalledWith(expect.stringContaining('api'), 'custom/api');
