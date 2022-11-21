@@ -66,14 +66,27 @@ describe('adapt', () => {
 		await adapter.adapt(builder);
 		expect(builder.writePrerendered).toBeCalled();
 		expect(builder.writeClient).toBeCalled();
+		expect(builder.copy).toBeCalledWith(expect.stringContaining('api'), 'build/server');
 	});
 
-	test('throws error when no package.json', async () => {
-		existsSync.mockImplementationOnce(() => false);
-
-		const adapter = azureAdapter();
+	test('writes to custom api directory', async () => {
+		const adapter = azureAdapter({ apiDir: 'custom/api' });
 		const builder = getMockBuilder();
-		await expect(adapter.adapt(builder)).rejects.toThrowError('You need to create a package.json');
+		await adapter.adapt(builder);
+		expect(writeFileSync).toBeCalledWith(
+			'custom/api/sk_render/function.json',
+			expect.stringContaining('__render')
+		);
+		// we don't copy the required function files to a custom API directory
+		expect(builder.copy).not.toBeCalledWith(expect.stringContaining('api'), 'custom/api');
+	});
+
+	test('logs warning when custom api directory set and required file does not exist', async () => {
+		vi.mocked(existsSync).mockImplementationOnce(() => false);
+		const adapter = azureAdapter({ apiDir: 'custom/api' });
+		const builder = getMockBuilder();
+		await adapter.adapt(builder);
+		expect(builder.log.warn).toBeCalled();
 	});
 
 	test('adds index.html when root not prerendered', async () => {
@@ -112,7 +125,8 @@ function getMockBuilder() {
 			}
 		},
 		log: {
-			minor: vi.fn()
+			minor: vi.fn(),
+			warn: vi.fn()
 		},
 		prerendered: {
 			paths: ['/']

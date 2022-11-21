@@ -9,6 +9,25 @@ import esbuild from 'esbuild';
 
 const ssrFunctionRoute = '/api/__render';
 
+const functionJson = `
+{
+	"bindings": [
+		{
+			"authLevel": "anonymous",
+			"type": "httpTrigger",
+			"direction": "in",
+			"name": "req",
+			"route": "__render"
+		},
+		{
+			"type": "http",
+			"direction": "out",
+			"name": "res"
+		}
+	]
+}
+`;
+
 /**
  * Validate the static web app configuration does not override the minimum config for the adapter to work correctly.
  * @param config {import('./types/swa').CustomStaticWebAppConfig}
@@ -28,30 +47,32 @@ function validateCustomConfig(config) {
 export default function ({
 	debug = false,
 	customStaticWebAppConfig = {},
-	esbuildOptions = {}
+	esbuildOptions = {},
+	apiDir: customApiDir = undefined
 } = {}) {
 	return {
 		name: 'adapter-azure-swa',
 
 		async adapt(builder) {
-			if (!existsSync(join('api', 'package.json'))) {
-				throw new Error(
-					'You need to create a package.json in your `api` directory. See the adapter README for details.'
+			// TODO: remove for 1.0
+			if (!customApiDir && existsSync(join('api', 'render'))) {
+				builder.log.warn(
+					`Warning: you have an api/render folder but this adapter now uses the build/server folder for API functions. You may need to update your build configuration. Failing to do so could break your deployed site.
+Please see the PR for migration instructions: https://github.com/geoffrich/svelte-adapter-azure-swa/pull/92`
 				);
 			}
-
 			const swaConfig = generateConfig(customStaticWebAppConfig, builder.config.kit.appDir);
 
 			const tmp = builder.getBuildDirectory('azure-tmp');
 			const publish = 'build';
 			const staticDir = join(publish, 'static');
-			const apiDir = join('api', 'render');
+			const apiDir = customApiDir || join(publish, 'server');
+			const functionDir = join(apiDir, 'sk_render');
 			const entry = `${tmp}/entry.js`;
 			builder.log.minor(`Publishing to "${publish}"`);
 
 			builder.rimraf(tmp);
 			builder.rimraf(publish);
-			builder.rimraf(apiDir);
 
 			const files = fileURLToPath(new URL('./files', import.meta.url));
 
@@ -68,7 +89,12 @@ export default function ({
 				}
 			});
 
-			builder.copy(join(files, 'api'), apiDir);
+			if (customApiDir) {
+				checkForMissingFiles();
+			} else {
+				// if the user specified a custom API directory, assume they are creating the required function files themselves
+				builder.copy(join(files, 'api'), apiDir);
+			}
 
 			writeFileSync(
 				`${tmp}/manifest.js`,
@@ -80,7 +106,7 @@ export default function ({
 			/** @type {BuildOptions} */
 			const default_options = {
 				entryPoints: [entry],
-				outfile: join(apiDir, 'index.js'),
+				outfile: join(functionDir, 'index.js'),
 				bundle: true,
 				platform: 'node',
 				target: 'node16',
@@ -89,6 +115,7 @@ export default function ({
 			};
 
 			await esbuild.build(default_options);
+			writeFileSync(join(functionDir, 'function.json'), functionJson);
 
 			builder.log.minor('Copying assets...');
 			builder.writeClient(staticDir);
@@ -111,7 +138,21 @@ export default function ({
 				);
 			}
 
-			writeFileSync(`${publish}/staticwebapp.config.json`, JSON.stringify(swaConfig));
+			writeFileSync(`${publish}/staticwebapp.config.json`, JSON.stringify(swaConfig, null, 2));
+
+			/**
+			 * Check for missing files when a custom API directory is provided.
+			 */
+			function checkForMissingFiles() {
+				const requiredFiles = ['host.json', 'package.json'];
+				for (const file of requiredFiles) {
+					if (!existsSync(join(customApiDir, file))) {
+						builder.log.warn(
+							`Warning: apiDir set but ${file} does not exist. You will need to create this file yourself. See the docs for more information: https://github.com/geoffrich/svelte-adapter-azure-swa#apidir`
+						);
+					}
+				}
+			}
 		}
 	};
 }

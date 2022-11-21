@@ -9,9 +9,11 @@ test('submits sverdle guess', async ({ page }) => {
 	await page.goto('/sverdle');
 	const input = page.locator('input[name=guess]').first();
 	await expect(input).not.toBeDisabled();
+	await input.focus();
 
 	await page.keyboard.type('AZURE');
 	await page.keyboard.press('Enter');
 
+	await expect(input).toHaveValue('a');
 	await expect(input).toBeDisabled();
 });
