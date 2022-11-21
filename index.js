@@ -54,6 +54,13 @@ export default function ({
 		name: 'adapter-azure-swa',
 
 		async adapt(builder) {
+			// TODO: remove for 1.0
+			if (!customApiDir && existsSync(join('api', 'render'))) {
+				builder.log.warn(
+					`Warning: you have an api/render folder but this adapter now uses the build/server folder for API functions. You may need to update your build configuration. Failing to do so could break your deployed site.
+Please see the PR for migration instructions: https://github.com/geoffrich/svelte-adapter-azure-swa/pull/92`
+				);
+			}
 			const swaConfig = generateConfig(customStaticWebAppConfig, builder.config.kit.appDir);
 
 			const tmp = builder.getBuildDirectory('azure-tmp');
