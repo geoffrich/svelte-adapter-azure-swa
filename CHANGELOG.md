@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.12.0](https://www.github.com/geoffrich/svelte-adapter-azure-swa/compare/v0.11.0...v0.12.0) (2022-11-21)
+
+
+### Features
+
+* auto-create required function files ([#92](https://www.github.com/geoffrich/svelte-adapter-azure-swa/issues/92)) ([c682164](https://www.github.com/geoffrich/svelte-adapter-azure-swa/commit/c682164dfcc35045fbb66cc1ea31f3a8e253a411))
+* implement getClientAddress ([#71](https://www.github.com/geoffrich/svelte-adapter-azure-swa/issues/71)) ([56b5380](https://www.github.com/geoffrich/svelte-adapter-azure-swa/commit/56b5380c8ebb29c2678bb83ea3cbf9189dd09ee6))
+
 ## [0.11.0](https://www.github.com/geoffrich/svelte-adapter-azure-swa/compare/v0.10.0...v0.11.0) (2022-10-18)
 
 
