@@ -23,6 +23,8 @@ export default {
 };
 ```
 
+:warning: **IMPORTANT**: you also need to configure your build so that your SvelteKit site deploys properly. Failing to do so will prevent the project from building and deploying. See the next section for instructions.
+
 ## Azure configuration
 
 When deploying to Azure, you will need to properly [configure your build](https://docs.microsoft.com/en-us/azure/static-web-apps/build-configuration?tabs=github-actions) so that both the static files and API are deployed.
@@ -82,7 +84,7 @@ For instance, by default the adapter outputs these files...
 ```
 build/
 └── server/
-    ├── __render/
+    ├── sk_render/
     │   ├── function.json
     │   └── index.js
     ├── host.json
@@ -95,7 +97,7 @@ build/
 ```
 custom/
 └── api/
-    └── __render/
+    └── sk_render/
         ├── function.json
         └── index.js
 ```
