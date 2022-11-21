@@ -77,6 +77,7 @@ describe('adapt', () => {
 			'custom/api/sk_render/function.json',
 			expect.stringContaining('__render')
 		);
+		// we don't copy the required function files to a custom API directory
 		expect(builder.copy).not.toBeCalledWith(expect.stringContaining('api'), 'custom/api');
 	});
 

@@ -131,7 +131,7 @@ export default function ({
 				);
 			}
 
-			writeFileSync(`${publish}/staticwebapp.config.json`, JSON.stringify(swaConfig));
+			writeFileSync(`${publish}/staticwebapp.config.json`, JSON.stringify(swaConfig, null, 2));
 
 			/**
 			 * Check for missing files when a custom API directory is provided.
