@@ -35,6 +35,8 @@ When deploying to Azure, you will need to properly [configure your build](https:
 
 If you use a custom API directory (see [below](#apiDir)), your `api_location` will be the same as the value you pass to `apiDir`.
 
+If your `app_location` is not the repository root `./` but `./my_app_location`, then you also need to change the `api_location` to `my_app_location/build/server` (but not the `output_location`).
+
 ## Running locally with the Azure SWA CLI
 
 You can debug using the [Azure Static Web Apps CLI](https://github.com/Azure/static-web-apps-cli). Note that the CLI is currently in preview and you may encounter issues.
