@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.13.0](https://www.github.com/geoffrich/svelte-adapter-azure-swa/compare/v0.12.0...v0.13.0) (2023-01-23)
+
+
+### Features
+
+* bump deps to SvelteKit 1.0 ([d050933](https://www.github.com/geoffrich/svelte-adapter-azure-swa/commit/d050933b237530b6064351fe619c6f36bbee66d2))
+
 ## [0.12.0](https://www.github.com/geoffrich/svelte-adapter-azure-swa/compare/v0.11.0...v0.12.0) (2022-11-21)
 
 
