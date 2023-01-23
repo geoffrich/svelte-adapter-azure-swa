@@ -1,7 +1,11 @@
 import { installPolyfills } from '@sveltejs/kit/node/polyfills';
 import { Server } from 'SERVER';
 import { manifest } from 'MANIFEST';
-import { getClientIPFromHeaders, splitCookiesFromHeaders } from './headers';
+import {
+	getClientIPFromHeaders,
+	getClientPrincipalFromHeaders,
+	splitCookiesFromHeaders
+} from './headers';
 
 // replaced at build time
 // @ts-expect-error
@@ -29,10 +33,14 @@ export async function index(context) {
 	}
 
 	const ipAddress = getClientIPFromHeaders(request.headers);
+	const clientPrincipal = getClientPrincipalFromHeaders(request.headers);
 
 	const rendered = await server.respond(request, {
 		getClientAddress() {
 			return ipAddress;
+		},
+		platform: {
+			clientPrincipal
 		}
 	});
 

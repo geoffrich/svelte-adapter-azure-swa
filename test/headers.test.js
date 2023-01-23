@@ -1,6 +1,10 @@
 import { installPolyfills } from '@sveltejs/kit/node/polyfills';
 import { expect, describe, test } from 'vitest';
-import { splitCookiesFromHeaders, getClientIPFromHeaders } from '../files/headers';
+import {
+	splitCookiesFromHeaders,
+	getClientIPFromHeaders,
+	getClientPrincipalFromHeaders
+} from '../files/headers';
 
 installPolyfills();
 
@@ -92,5 +96,26 @@ describe('client ip address detection', () => {
 		const ipAddress = getClientIPFromHeaders(headers);
 
 		expect(ipAddress).toBe('8.23.191.142');
+	});
+});
+
+describe('client principal parsing', () => {
+	test('parses client principal correctly', () => {
+		const original = {
+			identityProvider: 'aad',
+			userId: '1234',
+			userDetails: 'user@example.net',
+			userRoles: ['authenticated']
+		};
+
+		const headers = new Headers({
+			'x-ms-client-principal': Buffer.from(JSON.stringify(original)).toString('base64')
+		});
+
+		expect(getClientPrincipalFromHeaders(headers)).toStrictEqual(original);
+	});
+
+	test('returns undefined when there is no client principal', () => {
+		expect(getClientPrincipalFromHeaders(new Headers())).toBeUndefined();
 	});
 });
