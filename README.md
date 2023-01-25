@@ -50,7 +50,8 @@ To run the CLI, install `@azure/static-web-apps-cli` and the [Azure Functions Co
 	"configurations": {
 		"app": {
 			"outputLocation": "./build/static",
-			"apiLocation": "./build/server"
+			"apiLocation": "./build/server",
+			"host": "127.0.0.1"
 		}
 	}
 }
