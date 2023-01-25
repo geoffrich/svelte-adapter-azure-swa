@@ -51,7 +51,7 @@ export interface Platform {
 /**
  * Client principal as presented to the render functions of a SWA.
  *
- * @see The official {@link https://learn.microsoft.com/en-us/azure/static-web-apps/user-information?tabs=javascript#client-principal-data | documentation}
+ * @see The official {@link https://learn.microsoft.com/en-us/azure/static-web-apps/user-information?tabs=javascript#client-principal-data documentation}
  * this was adapted from.
  */
 export interface ClientPrincipal {

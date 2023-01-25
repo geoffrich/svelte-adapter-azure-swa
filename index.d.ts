@@ -1,5 +1,5 @@
 import { Adapter } from '@sveltejs/kit';
-import { CustomStaticWebAppConfig } from './types/swa';
+import { ClientPrincipal, CustomStaticWebAppConfig } from './types/swa';
 import esbuild from 'esbuild';
 
 export * from './types/swa';
@@ -26,9 +26,9 @@ declare global {
 			 * protected. Protected in this case means that the `allowedRoles`
 			 * field is populated and does not contain the `anonymous` role.
 			 *
-			 * @see The {@link https://learn.microsoft.com/en-us/azure/static-web-apps/user-information?tabs=javascript#api-functions | SWA documentation}
+			 * @see The {@link https://learn.microsoft.com/en-us/azure/static-web-apps/user-information?tabs=javascript#api-functions SWA documentation}
 			 */
-			clientPrincipal?: import('./types/swa.d.ts').ClientPrincipal;
+			clientPrincipal?: ClientPrincipal;
 		}
 	}
 }
