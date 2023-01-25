@@ -1,4 +1,4 @@
-import { writeFileSync, existsSync } from 'fs';
+import { writeFileSync, existsSync, readFileSync } from 'fs';
 import { join, posix } from 'path';
 import { fileURLToPath } from 'url';
 import esbuild from 'esbuild';
@@ -29,6 +29,20 @@ const functionJson = `
 `;
 
 /**
+ * Extract content security policy from a html file.
+ *
+ * @param {string} file
+ * @returns {string | null}
+ */
+function findCspTag(file) {
+	const content = readFileSync(file, { encoding: 'utf-8' });
+	const match = content.match(/<meta http-equiv="content-security-policy" content="([^"]+)">/);
+	const csp = match?.[1] || null;
+
+	return csp;
+}
+
+/**
  * Validate the static web app configuration does not override the minimum config for the adapter to work correctly.
  * @param config {import('./types/swa').CustomStaticWebAppConfig}
  * */
@@ -40,6 +54,26 @@ function validateCustomConfig(config) {
 		if (config.routes && config.routes.find((route) => route.route === '*')) {
 			throw new Error(`customStaticWebAppConfig cannot override '*' route.`);
 		}
+	}
+}
+
+/**
+ * @param {import('./types/swa').Route[]} routes
+ * @param {import('./types/swa').Route} routeDef
+ */
+function mergeRouteDef(routes, routeDef) {
+	const i = routes.findIndex((u) => u.route === routeDef.route);
+	if (i === -1) {
+		routes.push(routeDef);
+	} else {
+		routes[i] = {
+			...routes[i],
+			...routeDef,
+			headers: {
+				...routes[i].headers,
+				...routeDef.headers
+			}
+		};
 	}
 }
 
@@ -120,6 +154,18 @@ Please see the PR for migration instructions: https://github.com/geoffrich/svelt
 			builder.log.minor('Copying assets...');
 			builder.writeClient(staticDir);
 			builder.writePrerendered(staticDir);
+
+			for (const [route, { file }] of builder.prerendered.pages.entries()) {
+				const csp = findCspTag(join(staticDir, file));
+				if (!csp) continue;
+
+				mergeRouteDef(swaConfig.routes, {
+					route: '/' + file,
+					headers: {
+						'Content-Security-Policy': csp
+					}
+				});
+			}
 
 			if (!builder.prerendered.paths.includes('/')) {
 				// Azure SWA requires an index.html to be present
