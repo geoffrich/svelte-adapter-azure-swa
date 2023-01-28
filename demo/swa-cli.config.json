@@ -1,8 +1,10 @@
 {
 	"configurations": {
-		"app": {
-			"outputLocation": "./build/static",
-			"apiLocation": "./build/server"
-		}
+	  "app": {
+		"apiLocation": "http://localhost:5173",
+		"appDevserverUrl": "http://localhost:5173",
+		"run": "npm run dev",
+		"swaConfigLocation": "./build"
+	  }
 	}
-}
+  }

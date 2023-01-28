@@ -176,7 +176,7 @@ export function generateConfig(customStaticWebAppConfig, appDir) {
 			...customStaticWebAppConfig.routes,
 			{
 				route: '*',
-				methods: ['POST', 'PUT', 'DELETE'],
+				methods: ['GET', 'POST', 'PUT', 'DELETE'],
 				rewrite: ssrFunctionRoute
 			},
 			{

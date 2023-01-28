@@ -8,9 +8,11 @@
 		"preview": "vite preview",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json --watch",
-		"test": "playwright test"
+		"test": "playwright test",
+		"swa": "swa start"
 	},
 	"devDependencies": {
+		"@azure/static-web-apps-cli": "^1.0.6",
 		"@fontsource/fira-mono": "^4.5.10",
 		"@neoconfetti/svelte": "^1.0.0",
 		"@playwright/test": "^1.25.0",
