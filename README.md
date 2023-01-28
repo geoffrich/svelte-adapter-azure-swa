@@ -21,6 +21,12 @@ export default {
 };
 ```
 
+And, if you use TypeScript, add this to the top of your `src/app.d.ts`:
+
+```ts
+/// <reference types="svelte-adapter-azure-swa" />
+```
+
 :warning: **IMPORTANT**: you also need to configure your build so that your SvelteKit site deploys properly. Failing to do so will prevent the project from building and deploying. See the next section for instructions.
 
 ## Azure configuration
@@ -165,3 +171,13 @@ export default {
 	}
 };
 ```
+
+## Platform-specific context
+
+SWA provides some information to the backend functions that this adapter makes available as [platform-specific context](https://kit.svelte.dev/docs/adapters#platform-specific-context). This is available in hooks and server routes through the `platform` property on the `RequestEvent`.
+
+To get typings for the `platform` property, reference this adapter in your `src/app.d.ts` as described in the [usage section](#usage).
+
+### `clientPrincipal`
+
+The client principal as passed in a header from SWA to the render function is available at `platform.clientPrincipal` in the same form it is provided by SWA. See the [official SWA documentation](https://learn.microsoft.com/en-us/azure/static-web-apps/user-information?tabs=javascript#api-functions) or [the types](index.d.ts) for further details.
