@@ -175,15 +175,15 @@ export function generateConfig(customStaticWebAppConfig, appDir) {
 		routes: [
 			...customStaticWebAppConfig.routes,
 			{
-				route: '*',
-				methods: ['GET', 'POST', 'PUT', 'DELETE'],
-				rewrite: ssrFunctionRoute
-			},
-			{
 				route: `/${appDir}/immutable/*`,
 				headers: {
 					'cache-control': 'public, immutable, max-age=31536000'
 				}
+			},
+			{
+				route: '*',
+				methods: ['GET', 'POST', 'PUT', 'DELETE'],
+				rewrite: ssrFunctionRoute
 			}
 		],
 		navigationFallback: {
