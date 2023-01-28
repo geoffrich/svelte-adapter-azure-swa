@@ -28,7 +28,7 @@ describe('generateConfig', () => {
 			},
 			routes: [
 				{
-					methods: ['POST', 'PUT', 'DELETE'],
+					methods: ['GET', 'POST', 'PUT', 'DELETE'],
 					rewrite: '/api/__render',
 					route: '*'
 				},
