@@ -114,6 +114,22 @@ describe('adapt', () => {
 			)
 		);
 	});
+
+	test('writes to pages directory', async () => {
+		vi.mocked(existsSync).mockImplementationOnce(() => false);
+		const adapter = azureAdapter({ pages: 'test' });
+		const builder = getMockBuilder();
+		await adapter.adapt(builder);
+		expect(builder.writePrerendered).toBeCalledWith('build/static/test');
+	});
+
+	test('writes to assets directory', async () => {
+		vi.mocked(existsSync).mockImplementationOnce(() => false);
+		const adapter = azureAdapter({ assets: 'test' });
+		const builder = getMockBuilder();
+		await adapter.adapt(builder);
+		expect(builder.writeClient).toBeCalledWith('build/static/test');
+	});
 });
 
 /** @returns {import('@sveltejs/kit').Builder} */
