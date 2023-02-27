@@ -1,4 +1,5 @@
 import { Adapter } from '@sveltejs/kit';
+import { AdapterOptions } from '@sveltejs/adapter-static';
 import { ClientPrincipal, CustomStaticWebAppConfig } from './types/swa';
 import esbuild from 'esbuild';
 
@@ -9,6 +10,7 @@ export type Options = {
 	customStaticWebAppConfig?: CustomStaticWebAppConfig;
 	esbuildOptions?: Pick<esbuild.BuildOptions, 'external'>;
 	apiDir?: string;
+	staticAdapterOptions?: AdapterOptions;
 };
 
 export default function plugin(options?: Options): Adapter;

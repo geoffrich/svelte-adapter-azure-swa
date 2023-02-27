@@ -2,6 +2,7 @@ import { writeFileSync, existsSync } from 'fs';
 import { join, posix } from 'path';
 import { fileURLToPath } from 'url';
 import esbuild from 'esbuild';
+import staticAdapter from '@sveltejs/adapter-static';
 
 /**
  * @typedef {import('esbuild').BuildOptions} BuildOptions
@@ -48,7 +49,8 @@ export default function ({
 	debug = false,
 	customStaticWebAppConfig = {},
 	esbuildOptions = {},
-	apiDir: customApiDir = undefined
+	apiDir: customApiDir = undefined,
+	staticAdapterOptions = {}
 } = {}) {
 	return {
 		name: 'adapter-azure-swa',
@@ -118,8 +120,12 @@ Please see the PR for migration instructions: https://github.com/geoffrich/svelt
 			writeFileSync(join(functionDir, 'function.json'), functionJson);
 
 			builder.log.minor('Copying assets...');
-			builder.writeClient(staticDir);
-			builder.writePrerendered(staticDir);
+
+			await staticAdapter({
+				...staticAdapterOptions,
+				pages: join(staticDir, staticAdapterOptions.pages ?? ''),
+				assets: join(staticDir, staticAdapterOptions.assets ?? '')
+			}).adapt(builder);
 
 			if (!builder.prerendered.paths.includes('/')) {
 				// Azure SWA requires an index.html to be present

@@ -44,6 +44,7 @@
 		"vitest": "^0.23.4"
 	},
 	"dependencies": {
+		"@sveltejs/adapter-static": "^2.0.1",
 		"esbuild": "^0.15.7",
 		"set-cookie-parser": "^2.5.1"
 	},

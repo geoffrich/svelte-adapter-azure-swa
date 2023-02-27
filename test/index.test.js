@@ -1,6 +1,7 @@
 import { expect, describe, test, vi } from 'vitest';
 import azureAdapter, { generateConfig } from '../index';
 import { writeFileSync, existsSync } from 'fs';
+import staticAdapter from '@sveltejs/adapter-static';
 import { jsonMatching, toMatchJSON } from './json';
 
 expect.extend({ jsonMatching, toMatchJSON });
@@ -14,6 +15,12 @@ vi.mock('esbuild', () => ({
 	default: {
 		build: vi.fn(() => Promise.resolve())
 	}
+}));
+
+vi.mock('@sveltejs/adapter-static', () => ({
+	default: vi.fn().mockReturnValue({
+		adapt: vi.fn()
+	})
 }));
 
 describe('generateConfig', () => {
@@ -64,8 +71,7 @@ describe('adapt', () => {
 		const adapter = azureAdapter();
 		const builder = getMockBuilder();
 		await adapter.adapt(builder);
-		expect(builder.writePrerendered).toBeCalled();
-		expect(builder.writeClient).toBeCalled();
+		expect(staticAdapter).toBeCalled();
 		expect(builder.copy).toBeCalledWith(expect.stringContaining('api'), 'build/server');
 	});
 
