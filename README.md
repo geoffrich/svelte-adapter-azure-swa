@@ -181,3 +181,7 @@ To get typings for the `platform` property, reference this adapter in your `src/
 ### `clientPrincipal`
 
 The client principal as passed in a header from SWA to the render function is available at `platform.clientPrincipal` in the same form it is provided by SWA. See the [official SWA documentation](https://learn.microsoft.com/en-us/azure/static-web-apps/user-information?tabs=javascript#api-functions) or [the types](index.d.ts) for further details.
+
+### `staticAdapterOptions`
+
+The options used by `@svelte/adapter-static` when building the static portions of the site. See the [official SvelteKit documentation](https://kit.svelte.dev/docs/adapter-static) for more details.
