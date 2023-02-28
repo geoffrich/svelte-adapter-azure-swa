@@ -35,7 +35,7 @@
 	},
 	"devDependencies": {
 		"@azure/functions": "^1.2.3",
-		"@sveltejs/kit": "^1.0.0",
+		"@sveltejs/kit": "^1.8.8",
 		"@types/node": "^17.0.5",
 		"@types/set-cookie-parser": "^2.4.2",
 		"@vitest/coverage-c8": "^0.23.4",
