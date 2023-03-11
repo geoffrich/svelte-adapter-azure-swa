@@ -27,14 +27,13 @@ jobs:
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.repository == 'geoffrich/svelte-adapter-azure-swa' && github.event.action != 'closed')
     runs-on: ubuntu-latest
     name: Build and Deploy Job
+    env:
+      # workaround for Oryx issue: see https://github.com/Azure/static-web-apps/issues/909#issuecomment-1320077142
+      CUSTOM_BUILD_COMMAND: 'chown -R root:root . && npm install --unsafe-perm && npm run build'
     steps:
       - uses: actions/checkout@v2
         with:
           submodules: true
-      # attempt to fix persistent npm error: "Your cache folder contains root-owned files, due to a bug in previous versions of npm which has since been addressed."
-      - name: fix cache issue
-        run: |
-          sudo chown -R 1001:123 "/github/home/.npm" | :
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
