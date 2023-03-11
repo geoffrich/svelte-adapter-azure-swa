@@ -9,12 +9,9 @@ on:
     branches:
       - main
 
-env:
-  IS_NON_FORK_PR: (github.event_name == 'pull_request' && github.repository == 'geoffrich/svelte-adapter-azure-swa')
-
 jobs:
   clean:
-    if: env.IS_NON_FORK_PR && github.event.action != 'closed'
+    if: github.event_name == 'pull_request' && github.repository == 'geoffrich/svelte-adapter-azure-swa' && github.event.action != 'closed'
     runs-on: ubuntu-latest
     name: Delete old bot comment
     steps:
@@ -27,7 +24,7 @@ jobs:
           user: 'github-actions[bot]'
           issue: '${{github.event.number}}'
   build_and_deploy_job:
-    if: github.event_name == 'push' || (env.IS_NON_FORK_PR && github.event.action != 'closed')
+    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.repository == 'geoffrich/svelte-adapter-azure-swa' && github.event.action != 'closed')
     runs-on: ubuntu-latest
     name: Build and Deploy Job
     steps:
@@ -51,7 +48,7 @@ jobs:
       preview_url: ${{ steps.builddeploy.outputs.static_web_app_url }}
   test:
     needs: build_and_deploy_job
-    if: github.event_name == 'push' || (env.IS_NON_FORK_PR && github.event.action != 'closed')
+    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.repository == 'geoffrich/svelte-adapter-azure-swa' && github.event.action != 'closed')
     name: Run E2E Tests
     timeout-minutes: 10
     runs-on: ubuntu-latest
@@ -73,7 +70,7 @@ jobs:
           PLAYWRIGHT_TEST_BASE_URL: ${{ needs.build_and_deploy_job.outputs.preview_url }}
 
   close_pull_request_job:
-    if: env.IS_NON_FORK_PR && github.event.action == 'closed'
+    if: github.event_name == 'pull_request' && github.repository == 'geoffrich/svelte-adapter-azure-swa' && github.event.action == 'closed'
     runs-on: ubuntu-latest
     name: Close Pull Request Job
     steps:
