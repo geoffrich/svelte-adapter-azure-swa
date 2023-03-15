@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.14.0](https://www.github.com/geoffrich/svelte-adapter-azure-swa/compare/v0.13.0...v0.14.0) (2023-03-15)
+
+
+### Features
+
+* expose client principal through platform ([#107](https://www.github.com/geoffrich/svelte-adapter-azure-swa/issues/107)) ([e41f89c](https://www.github.com/geoffrich/svelte-adapter-azure-swa/commit/e41f89cde57858b76df61a7ba6316f5ac0a4498d))
+
+
+### Bug Fixes
+
+* binary body is incorrectly parsed as UTF-8 ([#123](https://www.github.com/geoffrich/svelte-adapter-azure-swa/issues/123)) ([4869959](https://www.github.com/geoffrich/svelte-adapter-azure-swa/commit/48699595be4cabe355f070250780492bba5a1fdb))
+
 ## [0.13.0](https://www.github.com/geoffrich/svelte-adapter-azure-swa/compare/v0.12.0...v0.13.0) (2023-01-23)
 
 
