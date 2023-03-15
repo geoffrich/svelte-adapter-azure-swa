@@ -70,7 +70,11 @@ function toRequest(context) {
 	};
 
 	if (method !== 'GET' && method !== 'HEAD') {
-		init.body = Buffer.isBuffer(body) ? body : typeof rawBody === 'string' ? Buffer.from(rawBody, 'utf-8') : rawBody;
+		init.body = Buffer.isBuffer(body)
+			? body
+			: typeof rawBody === 'string'
+			? Buffer.from(rawBody, 'utf-8')
+			: rawBody;
 	}
 
 	return new Request(originalUrl, init);
