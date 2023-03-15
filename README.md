@@ -180,4 +180,6 @@ To get typings for the `platform` property, reference this adapter in your `src/
 
 ### `clientPrincipal`
 
-The client principal as passed in a header from SWA to the render function is available at `platform.clientPrincipal` in the same form it is provided by SWA. See the [official SWA documentation](https://learn.microsoft.com/en-us/azure/static-web-apps/user-information?tabs=javascript#api-functions) or [the types](index.d.ts) for further details.
+This contains the client principal as parsed from the `x-ms-client-principal` request header. See the [official SWA documentation](https://learn.microsoft.com/en-us/azure/static-web-apps/user-information?tabs=javascript#api-functions) or [the types](index.d.ts) for further details.
+
+This is currently only available when running in production on SWA. In addition, it is only available in certain circumstances in production - see [this adapter issue](https://github.com/geoffrich/svelte-adapter-azure-swa/issues/102) for more details. Please report any issues you encounter.
