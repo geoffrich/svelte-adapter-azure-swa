@@ -1,5 +1,12 @@
 # Changelog
 
+### [0.14.1](https://www.github.com/geoffrich/svelte-adapter-azure-swa/compare/v0.14.0...v0.14.1) (2023-03-16)
+
+
+### Bug Fixes
+
+* await server init ([#128](https://www.github.com/geoffrich/svelte-adapter-azure-swa/issues/128)) ([4900a35](https://www.github.com/geoffrich/svelte-adapter-azure-swa/commit/4900a351ee78fcecf3050cf0a28696548646cd1a))
+
 ## [0.14.0](https://www.github.com/geoffrich/svelte-adapter-azure-swa/compare/v0.13.0...v0.14.0) (2023-03-15)
 
 
