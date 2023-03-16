@@ -14,7 +14,7 @@ const debug = DEBUG;
 installPolyfills();
 
 const server = new Server(manifest);
-server.init({ env: process.env });
+const initialized = server.init({ env: process.env });
 
 /**
  * @typedef {import('@azure/functions').AzureFunction} AzureFunction
@@ -35,6 +35,7 @@ export async function index(context) {
 	const ipAddress = getClientIPFromHeaders(request.headers);
 	const clientPrincipal = getClientPrincipalFromHeaders(request.headers);
 
+	await initialized;
 	const rendered = await server.respond(request, {
 		getClientAddress() {
 			return ipAddress;
