@@ -183,3 +183,7 @@ To get typings for the `platform` property, reference this adapter in your `src/
 This contains the client principal as parsed from the `x-ms-client-principal` request header. See the [official SWA documentation](https://learn.microsoft.com/en-us/azure/static-web-apps/user-information?tabs=javascript#api-functions) or [the types](index.d.ts) for further details.
 
 This is currently only available when running in production on SWA. In addition, it is only available in certain circumstances in production - see [this adapter issue](https://github.com/geoffrich/svelte-adapter-azure-swa/issues/102) for more details. Please report any issues you encounter.
+
+### `context`
+
+All server requests to your SvelteKit app are handled by an Azure function. This property contains that Azure function's [request context](https://learn.microsoft.com/en-us/azure/azure-functions/functions-reference-node#context-object).
