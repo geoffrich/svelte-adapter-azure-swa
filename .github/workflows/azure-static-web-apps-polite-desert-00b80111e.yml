@@ -70,6 +70,7 @@ jobs:
       - name: Install Playwright
         run: npx playwright install --with-deps
       - name: Run Playwright tests
+        if: !github.event.pull_request.draft
         run: npm test
         env:
           PLAYWRIGHT_TEST_BASE_URL: ${{ needs.build_and_deploy_job.outputs.preview_url }}
