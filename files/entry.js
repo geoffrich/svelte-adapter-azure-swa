@@ -41,7 +41,8 @@ export async function index(context) {
 			return ipAddress;
 		},
 		platform: {
-			clientPrincipal
+			clientPrincipal,
+			context
 		}
 	});
 
