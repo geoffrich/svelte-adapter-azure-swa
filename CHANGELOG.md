@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.15.0](https://www.github.com/geoffrich/svelte-adapter-azure-swa/compare/v0.14.0...v0.15.0) (2023-03-18)
+
+
+### Features
+
+* add context to the platform object ([#127](https://www.github.com/geoffrich/svelte-adapter-azure-swa/issues/127)) ([e597d0c](https://www.github.com/geoffrich/svelte-adapter-azure-swa/commit/e597d0cbd54a0e486a6bedc93d6b8071bb25f2b8))
+
+
+### Bug Fixes
+
+* await server init ([#128](https://www.github.com/geoffrich/svelte-adapter-azure-swa/issues/128)) ([4900a35](https://www.github.com/geoffrich/svelte-adapter-azure-swa/commit/4900a351ee78fcecf3050cf0a28696548646cd1a))
+
 ## [0.14.0](https://www.github.com/geoffrich/svelte-adapter-azure-swa/compare/v0.13.0...v0.14.0) (2023-03-15)
 
 
