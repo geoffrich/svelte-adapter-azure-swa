@@ -187,3 +187,49 @@ This is currently only available when running in production on SWA. In addition,
 ### `context`
 
 All server requests to your SvelteKit app are handled by an Azure function. This property contains that Azure function's [request context](https://learn.microsoft.com/en-us/azure/azure-functions/functions-reference-node#context-object).
+
+
+## Monorepo support
+
+If you're using [Turborepo](https://turbo.build/repo) or [Nx](https://nx.dev) to create a mono repo, please ensure you're using NPM as your package manager. PNPM doesn't install dependencies automatically and the build process fails. 
+
+If your folder structure is like following: 
+```
+.github/
+	├── workflow-file1.yml
+	└── workflow-file2.yml
+apps/
+	├── sveltekit-app
+	├── nextjs-app
+	└── nuxtjs-app
+packages/
+	├── ui
+	└── auth
+package.json
+turbo.json / nx.json
+README.md
+
+```
+
+In your Github workflow file for SvelteKit, update the jobs to:
+```
+...
+
+steps:
+	 - uses: actions/checkout@v2
+        with:
+          submodules: true
+      - name: Build And Deploy
+        id: builddeploy
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_ORANGE_GRASS_0778C6300 }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for Github integrations (i.e. PR comments)
+          action: "upload"
+          ###### Repository/Build Configurations - These values can be configured to match your app requirements. ######
+          # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
+          app_location: "./apps/sveltekit-app" # App source code path
+          api_location: "apps/sveltekit-app/build/server" # Api source code path - optional
+          output_location: "build/static" # Built app content directory - optional
+          ###### End of Repository/Build Configurations ######
+```
