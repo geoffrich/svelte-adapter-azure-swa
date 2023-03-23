@@ -41,7 +41,7 @@ When deploying to Azure, you will need to properly [configure your build](https:
 
 If you use a custom API directory (see [below](#apiDir)), your `api_location` will be the same as the value you pass to `apiDir`.
 
-If your `app_location` is not the repository root `./` but `./my_app_location`, then you also need to change the `api_location` to `my_app_location/build/server` (but not the `output_location`).
+If your `app_location` is in a subfolder (e.g. `./my_app_location`), then your `api_location` should include the path to that subfolder (e.g. `my_app_location/build/server`.) `output_location` should still be `build/static`.
 
 ## Running locally with the Azure SWA CLI
 
@@ -190,32 +190,23 @@ All server requests to your SvelteKit app are handled by an Azure function. This
 
 ## Monorepo support
 
-If you're using [Turborepo](https://turbo.build/repo) or [Nx](https://nx.dev) to create a mono repo, please ensure you're using NPM as your package manager. PNPM doesn't install dependencies automatically and the build process fails.
+If you're deploying your app from a monorepo, here's what you need to know.
 
-If your folder structure is like following:
+The build currently fails if you use `pnpm` as a package manager. You can track [this issue](https://github.com/geoffrich/svelte-adapter-azure-swa/issues/135) for updates. For now, you can work around the issue by using `npm` instead.
+
+Also, since your SvelteKit app is in a subfolder of the monorepo, you will need to update your deployment workflow.
+
+For instance, if you have the following folder structure:
 
 ```
-.github/
-	├── workflow-file1.yml
-	└── workflow-file2.yml
 apps/
 	├── sveltekit-app
-	├── nextjs-app
-	└── nuxtjs-app
-packages/
-	├── ui
-	└── auth
-package.json
-turbo.json / nx.json
-README.md
-
+	└── other-app
 ```
 
-In your Github workflow file for SvelteKit, update the jobs to:
+The `app_location` and `api_location` in your deployment configuration need to point to the `apps/sveltekit-app` subfolder. `output_location` should remain the same. Here's how that would look for an Azure SWA GitHub workflow:
 
-```
-...
-
+```diff
 steps:
 	 - uses: actions/checkout@v2
         with:
@@ -229,8 +220,10 @@ steps:
           action: "upload"
           ###### Repository/Build Configurations - These values can be configured to match your app requirements. ######
           # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
-          app_location: "./apps/sveltekit-app" # App source code path
-          api_location: "apps/sveltekit-app/build/server" # Api source code path - optional
+-         app_location: "./" # App source code path
+-         api_location: "build/server" # Api source code path - optional
++         app_location: "./apps/sveltekit-app" # App source code path
++         api_location: "apps/sveltekit-app/build/server" # Api source code path - optional
           output_location: "build/static" # Built app content directory - optional
           ###### End of Repository/Build Configurations ######
 ```
