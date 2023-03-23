@@ -188,12 +188,12 @@ This is currently only available when running in production on SWA. In addition,
 
 All server requests to your SvelteKit app are handled by an Azure function. This property contains that Azure function's [request context](https://learn.microsoft.com/en-us/azure/azure-functions/functions-reference-node#context-object).
 
-
 ## Monorepo support
 
-If you're using [Turborepo](https://turbo.build/repo) or [Nx](https://nx.dev) to create a mono repo, please ensure you're using NPM as your package manager. PNPM doesn't install dependencies automatically and the build process fails. 
+If you're using [Turborepo](https://turbo.build/repo) or [Nx](https://nx.dev) to create a mono repo, please ensure you're using NPM as your package manager. PNPM doesn't install dependencies automatically and the build process fails.
 
-If your folder structure is like following: 
+If your folder structure is like following:
+
 ```
 .github/
 	├── workflow-file1.yml
@@ -212,6 +212,7 @@ README.md
 ```
 
 In your Github workflow file for SvelteKit, update the jobs to:
+
 ```
 ...
 
