@@ -41,7 +41,7 @@ When deploying to Azure, you will need to properly [configure your build](https:
 
 If you use a custom API directory (see [below](#apiDir)), your `api_location` will be the same as the value you pass to `apiDir`.
 
-If your `app_location` is not the repository root `./` but `./my_app_location`, then you also need to change the `api_location` to `my_app_location/build/server` (but not the `output_location`).
+If your `app_location` is in a subfolder (e.g. `./my_app_location`), then your `api_location` should include the path to that subfolder (e.g. `my_app_location/build/server`.) `output_location` should still be `build/static`.
 
 ## Running locally with the Azure SWA CLI
 
@@ -187,3 +187,43 @@ This is currently only available when running in production on SWA. In addition,
 ### `context`
 
 All server requests to your SvelteKit app are handled by an Azure function. This property contains that Azure function's [request context](https://learn.microsoft.com/en-us/azure/azure-functions/functions-reference-node#context-object).
+
+## Monorepo support
+
+If you're deploying your app from a monorepo, here's what you need to know.
+
+The build currently fails if you use `pnpm` as a package manager. You can track [this issue](https://github.com/geoffrich/svelte-adapter-azure-swa/issues/135) for updates. For now, you can work around the issue by using `npm` instead.
+
+Also, since your SvelteKit app is in a subfolder of the monorepo, you will need to update your deployment workflow.
+
+For instance, if you have the following folder structure:
+
+```
+apps/
+	├── sveltekit-app
+	└── other-app
+```
+
+The `app_location` and `api_location` in your deployment configuration need to point to the `apps/sveltekit-app` subfolder. `output_location` should remain the same. Here's how that would look for an Azure SWA GitHub workflow:
+
+```diff
+steps:
+	 - uses: actions/checkout@v2
+        with:
+          submodules: true
+      - name: Build And Deploy
+        id: builddeploy
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_ORANGE_GRASS_0778C6300 }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for Github integrations (i.e. PR comments)
+          action: "upload"
+          ###### Repository/Build Configurations - These values can be configured to match your app requirements. ######
+          # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
+-         app_location: "./" # App source code path
+-         api_location: "build/server" # Api source code path - optional
++         app_location: "./apps/sveltekit-app" # App source code path
++         api_location: "apps/sveltekit-app/build/server" # Api source code path - optional
+          output_location: "build/static" # Built app content directory - optional
+          ###### End of Repository/Build Configurations ######
+```
