@@ -81,6 +81,15 @@ describe('adapt', () => {
 		expect(builder.copy).not.toBeCalledWith(expect.stringContaining('api'), 'custom/api');
 	});
 
+	test('writes to custom static directory', async () => {
+		vi.mocked(existsSync).mockImplementationOnce(() => false);
+		const adapter = azureAdapter({ staticDir: 'custom/static' });
+		const builder = getMockBuilder();
+		await adapter.adapt(builder);
+		expect(builder.writeClient).toBeCalledWith('custom/static');
+		expect(builder.writePrerendered).toBeCalledWith('custom/static');
+	});
+
 	test('logs warning when custom api directory set and required file does not exist', async () => {
 		vi.mocked(existsSync).mockImplementationOnce(() => false);
 		const adapter = azureAdapter({ apiDir: 'custom/api' });
@@ -113,22 +122,6 @@ describe('adapt', () => {
 				})
 			)
 		);
-	});
-
-	test('writes to pages directory', async () => {
-		vi.mocked(existsSync).mockImplementationOnce(() => false);
-		const adapter = azureAdapter({ pages: 'test' });
-		const builder = getMockBuilder();
-		await adapter.adapt(builder);
-		expect(builder.writePrerendered).toBeCalledWith('build/static/test');
-	});
-
-	test('writes to assets directory', async () => {
-		vi.mocked(existsSync).mockImplementationOnce(() => false);
-		const adapter = azureAdapter({ assets: 'test' });
-		const builder = getMockBuilder();
-		await adapter.adapt(builder);
-		expect(builder.writeClient).toBeCalledWith('build/static/test');
 	});
 });
 

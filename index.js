@@ -49,8 +49,7 @@ export default function ({
 	customStaticWebAppConfig = {},
 	esbuildOptions = {},
 	apiDir: customApiDir = undefined,
-	pages = '',
-	assets = ''
+	staticDir: customStaticDir = undefined
 } = {}) {
 	return {
 		name: 'adapter-azure-swa',
@@ -67,7 +66,7 @@ Please see the PR for migration instructions: https://github.com/geoffrich/svelt
 
 			const tmp = builder.getBuildDirectory('azure-tmp');
 			const publish = 'build';
-			const staticDir = join(publish, 'static');
+			const staticDir = customStaticDir || join(publish, 'static');
 			const apiDir = customApiDir || join(publish, 'server');
 			const functionDir = join(apiDir, 'sk_render');
 			const entry = `${tmp}/entry.js`;
@@ -121,8 +120,8 @@ Please see the PR for migration instructions: https://github.com/geoffrich/svelt
 
 			builder.log.minor('Copying assets...');
 
-			builder.writeClient(join(staticDir, assets));
-			builder.writePrerendered(join(staticDir, pages));
+			builder.writeClient(staticDir);
+			builder.writePrerendered(staticDir);
 
 			if (!builder.prerendered.paths.includes('/')) {
 				// Azure SWA requires an index.html to be present

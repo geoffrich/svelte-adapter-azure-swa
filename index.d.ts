@@ -9,8 +9,7 @@ export type Options = {
 	customStaticWebAppConfig?: CustomStaticWebAppConfig;
 	esbuildOptions?: Pick<esbuild.BuildOptions, 'external'>;
 	apiDir?: string;
-	pages?: string;
-	assets?: string;
+	staticDir?: string;
 };
 
 export default function plugin(options?: Options): Adapter;
