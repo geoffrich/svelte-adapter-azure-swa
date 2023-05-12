@@ -119,7 +119,6 @@ Please see the PR for migration instructions: https://github.com/geoffrich/svelt
 			writeFileSync(join(functionDir, 'function.json'), functionJson);
 
 			builder.log.minor('Copying assets...');
-
 			builder.writeClient(staticDir);
 			builder.writePrerendered(staticDir);
 
