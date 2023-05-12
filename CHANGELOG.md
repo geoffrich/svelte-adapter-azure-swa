@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.16.0](https://www.github.com/geoffrich/svelte-adapter-azure-swa/compare/v0.15.0...v0.16.0) (2023-05-12)
+
+
+### Features
+
+* add `staticDir` setting ([#117](https://www.github.com/geoffrich/svelte-adapter-azure-swa/issues/117)) ([4f2ff41](https://www.github.com/geoffrich/svelte-adapter-azure-swa/commit/4f2ff41a8355ce070fc96f7d9c709806a74a2341))
+
 ## [0.15.0](https://www.github.com/geoffrich/svelte-adapter-azure-swa/compare/v0.14.0...v0.15.0) (2023-03-18)
 
 
