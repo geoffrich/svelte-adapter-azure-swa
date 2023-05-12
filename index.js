@@ -48,7 +48,8 @@ export default function ({
 	debug = false,
 	customStaticWebAppConfig = {},
 	esbuildOptions = {},
-	apiDir: customApiDir = undefined
+	apiDir: customApiDir = undefined,
+	staticDir: customStaticDir = undefined
 } = {}) {
 	return {
 		name: 'adapter-azure-swa',
@@ -65,7 +66,7 @@ Please see the PR for migration instructions: https://github.com/geoffrich/svelt
 
 			const tmp = builder.getBuildDirectory('azure-tmp');
 			const publish = 'build';
-			const staticDir = join(publish, 'static');
+			const staticDir = customStaticDir || join(publish, 'static');
 			const apiDir = customApiDir || join(publish, 'server');
 			const functionDir = join(apiDir, 'sk_render');
 			const entry = `${tmp}/entry.js`;
