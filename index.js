@@ -64,9 +64,9 @@ Please see the PR for migration instructions: https://github.com/geoffrich/svelt
 				);
 			}
 
-			const conflictingRoutes = builder.routes
-				.map((route) => route.id)
-				.filter((routeId) => routeId.startsWith('/api'));
+			const conflictingRoutes =
+				builder.routes?.map((route) => route.id).filter((routeId) => routeId.startsWith('/api')) ??
+				[];
 			if (!allowReservedSwaRoutes && conflictingRoutes.length > 0) {
 				builder.log.error(
 					`Error: the following routes conflict with Azure SWA's reserved /api route: ${conflictingRoutes.join(

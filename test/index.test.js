@@ -143,6 +143,14 @@ describe('adapt', () => {
 		});
 		await expect(adapter.adapt(builder)).resolves.not.toThrow();
 	});
+
+	test('handles null routes', async () => {
+		// builder.routes was added in 1.5 with route-level config
+		const adapter = azureAdapter();
+		const builder = getMockBuilder();
+		builder.routes = null;
+		await expect(adapter.adapt(builder)).resolves.not.toThrow();
+	});
 });
 
 /** @returns {import('@sveltejs/kit').Builder} */
