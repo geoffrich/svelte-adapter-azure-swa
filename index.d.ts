@@ -11,6 +11,7 @@ export type Options = {
 	esbuildOptions?: Pick<esbuild.BuildOptions, 'external'>;
 	apiDir?: string;
 	staticDir?: string;
+	allowReservedSwaRoutes?: boolean;
 };
 
 export default function plugin(options?: Options): Adapter;

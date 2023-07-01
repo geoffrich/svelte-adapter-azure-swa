@@ -123,6 +123,34 @@ describe('adapt', () => {
 			)
 		);
 	});
+
+	test.each(['/api', '/api/foo'])('throws error when the app defines %s route', async (routeId) => {
+		const adapter = azureAdapter();
+		const builder = getMockBuilder();
+		builder.routes.push({
+			id: routeId
+		});
+		await expect(adapter.adapt(builder)).rejects.toThrowError(
+			'Conflicting routes detected. Please rename the routes listed above.'
+		);
+	});
+
+	test('does not throw error for /api route if allowReservedSwaRoutes is defined', async () => {
+		const adapter = azureAdapter({ allowReservedSwaRoutes: true });
+		const builder = getMockBuilder();
+		builder.routes.push({
+			id: '/api'
+		});
+		await expect(adapter.adapt(builder)).resolves.not.toThrow();
+	});
+
+	test('handles null routes', async () => {
+		// builder.routes was added in 1.5 with route-level config
+		const adapter = azureAdapter();
+		const builder = getMockBuilder();
+		builder.routes = null;
+		await expect(adapter.adapt(builder)).resolves.not.toThrow();
+	});
 });
 
 /** @returns {import('@sveltejs/kit').Builder} */
@@ -135,7 +163,8 @@ function getMockBuilder() {
 		},
 		log: {
 			minor: vi.fn(),
-			warn: vi.fn()
+			warn: vi.fn(),
+			error: vi.fn()
 		},
 		prerendered: {
 			paths: ['/']
@@ -146,6 +175,14 @@ function getMockBuilder() {
 		getServerDirectory: vi.fn(() => 'server'),
 		rimraf: vi.fn(),
 		writeClient: vi.fn(),
-		writePrerendered: vi.fn()
+		writePrerendered: vi.fn(),
+		routes: [
+			{
+				id: '/'
+			},
+			{
+				id: '/about'
+			}
+		]
 	};
 }

@@ -172,6 +172,25 @@ export default {
 };
 ```
 
+### allowReservedSwaRoutes
+
+In production, Azure SWA will route any requests to `/api` or `/api/*` to the SWA [API backend](https://learn.microsoft.com/en-us/azure/static-web-apps/apis-overview). If you also define SvelteKit routes beginning with `/api`, those requests will work in dev, but return a 404 in production since the request will be routed to the SWA API. Because of this, the adapter will throw an error at build time if it detects any routes beginning with `/api`.
+
+If you want to disable this check, you can set `allowReservedSwaRoutes` to true. However, this will not start routing `/api` requests to your SvelteKit app. SWA does not allow configuring the `/api` route.
+
+```js
+import azure from 'svelte-adapter-azure-swa';
+
+export default {
+	kit: {
+		...
+		adapter: azure({
+			allowReservedSwaRoutes: true
+		})
+	}
+};
+```
+
 ### esbuildOptions
 
 An object containing additional [esbuild options](https://esbuild.github.io/api/#build-api). Currently only supports [external](https://esbuild.github.io/api/#external). If you require additional options to be exposed, plese [open an issue](https://github.com/geoffrich/svelte-adapter-azure-swa/issues).

@@ -49,7 +49,8 @@ export default function ({
 	customStaticWebAppConfig = {},
 	esbuildOptions = {},
 	apiDir: customApiDir = undefined,
-	staticDir: customStaticDir = undefined
+	staticDir: customStaticDir = undefined,
+	allowReservedSwaRoutes = false
 } = {}) {
 	return {
 		name: 'adapter-azure-swa',
@@ -62,6 +63,24 @@ export default function ({
 Please see the PR for migration instructions: https://github.com/geoffrich/svelte-adapter-azure-swa/pull/92`
 				);
 			}
+
+			const conflictingRoutes =
+				builder.routes?.map((route) => route.id).filter((routeId) => routeId.startsWith('/api')) ??
+				[];
+			if (!allowReservedSwaRoutes && conflictingRoutes.length > 0) {
+				builder.log.error(
+					`Error: the following routes conflict with Azure SWA's reserved /api route: ${conflictingRoutes.join(
+						', '
+					)}. Requests to these routes in production will return 404 instead of hitting your SvelteKit app.
+
+To resolve this error, move the conflicting routes so they do not start with /api. For example, move /api/blog to /blog.
+If you want to suppress this error, set allowReservedSwaRoutes to true in your adapter options.
+					`
+				);
+
+				throw new Error('Conflicting routes detected. Please rename the routes listed above.');
+			}
+
 			const swaConfig = generateConfig(customStaticWebAppConfig, builder.config.kit.appDir);
 
 			const tmp = builder.getBuildDirectory('azure-tmp');
