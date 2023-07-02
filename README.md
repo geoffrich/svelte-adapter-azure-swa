@@ -165,6 +165,9 @@ export default {
 						'redirect': '/login',
 						'statusCode': 302
 					}
+				},
+				platform: {
+					apiRuntime: 'node:18'
 				}
 			}
 		})
