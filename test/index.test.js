@@ -53,9 +53,13 @@ describe('generateConfig', () => {
 
 	test('accepts custom config', () => {
 		const result = generateConfig({
+			platform: {
+				apiRuntime: 'node:18'
+			},
 			globalHeaders: { 'X-Foo': 'bar' }
 		});
 		expect(result.globalHeaders).toStrictEqual({ 'X-Foo': 'bar' });
+		expect(result.platform.apiRuntime).toBe('node:18');
 	});
 });
 
