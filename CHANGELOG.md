@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.17.0](https://www.github.com/geoffrich/svelte-adapter-azure-swa/compare/v0.16.0...v0.17.0) (2023-07-02)
+
+
+### Features
+
+* allow overriding `platform.apiRuntime` ([#144](https://www.github.com/geoffrich/svelte-adapter-azure-swa/issues/144)) ([fd8241a](https://www.github.com/geoffrich/svelte-adapter-azure-swa/commit/fd8241a7a02846d846fc291cb4c74a966d00db14))
+* throw error if /api routes defined ([#142](https://www.github.com/geoffrich/svelte-adapter-azure-swa/issues/142)) ([036cf64](https://www.github.com/geoffrich/svelte-adapter-azure-swa/commit/036cf64fbedc3f4ec95271be03f75ada66eb7f2e))
+
 ## [0.16.0](https://www.github.com/geoffrich/svelte-adapter-azure-swa/compare/v0.15.0...v0.16.0) (2023-05-12)
 
 
