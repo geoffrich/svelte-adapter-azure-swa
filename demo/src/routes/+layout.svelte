@@ -1,12 +1,17 @@
 <script>
 	import Header from './Header.svelte';
 	import './styles.css';
+
+	export let data;
 </script>
 
 <div class="app">
-	<Header />
+	<Header isLoggedIn={!!data.clientPrincipal} />
 
 	<main>
+		{#if data.clientPrincipal}
+			<p>{JSON.stringify(data.clientPrincipal)}</p>
+		{/if}
 		<slot />
 	</main>
 
