@@ -8,7 +8,7 @@ export * from './types/swa';
 export type Options = {
 	debug?: boolean;
 	customStaticWebAppConfig?: CustomStaticWebAppConfig;
-	esbuildOptions?: Pick<esbuild.BuildOptions, 'external'>;
+	esbuildOptions?: Pick<esbuild.BuildOptions, 'external' | 'keepNames'>;
 	apiDir?: string;
 	staticDir?: string;
 	allowReservedSwaRoutes?: boolean;
