@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.18.0](https://www.github.com/geoffrich/svelte-adapter-azure-swa/compare/v0.17.0...v0.18.0) (2023-08-03)
+
+
+### Features
+
+* add `keepNames` to `esbuildOptions` ([#150](https://www.github.com/geoffrich/svelte-adapter-azure-swa/issues/150)) ([dbe44ba](https://www.github.com/geoffrich/svelte-adapter-azure-swa/commit/dbe44ba4d239a4bc1db238b909fd8a5f55b5baf4))
+
 ## [0.17.0](https://www.github.com/geoffrich/svelte-adapter-azure-swa/compare/v0.16.0...v0.17.0) (2023-07-02)
 
 
