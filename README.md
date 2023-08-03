@@ -207,7 +207,7 @@ export default {
 		adapter: azure({
 			esbuildOptions: {
 				external: ['fsevents'],
-				keepNames: [true, false]
+				keepNames: true
 			}
 		})
 	}
