@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.19.0](https://www.github.com/geoffrich/svelte-adapter-azure-swa/compare/v0.18.0...v0.19.0) (2023-08-17)
+
+
+### Features
+
+* add `loader` to `esbuildOptions` ([#153](https://www.github.com/geoffrich/svelte-adapter-azure-swa/issues/153)) ([f1f4ec6](https://www.github.com/geoffrich/svelte-adapter-azure-swa/commit/f1f4ec6800a3d90e8002207c0609939fa1ccc049))
+
 ## [0.18.0](https://www.github.com/geoffrich/svelte-adapter-azure-swa/compare/v0.17.0...v0.18.0) (2023-08-03)
 
 
