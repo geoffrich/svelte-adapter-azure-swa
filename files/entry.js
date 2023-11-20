@@ -75,8 +75,8 @@ function toRequest(context) {
 		init.body = Buffer.isBuffer(body)
 			? body
 			: typeof rawBody === 'string'
-			? Buffer.from(rawBody, 'utf-8')
-			: rawBody;
+			  ? Buffer.from(rawBody, 'utf-8')
+			  : rawBody;
 	}
 
 	return new Request(originalUrl, init);
