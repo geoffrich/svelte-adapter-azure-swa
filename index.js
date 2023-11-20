@@ -218,7 +218,7 @@ export function generateConfig(customStaticWebAppConfig, appDir) {
 			rewrite: ssrFunctionRoute
 		},
 		platform: {
-			apiRuntime: 'node:16',
+			apiRuntime: 'node:18',
 			...customStaticWebAppConfig.platform
 		}
 	};
