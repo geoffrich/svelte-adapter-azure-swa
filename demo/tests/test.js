@@ -17,3 +17,12 @@ test('submits sverdle guess', async ({ page }) => {
 	await expect(input).toHaveValue('a');
 	await expect(input).toBeDisabled();
 });
+
+test('can call custom API azure function', async ({ request }) => {
+	const response = await request.post('/api/HelloWorld', {
+		data: {
+			name: 'Geoff'
+		}
+	});
+	expect(response.ok()).toBeTruthy();
+});
