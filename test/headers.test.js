@@ -118,4 +118,12 @@ describe('client principal parsing', () => {
 	test('returns undefined when there is no client principal', () => {
 		expect(getClientPrincipalFromHeaders(new Headers())).toBeUndefined();
 	});
+
+	test('returns undefined if unable to parse', () => {
+		const headers = new Headers({
+			'x-ms-client-principal': 'boom'
+		});
+
+		expect(getClientPrincipalFromHeaders(headers)).toBeUndefined();
+	});
 });

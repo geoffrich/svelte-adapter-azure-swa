@@ -54,9 +54,14 @@ export function getClientPrincipalFromHeaders(headers) {
 		return undefined;
 	}
 
-	const encoded = Buffer.from(header, 'base64');
-	const decoded = encoded.toString('ascii');
-	const clientPrincipal = JSON.parse(decoded);
+	try {
+		const encoded = Buffer.from(header, 'base64');
+		const decoded = encoded.toString('ascii');
+		const clientPrincipal = JSON.parse(decoded);
 
-	return clientPrincipal;
+		return clientPrincipal;
+	} catch (e) {
+		console.log('Unable to parse client principal:', e);
+		return undefined;
+	}
 }
