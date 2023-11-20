@@ -200,6 +200,9 @@ export function generateConfig(customStaticWebAppConfig, appDir) {
 				route: '/api/*'
 			},
 			{
+				route: '/data-api/*'
+			},
+			{
 				route: '*',
 				methods: ['POST', 'PUT', 'DELETE'],
 				rewrite: ssrFunctionRoute
