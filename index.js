@@ -9,25 +9,6 @@ import esbuild from 'esbuild';
 
 const ssrFunctionRoute = '/api/__render';
 
-const functionJson = `
-{
-	"bindings": [
-		{
-			"authLevel": "anonymous",
-			"type": "httpTrigger",
-			"direction": "in",
-			"name": "req",
-			"route": "__render"
-		},
-		{
-			"type": "http",
-			"direction": "out",
-			"name": "res"
-		}
-	]
-}
-`;
-
 /**
  * Validate the static web app configuration does not override the minimum config for the adapter to work correctly.
  * @param config {import('./types/swa').CustomStaticWebAppConfig}
@@ -123,21 +104,22 @@ If you want to suppress this error, set allowReservedSwaRoutes to true in your a
 				})};\n`
 			);
 
+			const external = esbuildOptions.external || [];
+
 			/** @type {BuildOptions} */
 			const default_options = {
 				entryPoints: [entry],
 				outfile: join(functionDir, 'index.js'),
 				bundle: true,
 				platform: 'node',
-				target: 'node16',
+				target: 'node18',
 				sourcemap: 'linked',
-				external: esbuildOptions.external,
+				external: [...external, '@azure/functions-core'],
 				keepNames: esbuildOptions.keepNames,
 				loader: esbuildOptions.loader
 			};
 
 			await esbuild.build(default_options);
-			writeFileSync(join(functionDir, 'function.json'), functionJson);
 
 			builder.log.minor('Copying assets...');
 			builder.writeClient(staticDir);

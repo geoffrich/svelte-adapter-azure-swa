@@ -1,4 +1,5 @@
 import { installPolyfills } from '@sveltejs/kit/node/polyfills';
+import { app } from '@azure/functions';
 import { Server } from 'SERVER';
 import { manifest } from 'MANIFEST';
 import {
@@ -16,67 +17,66 @@ installPolyfills();
 const server = new Server(manifest);
 const initialized = server.init({ env: process.env });
 
-/**
- * @typedef {import('@azure/functions').AzureFunction} AzureFunction
- * @typedef {import('@azure/functions').Context} Context
- * @typedef {import('@azure/functions').HttpRequest} HttpRequest
- */
+app.http('__render', {
+	handler: async (originalRequest, context) => {
+		const request = await toRequest(originalRequest);
 
-/**
- * @param {Context} context
- */
-export async function index(context) {
-	const request = toRequest(context);
-
-	if (debug) {
-		context.log(`Request: ${JSON.stringify(request)}`);
-	}
-
-	const ipAddress = getClientIPFromHeaders(request.headers);
-	const clientPrincipal = getClientPrincipalFromHeaders(request.headers);
-
-	await initialized;
-	const rendered = await server.respond(request, {
-		getClientAddress() {
-			return ipAddress;
-		},
-		platform: {
-			clientPrincipal,
-			context
+		if (debug) {
+			context.log(`Request: ${JSON.stringify(request)}`);
 		}
-	});
 
-	const response = await toResponse(rendered);
+		const ipAddress = getClientIPFromHeaders(request.headers);
+		const clientPrincipal = getClientPrincipalFromHeaders(request.headers);
 
-	if (debug) {
-		context.log(`Response: ${JSON.stringify(response)}`);
+		await initialized;
+		const rendered = await server.respond(request, {
+			getClientAddress() {
+				return ipAddress;
+			},
+			platform: {
+				clientPrincipal,
+				context
+			}
+		});
+
+		const response = await toResponse(rendered);
+
+		if (debug) {
+			context.log(`Response: ${JSON.stringify(response)}`);
+		}
+
+		return response;
 	}
-
-	context.res = response;
-}
+})
 
 /**
- * @param {Context} context
- * @returns {Request}
+ * @typedef {import('@azure/functions').HttpRequest} AzureFunctionHttpRequest
+ */
+
+/**
+ * @param {AzureFunctionHttpRequest} originalRequest
+ * @returns {Promise<Request>}
  * */
-function toRequest(context) {
-	const { method, headers, rawBody, body } = context.req;
+async function toRequest(originalRequest) {
+	const { method, headers, arrayBuffer  } = originalRequest;
 	// because we proxy all requests to the render function, the original URL in the request is /api/__render
 	// this header contains the URL the user requested
-	const originalUrl = headers['x-ms-original-url'];
+	const originalUrl = headers.get('x-ms-original-url');
+
+	/** @type {[string, string][]} */
+	const headerEntries = [];
+	for (const header of headers.entries()) {
+		headerEntries.push(header);
+	}
 
 	/** @type {RequestInit} */
 	const init = {
 		method,
-		headers: new Headers(headers)
+		headers: headerEntries
 	};
 
 	if (method !== 'GET' && method !== 'HEAD') {
-		init.body = Buffer.isBuffer(body)
-			? body
-			: typeof rawBody === 'string'
-			  ? Buffer.from(rawBody, 'utf-8')
-			  : rawBody;
+		init.body = await arrayBuffer();
 	}
 
 	return new Request(originalUrl, init);
