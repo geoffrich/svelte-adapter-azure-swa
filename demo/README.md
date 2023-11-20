@@ -4,6 +4,8 @@ This is a repo demonstrating how to use [svelte-adapter-azure-swa](https://www.n
 
 This demo uses the local version of the adapter to make testing unreleased changes easier. In your app, you should install `svelte-adapter-azure-swa` from npm.
 
+This demo also uses a custom Azure function to make testing that integration easier. If you do not need a custom Azure function, you do not need the `func/` folder or need to set the `apiDir` option in `svelte.config.js`.
+
 [Deployed demo](https://polite-desert-00b80111e.2.azurestaticapps.net/)
 
 ## Developing

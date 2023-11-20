@@ -1,2 +1,5 @@
 CHANGELOG.md
 coverage/
+build/
+.svelte-kit/
+sk_render/
