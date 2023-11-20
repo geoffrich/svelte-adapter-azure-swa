@@ -1,5 +1,13 @@
 # Changelog
 
+### [0.19.1](https://www.github.com/geoffrich/svelte-adapter-azure-swa/compare/v0.19.0...v0.19.1) (2023-11-20)
+
+
+### Bug Fixes
+
+* do not rewrite /api and /data-api requests to SvelteKit ([#162](https://www.github.com/geoffrich/svelte-adapter-azure-swa/issues/162)) ([aa36771](https://www.github.com/geoffrich/svelte-adapter-azure-swa/commit/aa3677133d404cf7bb396ea3f4c41ea026598ce7))
+* do not throw on parsing client principal ([#160](https://www.github.com/geoffrich/svelte-adapter-azure-swa/issues/160)) ([0fe3eaa](https://www.github.com/geoffrich/svelte-adapter-azure-swa/commit/0fe3eaa593e3f58044b230957e190cb3011ea4d5))
+
 ## [0.19.0](https://www.github.com/geoffrich/svelte-adapter-azure-swa/compare/v0.18.0...v0.19.0) (2023-08-17)
 
 
