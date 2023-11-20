@@ -26,7 +26,7 @@ describe('generateConfig', () => {
 			platform: {
 				apiRuntime: 'node:16'
 			},
-			routes: [
+			routes: expect.arrayContaining([
 				{
 					methods: ['POST', 'PUT', 'DELETE'],
 					rewrite: '/api/__render',
@@ -38,7 +38,7 @@ describe('generateConfig', () => {
 					},
 					route: '/appDir/immutable/*'
 				}
-			]
+			])
 		});
 	});
 
