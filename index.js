@@ -48,8 +48,8 @@ export default function ({
 	debug = false,
 	customStaticWebAppConfig = {},
 	esbuildOptions = {},
-	apiDir: customApiDir = undefined,
-	staticDir: customStaticDir = undefined,
+	apiDir: customApiDir = '',
+	staticDir: customStaticDir = '',
 	allowReservedSwaRoutes = false
 } = {}) {
 	return {
