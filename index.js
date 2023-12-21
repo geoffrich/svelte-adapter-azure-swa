@@ -129,7 +129,7 @@ If you want to suppress this error, set allowReservedSwaRoutes to true in your a
 				outfile: join(functionDir, 'index.js'),
 				bundle: true,
 				platform: 'node',
-				target: 'node16',
+				target: 'node18',
 				sourcemap: 'linked',
 				external: esbuildOptions.external,
 				keepNames: esbuildOptions.keepNames,
@@ -218,7 +218,7 @@ export function generateConfig(customStaticWebAppConfig, appDir) {
 			rewrite: ssrFunctionRoute
 		},
 		platform: {
-			apiRuntime: 'node:16',
+			apiRuntime: 'node:18',
 			...customStaticWebAppConfig.platform
 		}
 	};

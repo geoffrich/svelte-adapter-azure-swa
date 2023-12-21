@@ -31,7 +31,7 @@
 		"url": "https://github.com/geoffrich/svelte-adapter-azure-swa/issues"
 	},
 	"peerDependencies": {
-		"@sveltejs/kit": "^1.0.0"
+		"@sveltejs/kit": "^2.0.0"
 	},
 	"devDependencies": {
 		"@azure/functions": "^1.2.3",
@@ -43,8 +43,8 @@
 		"vitest": "^1.1.0"
 	},
 	"dependencies": {
-		"esbuild": "^0.15.7",
-		"set-cookie-parser": "^2.5.1"
+		"esbuild": "^0.19.9",
+		"set-cookie-parser": "^2.6.0"
 	},
 	"files": [
 		"files",
