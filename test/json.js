@@ -44,8 +44,8 @@ export function toMatchJSON(received, expected) {
 		const message = isEmpty
 			? ''
 			: match
-			  ? `Unexpected ${match[1]}: ${received[index]}`
-			  : 'Unexpected end of string';
+				? `Unexpected ${match[1]}: ${received[index]}`
+				: 'Unexpected end of string';
 		throwError(
 			matcherErrorMessage(
 				hint,
