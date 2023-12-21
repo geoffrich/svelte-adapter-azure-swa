@@ -48,8 +48,8 @@ export default function ({
 	debug = false,
 	customStaticWebAppConfig = {},
 	esbuildOptions = {},
-	apiDir = null,
-	staticDir = null,
+	apiDir: customApiDir = '',
+	staticDir: customStaticDir = '',
 	allowReservedSwaRoutes = false
 } = {}) {
 	return {
@@ -57,7 +57,7 @@ export default function ({
 
 		async adapt(builder) {
 			// TODO: remove for 1.0
-			if (!apiDir && existsSync(join('api', 'render'))) {
+			if (!customApiDir && existsSync(join('api', 'render'))) {
 				builder.log.warn(
 					`Warning: you have an api/render folder but this adapter now uses the build/server folder for API functions. You may need to update your build configuration. Failing to do so could break your deployed site.
 Please see the PR for migration instructions: https://github.com/geoffrich/svelte-adapter-azure-swa/pull/92`
@@ -85,9 +85,9 @@ If you want to suppress this error, set allowReservedSwaRoutes to true in your a
 
 			const tmp = builder.getBuildDirectory('azure-tmp');
 			const publish = 'build';
-			const staticDirOrDefault = staticDir || join(publish, 'static');
-			const apiDirOrDefault = apiDir || join(publish, 'server');
-			const functionDir = join(apiDirOrDefault, 'sk_render');
+			const staticDir = customStaticDir || join(publish, 'static');
+			const apiDir = customApiDir || join(publish, 'server');
+			const functionDir = join(apiDir, 'sk_render');
 			const entry = `${tmp}/entry.js`;
 			builder.log.minor(`Publishing to "${publish}"`);
 
@@ -109,11 +109,11 @@ If you want to suppress this error, set allowReservedSwaRoutes to true in your a
 				}
 			});
 
-			if (apiDirOrDefault) {
+			if (customApiDir) {
 				checkForMissingFiles();
 			} else {
 				// if the user specified a custom API directory, assume they are creating the required function files themselves
-				builder.copy(join(files, 'api'), apiDirOrDefault);
+				builder.copy(join(files, 'api'), apiDir);
 			}
 
 			writeFileSync(
@@ -140,14 +140,14 @@ If you want to suppress this error, set allowReservedSwaRoutes to true in your a
 			writeFileSync(join(functionDir, 'function.json'), functionJson);
 
 			builder.log.minor('Copying assets...');
-			builder.writeClient(staticDirOrDefault);
+			builder.writeClient(staticDir);
 			builder.writePrerendered(staticDir);
 
 			if (!builder.prerendered.paths.includes('/')) {
 				// Azure SWA requires an index.html to be present
 				// If the root was not pre-rendered, add a placeholder index.html
 				// Route all requests for the index to the SSR function
-				writeFileSync(`${staticDirOrDefault}/index.html`, '');
+				writeFileSync(`${staticDir}/index.html`, '');
 				swaConfig.routes.push(
 					{
 						route: '/index.html',
@@ -168,7 +168,7 @@ If you want to suppress this error, set allowReservedSwaRoutes to true in your a
 			function checkForMissingFiles() {
 				const requiredFiles = ['host.json', 'package.json'];
 				for (const file of requiredFiles) {
-					if (!existsSync(join(apiDirOrDefault, file))) {
+					if (!existsSync(join(customApiDir, file))) {
 						builder.log.warn(
 							`Warning: apiDir set but ${file} does not exist. You will need to create this file yourself. See the docs for more information: https://github.com/geoffrich/svelte-adapter-azure-swa#apidir`
 						);
