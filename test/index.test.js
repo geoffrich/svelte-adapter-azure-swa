@@ -24,7 +24,7 @@ describe('generateConfig', () => {
 				rewrite: '/api/__render'
 			},
 			platform: {
-				apiRuntime: 'node:16'
+				apiRuntime: 'node:18'
 			},
 			routes: expect.arrayContaining([
 				{
@@ -54,12 +54,12 @@ describe('generateConfig', () => {
 	test('accepts custom config', () => {
 		const result = generateConfig({
 			platform: {
-				apiRuntime: 'node:18'
+				apiRuntime: 'node:20'
 			},
 			globalHeaders: { 'X-Foo': 'bar' }
 		});
 		expect(result.globalHeaders).toStrictEqual({ 'X-Foo': 'bar' });
-		expect(result.platform.apiRuntime).toBe('node:18');
+		expect(result.platform.apiRuntime).toBe('node:20');
 	});
 });
 

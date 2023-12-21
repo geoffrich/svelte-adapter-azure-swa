@@ -167,7 +167,7 @@ export default {
 					}
 				},
 				platform: {
-					apiRuntime: 'node:18'
+					apiRuntime: 'node:20'
 				}
 			}
 		})
