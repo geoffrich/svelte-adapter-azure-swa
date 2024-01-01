@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.20.0](https://www.github.com/geoffrich/svelte-adapter-azure-swa/compare/v0.19.1...v0.20.0) (2024-01-01)
+
+
+### Features
+
+* require SvelteKit 2 and Node 18 ([c77c842](https://www.github.com/geoffrich/svelte-adapter-azure-swa/commit/c77c842659297a687239b33ba52546285d7b26d3))
+
 ### [0.19.1](https://www.github.com/geoffrich/svelte-adapter-azure-swa/compare/v0.19.0...v0.19.1) (2023-11-20)
 
 
