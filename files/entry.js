@@ -49,6 +49,7 @@ export async function index(context) {
 	const response = await toResponse(rendered);
 
 	if (debug) {
+		context.log(`SK headers: ${JSON.stringify(Object.fromEntries(rendered.headers.entries()))}`);
 		context.log(`Response: ${JSON.stringify(response)}`);
 	}
 
