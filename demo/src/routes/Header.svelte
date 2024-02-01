@@ -2,6 +2,8 @@
 	import { page } from '$app/stores';
 	import logo from '$lib/images/svelte-logo.svg';
 	import github from '$lib/images/github.svg';
+
+	export let isLoggedIn = false;
 </script>
 
 <header>
@@ -25,6 +27,15 @@
 			<li aria-current={$page.url.pathname.startsWith('/sverdle') ? 'page' : undefined}>
 				<a href="/sverdle">Sverdle</a>
 			</li>
+			{#if isLoggedIn}
+				<li>
+					<a href="/.auth/logout" data-sveltekit-reload>Logout</a>
+				</li>
+			{:else}
+				<li>
+					<a href="/.auth/login/github" data-sveltekit-reload>Login</a>
+				</li>
+			{/if}
 		</ul>
 		<svg viewBox="0 0 2 3" aria-hidden="true">
 			<path d="M0,0 L0,3 C0.5,3 0.5,3 1,2 L2,0 Z" />
