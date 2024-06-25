@@ -104,6 +104,11 @@ If you want to suppress this error, set allowReservedSwaRoutes to true in your a
 				})};\n`
 			);
 
+			// add @azure/functions to esbuildOptions.external if not already set - this is needed by the Azure Functiions v4 runtime
+			if (!esbuildOptions.external?.includes('@azure/functions')) {
+				esbuildOptions.external = [...(esbuildOptions.external || []), '@azure/functions'];
+			}
+
 			/** @type {BuildOptions} */
 			const default_options = {
 				entryPoints: [entry],
