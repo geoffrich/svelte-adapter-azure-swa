@@ -66,6 +66,12 @@ function toRequest(context) {
 	// this header contains the URL the user requested
 	const originalUrl = headers['x-ms-original-url'];
 
+	// SWA strips content-type headers from empty POST requests, but SK form actions require the header
+	// https://github.com/geoffrich/svelte-adapter-azure-swa/issues/178
+	if (method === 'POST' && !body && !headers['content-type']) {
+		headers['content-type'] = 'application/x-www-form-urlencoded';
+	}
+
 	/** @type {RequestInit} */
 	const init = {
 		method,
