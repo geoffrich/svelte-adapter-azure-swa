@@ -29,6 +29,12 @@ export async function index(context) {
 	const request = toRequest(context);
 
 	if (debug) {
+		context.log(
+			'Starting request',
+			context?.req?.method,
+			context?.req?.headers?.['x-ms-original-url']
+		);
+		context.log(`Original request: ${JSON.stringify(context)}`);
 		context.log(`Request: ${JSON.stringify(request)}`);
 	}
 
@@ -65,6 +71,12 @@ function toRequest(context) {
 	// because we proxy all requests to the render function, the original URL in the request is /api/__render
 	// this header contains the URL the user requested
 	const originalUrl = headers['x-ms-original-url'];
+
+	// SWA strips content-type headers from empty POST requests, but SK form actions require the header
+	// https://github.com/geoffrich/svelte-adapter-azure-swa/issues/178
+	if (method === 'POST' && !body && !headers['content-type']) {
+		headers['content-type'] = 'application/x-www-form-urlencoded';
+	}
 
 	/** @type {RequestInit} */
 	const init = {
