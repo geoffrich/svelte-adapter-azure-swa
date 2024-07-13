@@ -29,6 +29,12 @@ export async function index(context) {
 	const request = toRequest(context);
 
 	if (debug) {
+		context.log(
+			'Starting request',
+			context?.req?.method,
+			context?.req?.headers?.['x-ms-original-url']
+		);
+		context.log(`Original request: ${JSON.stringify(context)}`);
 		context.log(`Request: ${JSON.stringify(request)}`);
 	}
 
