@@ -1,5 +1,12 @@
 # Changelog
 
+### [0.20.1](https://www.github.com/geoffrich/svelte-adapter-azure-swa/compare/v0.20.0...v0.20.1) (2024-07-13)
+
+
+### Bug Fixes
+
+* work around SWA issue with empty form bodies ([#179](https://www.github.com/geoffrich/svelte-adapter-azure-swa/issues/179)) ([d14aae1](https://www.github.com/geoffrich/svelte-adapter-azure-swa/commit/d14aae1bd35a68ed6836db6277753f2e3619de1b))
+
 ## [0.20.0](https://www.github.com/geoffrich/svelte-adapter-azure-swa/compare/v0.19.1...v0.20.0) (2024-01-01)
 
 
