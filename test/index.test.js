@@ -2,6 +2,7 @@ import { expect, describe, test, vi } from 'vitest';
 import azureAdapter, { generateConfig } from '../index';
 import { writeFileSync, existsSync } from 'fs';
 import { jsonMatching, toMatchJSON } from './json';
+import esbuild from 'esbuild';
 
 expect.extend({ jsonMatching, toMatchJSON });
 
@@ -77,10 +78,10 @@ describe('adapt', () => {
 		const adapter = azureAdapter({ apiDir: 'custom/api' });
 		const builder = getMockBuilder();
 		await adapter.adapt(builder);
-		expect(writeFileSync).toBeCalledWith(
-			'custom/api/sk_render/function.json',
-			expect.stringContaining('sk_render')
-		);
+		expect(esbuild.build).toBeCalledWith(expect.objectContaining({
+			outfile: 'custom/api/sk_render/index.js',
+		}));
+
 		// we don't copy the required function files to a custom API directory
 		expect(builder.copy).not.toBeCalledWith(expect.stringContaining('api'), 'custom/api');
 	});
