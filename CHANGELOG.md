@@ -1,5 +1,15 @@
 # Changelog
 
+## [Unreleased]
+
+### Features
+
+* **Breaking:** switch to Azure Functions v4:
+  * the function path has changed from `/api/__render` to `/api/sk_render` (v4 does not allow routes starting with underscores)
+  * see also [Migrate to version 4 of the Node.js programming model for Azure Functions](https://learn.microsoft.com/en-us/azure/azure-functions/functions-node-upgrade-v4) from the Azure docs
+
+
+
 ### [0.20.1](https://www.github.com/geoffrich/svelte-adapter-azure-swa/compare/v0.20.0...v0.20.1) (2024-07-13)
 
 
