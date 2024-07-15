@@ -21,7 +21,7 @@ describe('generateConfig', () => {
 		const result = generateConfig({}, 'appDir');
 		expect(result).toStrictEqual({
 			navigationFallback: {
-				rewrite: '/api/__render'
+				rewrite: '/api/sk_render'
 			},
 			platform: {
 				apiRuntime: 'node:18'
@@ -29,7 +29,7 @@ describe('generateConfig', () => {
 			routes: expect.arrayContaining([
 				{
 					methods: ['POST', 'PUT', 'DELETE'],
-					rewrite: '/api/__render',
+					rewrite: '/api/sk_render',
 					route: '*'
 				},
 				{
@@ -79,7 +79,7 @@ describe('adapt', () => {
 		await adapter.adapt(builder);
 		expect(writeFileSync).toBeCalledWith(
 			'custom/api/sk_render/function.json',
-			expect.stringContaining('__render')
+			expect.stringContaining('sk_render')
 		);
 		// we don't copy the required function files to a custom API directory
 		expect(builder.copy).not.toBeCalledWith(expect.stringContaining('api'), 'custom/api');
@@ -116,11 +116,11 @@ describe('adapt', () => {
 					routes: expect.arrayContaining([
 						{
 							route: '/index.html',
-							rewrite: '/api/__render'
+							rewrite: '/api/sk_render'
 						},
 						{
 							route: '/',
-							rewrite: '/api/__render'
+							rewrite: '/api/sk_render'
 						}
 					])
 				})
