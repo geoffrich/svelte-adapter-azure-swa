@@ -279,3 +279,12 @@ steps:
           output_location: "build/static" # Built app content directory - optional
           ###### End of Repository/Build Configurations ######
 ```
+
+## Gotchas
+
+Azure has its share of surprising or quirky behaviors. Here is an evolving list of things to look out for:
+
+> [!CAUTION]
+> Azure silently strips the `content-type` header from requests that have no body.
+>
+> [SvelteKit form actions](https://kit.svelte.dev/docs/form-actions) are valid with no parameters, which can lead to `POST` requests that have an empty body. Unfortunately, [Azure deletes the `content-type` header when the request has an empty body](https://github.com/geoffrich/svelte-adapter-azure-swa/issues/178), which breaks SvelteKit's logic for handling form actions. Until [this is addressed by Azure](https://github.com/Azure/static-web-apps/issues/1512), update to [verson 0.20.1](https://github.com/geoffrich/svelte-adapter-azure-swa/releases/tag/v0.20.1) which contains a workaround for this behavior.
