@@ -18,10 +18,7 @@ describe('header processing', () => {
 
 		expect(cookies).toEqual({
 			cookies: [],
-			headers: {
-				'content-type': 'application/json',
-				location: '/'
-			}
+			headers
 		});
 	});
 
@@ -40,7 +37,7 @@ describe('header processing', () => {
 		const cookies = splitCookiesFromHeaders(headers);
 
 		expect(cookies).toStrictEqual({
-			headers: {},
+			headers: new Headers(),
 			cookies: [
 				{
 					expires: new Date('1994-11-06T08:49:37.000Z'),
