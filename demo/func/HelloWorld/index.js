@@ -7,7 +7,7 @@ app.http('httpTrigger1', {
 
 		let name;
 		if (req.query.has('name')) {
-			name = req.query.get('name')
+			name = req.query.get('name');
 		} else {
 			let body = await req.json();
 			name = body.name;

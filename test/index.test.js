@@ -78,9 +78,11 @@ describe('adapt', () => {
 		const adapter = azureAdapter({ apiDir: 'custom/api' });
 		const builder = getMockBuilder();
 		await adapter.adapt(builder);
-		expect(esbuild.build).toBeCalledWith(expect.objectContaining({
-			outfile: 'custom/api/sk_render/index.js',
-		}));
+		expect(esbuild.build).toBeCalledWith(
+			expect.objectContaining({
+				outfile: 'custom/api/sk_render/index.js'
+			})
+		);
 
 		// we don't copy the required function files to a custom API directory
 		expect(builder.copy).not.toBeCalledWith(expect.stringContaining('api'), 'custom/api');
