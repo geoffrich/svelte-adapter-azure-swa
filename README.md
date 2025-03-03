@@ -240,6 +240,10 @@ This is currently only available when running in production on SWA. In addition,
 
 All server requests to your SvelteKit app are handled by an Azure function. This property contains that Azure function's [request context](https://learn.microsoft.com/en-us/azure/azure-functions/functions-reference-node#context-object).
 
+### `user`
+
+The `user` property of the Azure function's [HTTP request](https://learn.microsoft.com/en-us/azure/azure-functions/functions-reference-node?tabs=javascript%2Cwindows%2Cazure-cli&pivots=nodejs-model-v4#http-request).
+
 ## Monorepo support
 
 If you're deploying your app from a monorepo, here's what you need to know.

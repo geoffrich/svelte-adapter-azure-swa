@@ -22,7 +22,7 @@ export function splitCookiesFromHeaders(headers) {
 	headers.forEach((value, key) => {
 		if (key === 'set-cookie') {
 			const cookieStrings = set_cookie_parser.splitCookiesString(value);
-			// @ts-ignore
+			// @ts-expect-error - one cookie type has a stricter sameSite type
 			resCookies.push(...set_cookie_parser.parse(cookieStrings));
 		} else {
 			resHeaders[key] = value;

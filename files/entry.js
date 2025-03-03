@@ -71,6 +71,8 @@ app.http('sk_render', {
  * @returns {Request}
  */
 function toRequest(httpRequest) {
+	// because we proxy all requests to the render function, the original URL in the request is /api/sk_render
+	// this header contains the URL the user requested
 	const originalUrl = httpRequest.headers.get('x-ms-original-url');
 
 	// SWA strips content-type headers from empty POST requests, but SK form actions require the header
