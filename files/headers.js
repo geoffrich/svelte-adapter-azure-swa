@@ -1,30 +1,35 @@
 import * as set_cookie_parser from 'set-cookie-parser';
 
 /**
+ * @typedef {import('@azure/functions').Cookie} Cookie
+ */
+
+/**
  * Splits 'set-cookie' headers into individual cookies
  * @param {Headers} headers
  * @returns {{
- *   headers: Record<string, string>,
- *   cookies: set_cookie_parser.Cookie[]
+ *   headers: Headers,
+ *   cookies: Cookie[]
  * }}
  */
 export function splitCookiesFromHeaders(headers) {
 	/** @type {Record<string, string>} */
 	const resHeaders = {};
 
-	/** @type {set_cookie_parser.Cookie[]} */
+	/** @type {Cookie[]} */
 	const resCookies = [];
 
 	headers.forEach((value, key) => {
 		if (key === 'set-cookie') {
 			const cookieStrings = set_cookie_parser.splitCookiesString(value);
+			// @ts-expect-error - one cookie type has a stricter sameSite type
 			resCookies.push(...set_cookie_parser.parse(cookieStrings));
 		} else {
 			resHeaders[key] = value;
 		}
 	});
 
-	return { headers: resHeaders, cookies: resCookies };
+	return { headers: new Headers(resHeaders), cookies: resCookies };
 }
 
 /**

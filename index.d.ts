@@ -1,6 +1,6 @@
 import { Adapter } from '@sveltejs/kit';
 import { ClientPrincipal, CustomStaticWebAppConfig } from './types/swa';
-import { Context } from '@azure/functions';
+import { HttpRequestUser, InvocationContext } from '@azure/functions';
 import esbuild from 'esbuild';
 
 export * from './types/swa';
@@ -37,8 +37,11 @@ declare global {
 			 *
 			 * @see The {@link https://learn.microsoft.com/en-us/azure/azure-functions/functions-reference-node#context-object Azure function documentation}
 			 */
+			context: InvocationContext;
+
+			user: HttpRequestUser;
+
 			clientPrincipal?: ClientPrincipal;
-			context: Context;
 		}
 	}
 }

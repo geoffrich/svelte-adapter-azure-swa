@@ -7,26 +7,7 @@ import esbuild from 'esbuild';
  * @typedef {import('esbuild').BuildOptions} BuildOptions
  */
 
-const ssrFunctionRoute = '/api/__render';
-
-const functionJson = `
-{
-	"bindings": [
-		{
-			"authLevel": "anonymous",
-			"type": "httpTrigger",
-			"direction": "in",
-			"name": "req",
-			"route": "__render"
-		},
-		{
-			"type": "http",
-			"direction": "out",
-			"name": "res"
-		}
-	]
-}
-`;
+const ssrFunctionRoute = '/api/sk_render';
 
 /**
  * Validate the static web app configuration does not override the minimum config for the adapter to work correctly.
@@ -123,6 +104,11 @@ If you want to suppress this error, set allowReservedSwaRoutes to true in your a
 				})};\n`
 			);
 
+			// add @azure/functions to esbuildOptions.external if not already set - this is needed by the Azure Functiions v4 runtime
+			if (!esbuildOptions.external?.includes('@azure/functions')) {
+				esbuildOptions.external = [...(esbuildOptions.external || []), '@azure/functions'];
+			}
+
 			/** @type {BuildOptions} */
 			const default_options = {
 				entryPoints: [entry],
@@ -137,7 +123,6 @@ If you want to suppress this error, set allowReservedSwaRoutes to true in your a
 			};
 
 			await esbuild.build(default_options);
-			writeFileSync(join(functionDir, 'function.json'), functionJson);
 
 			builder.log.minor('Copying assets...');
 			builder.writeClient(staticDir);

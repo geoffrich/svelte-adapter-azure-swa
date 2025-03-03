@@ -6,6 +6,7 @@ import {
 	getClientPrincipalFromHeaders,
 	splitCookiesFromHeaders
 } from './headers';
+import { app } from '@azure/functions';
 
 // replaced at build time
 // @ts-expect-error
@@ -17,99 +18,103 @@ const server = new Server(manifest);
 const initialized = server.init({ env: process.env });
 
 /**
- * @typedef {import('@azure/functions').AzureFunction} AzureFunction
- * @typedef {import('@azure/functions').Context} Context
+ * @typedef {import('@azure/functions').InvocationContext} InvocationContext
  * @typedef {import('@azure/functions').HttpRequest} HttpRequest
+ * @typedef {import('@azure/functions').HttpResponse} HttpResponse
  */
 
-/**
- * @param {Context} context
- */
-export async function index(context) {
-	const request = toRequest(context);
-
-	if (debug) {
-		context.log(
-			'Starting request',
-			context?.req?.method,
-			context?.req?.headers?.['x-ms-original-url']
-		);
-		context.log(`Original request: ${JSON.stringify(context)}`);
-		context.log(`Request: ${JSON.stringify(request)}`);
-	}
-
-	const ipAddress = getClientIPFromHeaders(request.headers);
-	const clientPrincipal = getClientPrincipalFromHeaders(request.headers);
-
-	await initialized;
-	const rendered = await server.respond(request, {
-		getClientAddress() {
-			return ipAddress;
-		},
-		platform: {
-			clientPrincipal,
-			context
+app.http('sk_render', {
+	methods: ['HEAD', 'GET', 'POST', 'DELETE', 'PUT', 'OPTIONS'],
+	/**
+	 *
+	 * @param {HttpRequest} httpRequest
+	 * @param {InvocationContext} context
+	 */
+	handler: async (httpRequest, context) => {
+		if (debug) {
+			context.log(
+				'Starting request',
+				httpRequest.method,
+				httpRequest.headers.get('x-ms-original-url')
+			);
+			context.log(`Request: ${JSON.stringify(httpRequest)}`);
 		}
-	});
 
-	const response = await toResponse(rendered);
+		const request = toRequest(httpRequest);
 
-	if (debug) {
-		context.log(`SK headers: ${JSON.stringify(Object.fromEntries(rendered.headers.entries()))}`);
-		context.log(`Response: ${JSON.stringify(response)}`);
+		const ipAddress = getClientIPFromHeaders(request.headers);
+		const clientPrincipal = getClientPrincipalFromHeaders(request.headers);
+
+		await initialized;
+		const rendered = await server.respond(request, {
+			getClientAddress() {
+				return ipAddress;
+			},
+			platform: {
+				user: httpRequest.user,
+				clientPrincipal,
+				context
+			}
+		});
+
+		if (debug) {
+			context.log(`SK headers: ${JSON.stringify(Object.fromEntries(rendered.headers.entries()))}`);
+			context.log(`Response: ${JSON.stringify(rendered)}`);
+		}
+
+		return toResponse(rendered);
 	}
-
-	context.res = response;
-}
+});
 
 /**
- * @param {Context} context
+ * @param {HttpRequest} httpRequest
  * @returns {Request}
- * */
-function toRequest(context) {
-	const { method, headers, rawBody, body } = context.req;
-	// because we proxy all requests to the render function, the original URL in the request is /api/__render
+ */
+function toRequest(httpRequest) {
+	// because we proxy all requests to the render function, the original URL in the request is /api/sk_render
 	// this header contains the URL the user requested
-	const originalUrl = headers['x-ms-original-url'];
+	const originalUrl = httpRequest.headers.get('x-ms-original-url');
 
 	// SWA strips content-type headers from empty POST requests, but SK form actions require the header
 	// https://github.com/geoffrich/svelte-adapter-azure-swa/issues/178
-	if (method === 'POST' && !body && !headers['content-type']) {
-		headers['content-type'] = 'application/x-www-form-urlencoded';
+	if (
+		httpRequest.method === 'POST' &&
+		!httpRequest.body &&
+		!httpRequest.headers.get('content-type')
+	) {
+		httpRequest.headers.set('content-type', 'application/x-www-form-urlencoded');
 	}
 
-	/** @type {RequestInit} */
-	const init = {
-		method,
-		headers: new Headers(headers)
-	};
+	/** @type {Record<string, string>} */
+	const headers = {};
+	httpRequest.headers.forEach((value, key) => {
+		if (key !== 'x-ms-original-url') {
+			headers[key] = value;
+		}
+	});
 
-	if (method !== 'GET' && method !== 'HEAD') {
-		init.body = Buffer.isBuffer(body)
-			? body
-			: typeof rawBody === 'string'
-				? Buffer.from(rawBody, 'utf-8')
-				: rawBody;
-	}
-
-	return new Request(originalUrl, init);
+	return new Request(originalUrl, {
+		method: httpRequest.method,
+		headers: new Headers(headers),
+		// @ts-ignore
+		body: httpRequest.body,
+		duplex: 'half'
+	});
 }
 
 /**
  * @param {Response} rendered
- * @returns {Promise<Record<string, any>>}
+ * @returns {Promise<HttpResponse>}
  */
 async function toResponse(rendered) {
-	const { status } = rendered;
-	const resBody = new Uint8Array(await rendered.arrayBuffer());
-
 	const { headers, cookies } = splitCookiesFromHeaders(rendered.headers);
 
 	return {
-		status,
-		body: resBody,
+		status: rendered.status,
+		// @ts-ignore
+		body: rendered.body,
 		headers,
 		cookies,
-		isRaw: true
+		enableContentNegotiation: false
 	};
 }

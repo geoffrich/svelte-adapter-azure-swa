@@ -34,7 +34,7 @@
 		"@sveltejs/kit": "^2.0.0"
 	},
 	"devDependencies": {
-		"@azure/functions": "^1.2.3",
+		"@azure/functions": "^4",
 		"@sveltejs/kit": "^2.0.4",
 		"@types/node": "^18.19.3",
 		"@types/set-cookie-parser": "^2.4.7",
