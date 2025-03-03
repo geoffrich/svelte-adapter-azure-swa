@@ -39,7 +39,7 @@ declare global {
 			 */
 			context: InvocationContext;
 
-			user: HttpRequestUser;
+			user: HttpRequestUser | null;
 
 			clientPrincipal?: ClientPrincipal;
 		}
