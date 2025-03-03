@@ -96,7 +96,6 @@ function toRequest(httpRequest) {
 		method: httpRequest.method,
 		headers: new Headers(headers),
 		body: httpRequest.body,
-		// @ts-ignore
 		duplex: 'half'
 	});
 }
