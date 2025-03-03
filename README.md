@@ -70,7 +70,8 @@ If you wish to control that `npm ci` is executed instead of `npm install`, defin
 	...
 	env:
 		# npm install in build/server should be executed manually
-		CUSTOM_BUILD_COMMAND: "npm run build && npm install --prefix ./build/server --omit=dev"
+		# or execute npm ci before this action
+		CUSTOM_BUILD_COMMAND: "npm ci && npm run build && npm install --prefix ./build/server --omit=dev"
 	with:
 		skip_api_build: true
 		...
