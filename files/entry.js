@@ -22,6 +22,10 @@ const initialized = server.init({ env: process.env });
  * @typedef {import('@azure/functions').HttpRequest} HttpRequest
  */
 
+app.setup({
+	enableHttpStream: true
+});
+
 app.http('sk_render', {
 	methods: ['HEAD', 'GET', 'POST', 'DELETE', 'PUT', 'OPTIONS'],
 	/**
