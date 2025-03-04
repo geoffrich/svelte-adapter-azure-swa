@@ -6,8 +6,7 @@ import {
 	getClientPrincipalFromHeaders,
 	splitCookiesFromHeaders
 } from './headers';
-import { app, HttpResponse } from '@azure/functions';
-import { Readable } from 'stream';
+import { app } from '@azure/functions';
 
 // replaced at build time
 // @ts-expect-error
@@ -107,16 +106,15 @@ function toRequest(httpRequest) {
 
 /**
  * @param {Response} rendered
- * @returns {Promise<HttpResponse>}
  */
-async function toResponse(rendered) {
+function toResponse(rendered) {
 	const { headers, cookies } = splitCookiesFromHeaders(rendered.headers);
 
-	return new HttpResponse({
+	return {
 		status: rendered.status,
-		body: Readable.fromWeb(rendered.body),
+		body: rendered.body,
 		headers,
 		cookies,
 		enableContentNegotiation: false
-	});
+	};
 }
