@@ -115,6 +115,5 @@ function toResponse(rendered) {
 		body: rendered.body,
 		headers,
 		cookies,
-		enableContentNegotiation: false
 	};
 }
