@@ -4,10 +4,11 @@
 		"checkJs": true,
 		"noEmit": true,
 		"noImplicitAny": true,
-		"target": "es2020",
-		"module": "es2020",
+		"target": "es2022",
+		"module": "es2022",
 		"moduleResolution": "node",
-		"allowSyntheticDefaultImports": true
+		"allowSyntheticDefaultImports": true,
+		"lib": ["es2023"]
 	},
 	"include": ["./index.js", "files"]
 }

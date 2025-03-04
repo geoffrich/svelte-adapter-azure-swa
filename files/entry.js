@@ -6,7 +6,7 @@ import {
 	getClientPrincipalFromHeaders,
 	splitCookiesFromHeaders
 } from './headers';
-import { app } from '@azure/functions';
+import { app, HttpResponse } from '@azure/functions';
 
 // replaced at build time
 // @ts-expect-error
@@ -20,8 +20,11 @@ const initialized = server.init({ env: process.env });
 /**
  * @typedef {import('@azure/functions').InvocationContext} InvocationContext
  * @typedef {import('@azure/functions').HttpRequest} HttpRequest
- * @typedef {import('@azure/functions').HttpResponse} HttpResponse
  */
+
+app.setup({
+	enableHttpStream: true
+});
 
 app.http('sk_render', {
 	methods: ['HEAD', 'GET', 'POST', 'DELETE', 'PUT', 'OPTIONS'],
@@ -96,7 +99,6 @@ function toRequest(httpRequest) {
 	return new Request(originalUrl, {
 		method: httpRequest.method,
 		headers: new Headers(headers),
-		// @ts-ignore
 		body: httpRequest.body,
 		duplex: 'half'
 	});
@@ -109,12 +111,11 @@ function toRequest(httpRequest) {
 async function toResponse(rendered) {
 	const { headers, cookies } = splitCookiesFromHeaders(rendered.headers);
 
-	return {
+	return new HttpResponse({
 		status: rendered.status,
-		// @ts-ignore
 		body: rendered.body,
 		headers,
 		cookies,
 		enableContentNegotiation: false
-	};
+	});
 }
