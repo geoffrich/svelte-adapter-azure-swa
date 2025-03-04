@@ -53,24 +53,13 @@ Oryx, Azure's build system, may attempt to build your application with an EOL ve
 }
 ```
 
-### CUSTOM_BUILD_COMMAND
+### CUSTOM_BUILD_COMMAND considerations
 
-If `CUSTOM_BUILD_COMMAND` is not provided to the github action, the [azure swa github action](https://docs.microsoft.com/en-us/azure/static-web-apps/build-configuration?tabs=github-actions) runs the following (as of 03.03.2025)
-
-```yaml
-npm install # this could lead to differences in final used dependencies
-npm run build
-npm run build:azure # Although according to docs "...the workflow tries to run the npm run build or npm run build:azure commands"
-npm install # in build/server
-```
-
-If you wish to control that `npm ci` is executed instead of `npm install`, define the `CUSTOM_BUILD_COMMAND` environment variable for the build in combination with `skip_api_build: true`. In this case you will need to execute `npm install` in the `build/server` directory with api functions manually.
+If you are setting a [`CUSTOM_BUILD_COMMAND`](https://github.com/microsoft/Oryx/blob/main/doc/configuration.md) in your build pipeline to customize how the API is built (e.g. to run `npm ci` instead of `npm install`), make sure to run `npm install` inside the API directory to install production dependencies. Otherwise, the SvelteKit render function will not be able to start up.
 
 ```yaml
 	...
 	env:
-		# npm install in build/server should be executed manually
-		# or execute npm ci before this action
 		CUSTOM_BUILD_COMMAND: "npm ci && npm run build && npm install --prefix ./build/server --omit=dev"
 	with:
 		skip_api_build: true
