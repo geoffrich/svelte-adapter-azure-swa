@@ -1,5 +1,5 @@
 const { app } = require('@azure/functions');
-import { Readable } from 'stream';
+const { Readable } = require('stream');
 
 app.http('HelloWorld', {
 	methods: ['GET', 'POST'],
