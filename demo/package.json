@@ -1,8 +1,9 @@
 {
 	"name": "sveltekit-azure-swa-demo",
 	"version": "0.1.0",
+	"type": "module",
 	"scripts": {
-		"prepare": "cd .. && npm i",
+		"prepare": "(cd .. && npm i) && (svelte-kit sync || echo '')",
 		"dev": "vite dev",
 		"build": "vite build",
 		"preview": "vite preview",
@@ -11,19 +12,18 @@
 		"test": "playwright test"
 	},
 	"devDependencies": {
-		"@fontsource/fira-mono": "^4.5.10",
-		"@neoconfetti/svelte": "^1.0.0",
-		"@playwright/test": "^1.50.1",
-		"@sveltejs/adapter-auto": "^3.0.0",
-		"@sveltejs/kit": "^2.17.3",
-		"@sveltejs/vite-plugin-svelte": "^3.0.0",
-		"svelte": "^4.2.19",
+		"@fontsource/fira-mono": "^5.0.0",
+		"@neoconfetti/svelte": "^2.0.0",
+		"@playwright/test": "^1.49.1",
+		"@sveltejs/adapter-auto": "^4.0.0",
+		"@sveltejs/kit": "^2.16.0",
+		"@sveltejs/vite-plugin-svelte": "^5.0.0",
+		"svelte": "^5.0.0",
 		"svelte-adapter-azure-swa": "file:..",
-		"svelte-check": "^3.6.0",
+		"svelte-check": "^4.0.0",
 		"typescript": "^5.0.0",
-		"vite": "^5.0.3"
+		"vite": "^6.0.0"
 	},
-	"type": "module",
 	"engines": {
 		"node": ">=18.13 <19"
 	}
