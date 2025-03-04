@@ -115,7 +115,6 @@ For instance, by default the adapter outputs these files...
 build/
 └── server/
     ├── sk_render/
-    │   ├── function.json
     │   └── index.js
     ├── host.json
     ├── local.settings.json
@@ -128,7 +127,6 @@ build/
 custom/
 └── api/
     └── sk_render/
-        ├── function.json
         └── index.js
 ```
 
