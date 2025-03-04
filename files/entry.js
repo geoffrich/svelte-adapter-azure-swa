@@ -7,6 +7,7 @@ import {
 	splitCookiesFromHeaders
 } from './headers';
 import { app, HttpResponse } from '@azure/functions';
+import { Readable } from 'stream';
 
 // replaced at build time
 // @ts-expect-error
@@ -113,7 +114,7 @@ async function toResponse(rendered) {
 
 	return new HttpResponse({
 		status: rendered.status,
-		body: rendered.body,
+		body: Readable.fromWeb(rendered.body),
 		headers,
 		cookies,
 		enableContentNegotiation: false
