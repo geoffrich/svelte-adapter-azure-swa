@@ -7,6 +7,7 @@ import {
 	splitCookiesFromHeaders
 } from './headers';
 import { app } from '@azure/functions';
+import { Readable } from 'stream';
 
 // replaced at build time
 // @ts-expect-error
@@ -112,8 +113,8 @@ function toResponse(rendered) {
 
 	return {
 		status: rendered.status,
-		body: rendered.body,
+		body: Readable.fromWeb(rendered.body),
 		headers,
-		cookies,
+		cookies
 	};
 }
