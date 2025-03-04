@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.21.0](https://www.github.com/geoffrich/svelte-adapter-azure-swa/compare/v0.20.1...v0.21.0) (2025-03-04)
+
+
+### Features
+
+* switch to Azure Functions v4  ([#177](https://www.github.com/geoffrich/svelte-adapter-azure-swa/issues/177)) ([96e6067](https://www.github.com/geoffrich/svelte-adapter-azure-swa/commit/96e6067c50926c8328a5f78969ce74c304aaba75))
+
 ## [Unreleased]
 
 ### Features
