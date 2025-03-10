@@ -12,6 +12,7 @@
 		"test": "playwright test"
 	},
 	"devDependencies": {
+		"@azure/static-web-apps-cli": "^2.0.4",
 		"@fontsource/fira-mono": "^5.0.0",
 		"@neoconfetti/svelte": "^2.0.0",
 		"@playwright/test": "^1.49.1",
