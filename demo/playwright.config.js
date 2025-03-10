@@ -2,7 +2,7 @@
 const config = {
 	webServer: process.env.SWA
 		? {
-			command: 'npm run build && npm run swa',
+			command: 'npm run build && npm run swa -- --verbose=silly',
 			port: 4280
 		}
 		: {
