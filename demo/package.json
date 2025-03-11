@@ -5,13 +5,16 @@
 	"scripts": {
 		"prepare": "(cd .. && npm i) && (svelte-kit sync || echo '')",
 		"dev": "vite dev",
+		"swa": "swa start",
 		"build": "vite build",
 		"preview": "vite preview",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json --watch",
-		"test": "playwright test"
+		"test": "playwright test",
+		"test:swa": "SWA=true npm test"
 	},
 	"devDependencies": {
+		"@azure/static-web-apps-cli": "^2.0.4",
 		"@fontsource/fira-mono": "^5.0.0",
 		"@neoconfetti/svelte": "^2.0.0",
 		"@playwright/test": "^1.49.1",
