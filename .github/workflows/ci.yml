@@ -88,7 +88,7 @@ jobs:
           echo "result=false" >> "$GITHUB_OUTPUT"
 
       - id: token
-        if: steps.event.outputs.result == 'true'
+        if: steps.event.outputs.result != 'false'
         run: |
           if [ -z "${{ secrets.CI_AZURE_STATIC_WEB_APPS_API_TOKEN }}" ]; then
             echo "CI_AZURE_STATIC_WEB_APPS_API_TOKEN (secret) is NOT available"
