@@ -77,7 +77,7 @@ jobs:
   #     ${{
   #       github.repository == github.event.pull_request.head.repo.full_name &&
   #       !(github.event_name == 'pull_request' && github.event.action == 'closed') &&
-  #       ${{ env.AZURE_STATIC_WEB_APPS_API_TOKEN != '' }}
+  #       $AZURE_STATIC_WEB_APPS_API_TOKEN != ''
   #     }}
   #   runs-on: ubuntu-latest
   #   name: Delete old bot comment
@@ -91,11 +91,13 @@ jobs:
   #         user: "github-actions[bot]"
   #         issue: "${{github.event.number}}"
   test-azure:
+    env:
+      AZURE_STATIC_WEB_APPS_API_TOKEN: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
     timeout-minutes: 10
     if: |
       github.repository == github.event.pull_request.head.repo.full_name &&
       !(github.event_name == 'pull_request' && github.event.action == 'closed') &&
-      ${{ env.AZURE_STATIC_WEB_APPS_API_TOKEN != '' }}
+      $AZURE_STATIC_WEB_APPS_API_TOKEN != ''
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -131,7 +133,7 @@ jobs:
     if: |
       github.repository == github.event.pull_request.head.repo.full_name &&
       (github.event_name == 'pull_request' && github.event.action == 'closed') &&
-      ${{ env.AZURE_STATIC_WEB_APPS_API_TOKEN != '' }}
+      $AZURE_STATIC_WEB_APPS_API_TOKEN != ''
     runs-on: ubuntu-latest
     name: Close Pull Request Job
     steps:
