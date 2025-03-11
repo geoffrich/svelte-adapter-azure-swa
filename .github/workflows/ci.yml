@@ -73,7 +73,6 @@ jobs:
       - run: npx playwright install chromium --with-deps
       - run: npm run test:swa
   do-test-azure:
-    if: ${{ !(github.event_name == 'pull_request' && github.event.action == 'closed') }}
     runs-on: ubuntu-latest
     outputs:
       do-test: ${{ steps.event.outputs.result || steps.token.outputs.result || 'false' }}
