@@ -93,7 +93,7 @@ jobs:
           echo "token=${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}" >> $GITHUB_OUTPUT
         id: get-token
     outputs:
-      token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}"
+      token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
   # clean-azure:
   #   needs: azure-api-token
   #   if: needs.azure-api-token.outputs.token != ''
