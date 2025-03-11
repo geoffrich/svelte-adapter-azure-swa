@@ -1,5 +1,3 @@
-# Let's do PR 4
-
 # svelte-adapter-azure-swa
 
 Adapter for Svelte apps that creates an Azure Static Web App, using an Azure function for dynamic server rendering. If your app is purely static, you may be able to use [adapter-static](https://www.npmjs.com/package/@sveltejs/adapter-static) instead.
