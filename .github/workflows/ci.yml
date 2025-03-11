@@ -73,6 +73,7 @@ jobs:
       - run: npx playwright install chromium --with-deps
       - run: npm run test:swa
   do-test-azure:
+    if: ${{ !(github.event_name == 'pull_request' && github.event.action == 'closed') }}
     runs-on: ubuntu-latest
     outputs:
       do-test: ${{ steps.event.outputs.result || steps.token.outputs.result || 'false' }}
@@ -114,6 +115,7 @@ jobs:
   #         user: "github-actions[bot]"
   #         issue: "${{github.event.number}}"
   test-azure:
+    if: ${{ !(github.event_name == 'pull_request' && github.event.action == 'closed') }}
     concurrency:
       # we have only one slot we deploy to for all jobs and prs
       group: ${{ github.workflow }}-azure
