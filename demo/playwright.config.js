@@ -7,8 +7,7 @@ if (process.env.SWA) {
 	};
 } else if (process.env.CI) {
 	webServer = undefined;
-}
-else {
+} else {
 	webServer = {
 		command: 'npm run build && npm run preview',
 		port: 4173

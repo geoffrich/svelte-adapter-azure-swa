@@ -3,3 +3,5 @@ coverage/
 build/
 .svelte-kit/
 sk_render/
+.github/
+demo/test-results/
