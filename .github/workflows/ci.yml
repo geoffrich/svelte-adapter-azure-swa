@@ -25,6 +25,11 @@ jobs:
     if: ${{ !(github.event_name == 'pull_request' && github.event.action == 'closed') }}
     runs-on: ubuntu-latest
     steps:
+      - id: token
+        run: |
+          echo "github.repository: ${{ github.repository }}"
+          echo "github.event.pull_request.head.repo.full_name: ${{ github.event.pull_request.head.repo.full_name }}"
+          echo "github.event.pull_request.head.repo.name: ${{ github.event.pull_request.head.repo.name }}"
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
