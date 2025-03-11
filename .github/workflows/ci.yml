@@ -111,7 +111,7 @@ jobs:
   test-azure:
     needs: azure-api-token
     timeout-minutes: 10
-    if: needs.azure-api-token.outputs.token != ''
+    # if: needs.azure-api-token.outputs.token != ''
     runs-on: ubuntu-latest
     strategy:
       matrix:
