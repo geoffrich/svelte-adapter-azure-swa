@@ -36,7 +36,7 @@ jobs:
       - run: |
           npm ci
           npm run check
-        working-directory: ./demo
+        working-directory: demo
   test:
     if: ${{ !(github.event_name == 'pull_request' && github.event.action == 'closed') }}
     runs-on: ubuntu-latest
@@ -60,7 +60,7 @@ jobs:
         node-version: [18.x, 20.x]
     defaults:
       run:
-        working-directory: ./demo
+        working-directory: demo
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -118,14 +118,14 @@ jobs:
     if: |
       github.repository == github.event.pull_request.head.repo.full_name &&
       !(github.event_name == 'pull_request' && github.event.action == 'closed') &&
-      ${{ needs.azure-api-token.outputs.token }}
+      ${{ needs.azure-api-token.outputs.token }} != ''
     runs-on: ubuntu-latest
     strategy:
       matrix:
         node-version: [18.x, 20.x]
     defaults:
       run:
-        working-directory: ./demo
+        working-directory: demo
     steps:
       - run: |
           echo "token = ${{ needs.azure-api-token.outputs.token }}"
