@@ -10,7 +10,6 @@ on:
 env:
   # we call `pnpm playwright install` instead
   PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
-  AZURE_STATIC_WEB_APPS_API_TOKEN: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
 
 # cancel in-progress runs on new commits to same PR (gitub.event.number)
 concurrency:
@@ -72,12 +71,19 @@ jobs:
       - run: npm ci
       - run: npx playwright install chromium --with-deps
       - run: npm run test:swa
+  azure-api-token:
+    if: |
+      github.repository == github.event.pull_request.head.repo.full_name
+    runs-on: ubuntu-latest
+    outputs:
+      token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}"
   # clean-azure:
+  #   needs: azure-api-token
   #   if: |
   #     ${{
   #       github.repository == github.event.pull_request.head.repo.full_name &&
   #       !(github.event_name == 'pull_request' && github.event.action == 'closed') &&
-  #       $AZURE_STATIC_WEB_APPS_API_TOKEN != ''
+  #       ${{ needs.azure-api-token.outputs.token != '' }}
   #     }}
   #   runs-on: ubuntu-latest
   #   name: Delete old bot comment
@@ -91,13 +97,12 @@ jobs:
   #         user: "github-actions[bot]"
   #         issue: "${{github.event.number}}"
   test-azure:
-    env:
-      AZURE_STATIC_WEB_APPS_API_TOKEN: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+    needs: azure-api-token
     timeout-minutes: 10
     if: |
       github.repository == github.event.pull_request.head.repo.full_name &&
       !(github.event_name == 'pull_request' && github.event.action == 'closed') &&
-      env.AZURE_STATIC_WEB_APPS_API_TOKEN != ''
+      ${{ needs.azure-api-token.outputs.token != '' }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -116,7 +121,7 @@ jobs:
       - uses: Azure/static-web-apps-deploy@v1
         id: builddeploy
         with:
-          azure_static_web_apps_api_token: $AZURE_STATIC_WEB_APPS_API_TOKEN
+          azure_static_web_apps_api_token: ${{ needs.azure-api-token.outputs.token }}
           repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for Github integrations (i.e. PR comments)
           action: "upload"
           ###### Repository/Build Configurations - These values can be configured to match your app requirements. ######
@@ -133,7 +138,7 @@ jobs:
     if: |
       github.repository == github.event.pull_request.head.repo.full_name &&
       (github.event_name == 'pull_request' && github.event.action == 'closed') &&
-      $AZURE_STATIC_WEB_APPS_API_TOKEN != ''
+      ${{ needs.azure-api-token.outputs.token != '' }}
     runs-on: ubuntu-latest
     name: Close Pull Request Job
     steps:
@@ -141,5 +146,5 @@ jobs:
         id: closepullrequest
         uses: Azure/static-web-apps-deploy@v1
         with:
-          azure_static_web_apps_api_token: $AZURE_STATIC_WEB_APPS_API_TOKEN
+          azure_static_web_apps_api_token: ${{ needs.azure-api-token.outputs.token }}
           action: "close"
