@@ -72,14 +72,17 @@ jobs:
       - run: npm ci
       - run: npx playwright install chromium --with-deps
       - run: npm run test:swa
-  azure-api-token:
+  azure_api_token:
     if: |
       github.repository == github.event.pull_request.head.repo.full_name ||
       github.event_name == 'push'
     runs-on: ubuntu-latest
+    outputs:
+      token: ${{ steps.get_token.outputs.token }}
     steps:
       # echo if secrets.CI_AZURE_STATIC_WEB_APPS_API_TOKEN is not set
-      - run: |
+      - id: get_token
+        run: |
           echo "github.repository: ${{ github.repository }}"
           echo "github.event.pull_request.head.repo.full_name: ${{ github.event.pull_request.head.repo.full_name }}"
           echo "github.event.pull_request.head.repo.name: ${{ github.event.pull_request.head.repo.name }}"
@@ -90,9 +93,6 @@ jobs:
           fi
           echo "token=${{ secrets.CI_AZURE_STATIC_WEB_APPS_API_TOKEN }}"
           echo "token=${{ secrets.CI_AZURE_STATIC_WEB_APPS_API_TOKEN }}" >> "$GITHUB_OUTPUT"
-        id: get-token
-    outputs:
-      token: ${{ steps.get-token.outputs.token }}
   # clean-azure:
   #   needs: azure-api-token
   #   if: needs.azure-api-token.outputs.token != ''
@@ -108,7 +108,7 @@ jobs:
   #         user: "github-actions[bot]"
   #         issue: "${{github.event.number}}"
   test-azure:
-    needs: azure-api-token
+    needs: azure_api_token
     timeout-minutes: 10
     # if: needs.azure-api-token.outputs.token != ''
     runs-on: ubuntu-latest
@@ -126,8 +126,8 @@ jobs:
           cache: npm
           cache-dependency-path: ./**/package-lock.json
       - run: |
-          echo "token = ${{ needs.azure-api-token.outputs.token }}"
-          if [ -z "${{ needs.azure-api-token.outputs.token }}" ]; then
+          echo "token = ${{ needs.azure_api_token.outputs.token }}"
+          if [ -z "${{ needs.azure_api_token.outputs.token }}" ]; then
             echo "token is not set"
             exit 1
           fi
