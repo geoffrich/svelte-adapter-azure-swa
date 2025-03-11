@@ -122,7 +122,7 @@ jobs:
       - uses: actions/checkout@v4
       # if azure deployment is not required, just exit with success
       # so we can report success status to github
-      - if: needs.do-azure-deploy.outputs.deploy == 'false'
+      - if: needs.do-azure-deploy.outputs.deploy != 'true'
         run: exit 0
       - uses: actions/setup-node@v4
         with:
