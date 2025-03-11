@@ -78,12 +78,16 @@ jobs:
     steps:
       # echo if secrets.AZURE_STATIC_WEB_APPS_API_TOKEN is not set
       - run: |
+          echo "AZURE_STATIC_WEB_APPS_API_TOKEN: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}"
+          echo "AZURE_STATIC_WEB_APPS_API_TOKEN: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN || '' }}"
           if [ -z "${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}" ]; then
+            echo "AZURE_STATIC_WEB_APPS_API_TOKEN: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}"
             echo "AZURE_STATIC_WEB_APPS_API_TOKEN is not set"
           fi
-      # echo github.repository and github.event.pull_request.head.repo.name
+      # echo github.repository and github.event.pull_request.head.repo.full_name
       - run: |
           echo "github.repository: ${{ github.repository }}"
+          echo "github.event.pull_request.head.repo.full_name: ${{ github.event.pull_request.head.repo.full_name }}"
           echo "github.event.pull_request.head.repo.name: ${{ github.event.pull_request.head.repo.name }}"
     outputs:
       token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN || '' }}"
@@ -112,7 +116,7 @@ jobs:
     if: |
       github.repository == github.event.pull_request.head.repo.full_name &&
       !(github.event_name == 'pull_request' && github.event.action == 'closed') &&
-      ${{ needs.azure-api-token.outputs.token != '' }}
+      ${{ needs.azure-api-token.outputs.token }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -151,11 +155,8 @@ jobs:
       (github.event_name == 'pull_request' && github.event.action == 'closed') &&
       ${{ needs.azure-api-token.outputs.token != '' }}
     runs-on: ubuntu-latest
-    name: Close Pull Request Job
     steps:
-      - name: Close Pull Request
-        id: closepullrequest
-        uses: Azure/static-web-apps-deploy@v1
+      - uses: Azure/static-web-apps-deploy@v1
         with:
           azure_static_web_apps_api_token: ${{ needs.azure-api-token.outputs.token }}
           action: "close"
