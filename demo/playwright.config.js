@@ -2,6 +2,7 @@
 let webServer = undefined;
 if (process.env.SWA) {
 	webServer = {
+		timeout: 120 * 1000,
 		command: 'npm run build && npm run swa -- --verbose=silly',
 		port: 4280
 	};
