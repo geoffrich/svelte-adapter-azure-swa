@@ -72,10 +72,10 @@ jobs:
       - run: npm ci
       - run: npx playwright install chromium --with-deps
       - run: npm run test:swa
-  do-azure-deploy:
+  do-test-azure:
     runs-on: ubuntu-latest
     outputs:
-      deploy: ${{ steps.event.outputs.result || steps.token.outputs.result || 'false' }}
+      do-test: ${{ steps.event.outputs.result || steps.token.outputs.result || 'false' }}
     steps:
       - id: event
         if: |
@@ -86,22 +86,22 @@ jobs:
           echo "github.event.pull_request.head.repo.full_name: ${{ github.event.pull_request.head.repo.full_name }}"
           echo "No deployment to azure will be executed"
           echo "result=false" >> "$GITHUB_OUTPUT"
-          exit 0
 
       - id: token
+        if: steps.event.outputs.result != 'false'
         run: |
           if [ -z "${{ secrets.CI_AZURE_STATIC_WEB_APPS_API_TOKEN }}" ]; then
             echo "CI_AZURE_STATIC_WEB_APPS_API_TOKEN (secret) is NOT available"
             echo "No deployment to azure will be executed"
-            echo "available=false" >> "$GITHUB_OUTPUT"
+            # echo "result=false" >> "$GITHUB_OUTPUT"
           else
             echo "CI_AZURE_STATIC_WEB_APPS_API_TOKEN (secret) is available"
             echo "Deployment to azure will be executed"
-            echo "available=true" >> "$GITHUB_OUTPUT"
+            echo "result=true" >> "$GITHUB_OUTPUT"
           fi
   # clean-azure:
-  #   needs: do-azure-deploy
-  #   if: needs.do-azure-deploy.outputs.deploy == 'true'
+  #   needs: do-test-azure
+  #   if: needs.do-test-azure.outputs.do-test == 'true'
   #   runs-on: ubuntu-latest
   #   name: Delete old bot comment
   #   steps:
@@ -117,7 +117,8 @@ jobs:
     concurrency:
       # we have only one slot we deploy to for all jobs and prs
       group: ${{ github.workflow }}-azure
-    needs: do-azure-deploy
+      cancel-in-progress: false
+    needs: do-test-azure
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -127,17 +128,17 @@ jobs:
         working-directory: demo
     steps:
       - uses: actions/checkout@v4
-      # if azure deployment is not required, just exit with success
-      # so we can report success status to github
-      - if: needs.do-azure-deploy.outputs.deploy != 'true'
-        run: exit 0
+        if: needs.do-test-azure.outputs.do-test == 'true'
       - uses: actions/setup-node@v4
+        if: needs.do-test-azure.outputs.do-test == 'true'
         with:
           node-version: ${{ matrix.node-version }}
           cache: npm
           cache-dependency-path: ./**/package-lock.json
       - run: npm ci
+        if: needs.do-test-azure.outputs.do-test == 'true'
       - uses: Azure/static-web-apps-deploy@v1
+        if: needs.do-test-azure.outputs.do-test == 'true'
         id: builddeploy
         with:
           azure_static_web_apps_api_token: ${{ secrets.CI_AZURE_STATIC_WEB_APPS_API_TOKEN }}
@@ -150,16 +151,19 @@ jobs:
           output_location: "build/static" # Built app content directory - optional
           ###### End of Repository/Build Configurations ######
       - run: npx playwright install chromium --with-deps
+        if: needs.do-test-azure.outputs.do-test == 'true'
       - run: npm test
+        if: needs.do-test-azure.outputs.do-test == 'true'
         env:
           PLAYWRIGHT_TEST_BASE_URL: ${{ steps.builddeploy.outputs.static_web_app_url }}
   close-azure:
     concurrency:
       # we have only one slot we deploy to for all jobs and prs
       group: ${{ github.workflow }}-azure
-    needs: do-azure-deploy
+      cancel-in-progress: false
+    needs: do-test-azure
     if: |
-      needs.do-azure-deploy.outputs.deploy == 'true' &&
+      needs.do-test-azure.outputs.do-test == 'true' &&
       (github.event_name == 'pull_request' && github.event.action == 'closed')
     runs-on: ubuntu-latest
     steps:
