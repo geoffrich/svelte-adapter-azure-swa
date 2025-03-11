@@ -86,7 +86,7 @@ jobs:
           echo "github.repository: ${{ github.repository }}"
           echo "github.event.pull_request.head.repo.full_name: ${{ github.event.pull_request.head.repo.full_name }}"
     outputs:
-      token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}"
+      token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN || '' }}"
   # clean-azure:
   #   needs: azure-api-token
   #   if: |
@@ -145,6 +145,7 @@ jobs:
         env:
           PLAYWRIGHT_TEST_BASE_URL: ${{ steps.builddeploy.outputs.preview_url }}
   close-azure:
+    needs: azure-api-token
     if: |
       github.repository == github.event.pull_request.head.repo.full_name &&
       (github.event_name == 'pull_request' && github.event.action == 'closed') &&
