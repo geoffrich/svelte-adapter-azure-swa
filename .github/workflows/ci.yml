@@ -99,7 +99,7 @@ jobs:
             echo "available=false" >> "$GITHUB_OUTPUT"
           else
             echo "CI_AZURE_STATIC_WEB_APPS_API_TOKEN (secret) is available"
-            echo "Deployment to azure will be executed
+            echo "Deployment to azure will be executed"
             echo "available=true" >> "$GITHUB_OUTPUT"
           fi
   # clean-azure:
