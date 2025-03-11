@@ -17,7 +17,7 @@ if (process.env.SWA) {
 /** @type {import('@playwright/test').PlaywrightTestConfig} */
 const config = {
 	webServer,
-	outputDir: '../demo-test-results',
+	outputDir: '../demo-test-results'
 };
 
 export default config;
