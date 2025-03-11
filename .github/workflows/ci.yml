@@ -75,6 +75,13 @@ jobs:
     if: |
       github.repository == github.event.pull_request.head.repo.full_name
     runs-on: ubuntu-latest
+    steps:
+      # echo if secrets.AZURE_STATIC_WEB_APPS_API_TOKEN is not set
+      - run: |
+          if [ -z "${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}" ]; then
+            echo "AZURE_STATIC_WEB_APPS_API_TOKEN is not set"
+            exit 1
+          fi
     outputs:
       token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}"
   # clean-azure:
