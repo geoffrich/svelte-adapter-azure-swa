@@ -109,6 +109,8 @@ jobs:
   #         issue: "${{github.event.number}}"
   test-azure:
     needs: azure_api_token
+    env:
+      CI_AZURE_STATIC_WEB_APPS_API_TOKEN: ${{ needs.azure_api_token.outputs.token }}
     timeout-minutes: 10
     # if: needs.azure-api-token.outputs.token != ''
     runs-on: ubuntu-latest
@@ -126,8 +128,8 @@ jobs:
           cache: npm
           cache-dependency-path: ./**/package-lock.json
       - run: |
-          echo "token = ${{ needs.azure_api_token.outputs.token }}"
-          if [ -z "${{ needs.azure_api_token.outputs.token }}" ]; then
+          echo "token = $CI_AZURE_STATIC_WEB_APPS_API_TOKEN"
+          if [ -z "$CI_AZURE_STATIC_WEB_APPS_API_TOKEN" ]; then
             echo "token is not set"
             exit 1
           fi
