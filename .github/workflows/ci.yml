@@ -107,6 +107,9 @@ jobs:
   #         user: "github-actions[bot]"
   #         issue: "${{github.event.number}}"
   test-azure:
+    concurrency:
+      # we have only one slot we deploy to for all jobs and prs
+      group: ${{ github.workflow }}-azure
     needs: do-azure-deploy
     if: needs.do-azure-deploy.outputs.deploy == 'true'
     timeout-minutes: 10
@@ -142,6 +145,9 @@ jobs:
         env:
           PLAYWRIGHT_TEST_BASE_URL: ${{ steps.builddeploy.outputs.static_web_app_url }}
   close-azure:
+    concurrency:
+      # we have only one slot we deploy to for all jobs and prs
+      group: ${{ github.workflow }}-azure
     needs: do-azure-deploy
     if: |
       needs.do-azure-deploy.outputs.deploy == 'true' &&
