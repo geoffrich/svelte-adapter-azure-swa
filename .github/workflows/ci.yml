@@ -115,10 +115,6 @@ jobs:
   #         issue: "${{github.event.number}}"
   test-azure:
     if: ${{ !(github.event_name == 'pull_request' && github.event.action == 'closed') }}
-    concurrency:
-      # we have only one slot we deploy to for all jobs and prs
-      group: ${{ github.workflow }}-azure
-      cancel-in-progress: false
     needs: do-test-azure
     runs-on: ubuntu-latest
     strategy:
@@ -158,10 +154,6 @@ jobs:
         env:
           PLAYWRIGHT_TEST_BASE_URL: ${{ steps.builddeploy.outputs.static_web_app_url }}
   close-azure:
-    concurrency:
-      # we have only one slot we deploy to for all jobs and prs
-      group: ${{ github.workflow }}-azure
-      cancel-in-progress: false
     needs: do-test-azure
     if: |
       needs.do-test-azure.outputs.do-test == 'true' &&
