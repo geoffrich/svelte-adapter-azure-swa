@@ -86,18 +86,18 @@ jobs:
           echo "github.event.pull_request.head.repo.full_name: ${{ github.event.pull_request.head.repo.full_name }}"
           echo "No deployment to azure will be executed"
           echo "result=false" >> "$GITHUB_OUTPUT"
-          exit 0
 
       - id: token
+        if: steps.event.outputs.result == 'true'
         run: |
           if [ -z "${{ secrets.CI_AZURE_STATIC_WEB_APPS_API_TOKEN }}" ]; then
             echo "CI_AZURE_STATIC_WEB_APPS_API_TOKEN (secret) is NOT available"
             echo "No deployment to azure will be executed"
-            echo "available=false" >> "$GITHUB_OUTPUT"
+            echo "result=false" >> "$GITHUB_OUTPUT"
           else
             echo "CI_AZURE_STATIC_WEB_APPS_API_TOKEN (secret) is available"
             echo "Deployment to azure will be executed"
-            echo "available=true" >> "$GITHUB_OUTPUT"
+            echo "result=true" >> "$GITHUB_OUTPUT"
           fi
   # clean-azure:
   #   needs: do-azure-deploy
