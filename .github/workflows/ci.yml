@@ -12,8 +12,9 @@ env:
   PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
 
 # cancel in-progress runs on new commits to same PR (gitub.event.number)
+# cancel in-progress runs on new pushes to same branch (github.ref_name)
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.number || github.sha }}
+  group: ${{ github.workflow }}-${{ github.event.number || github.ref_name }}
   cancel-in-progress: true
 
 permissions:
@@ -77,13 +78,10 @@ jobs:
       github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
-      # echo if secrets.AZURE_STATIC_WEB_APPS_API_TOKEN is not set
+      # echo if secrets.CI_AZURE_STATIC_WEB_APPS_API_TOKEN is not set
       - run: |
-          echo "AZURE_STATIC_WEB_APPS_API_TOKEN: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}"
-          echo "AZURE_STATIC_WEB_APPS_API_TOKEN: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN || 'xxx' }}"
-          if [ -z "${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}" ]; then
-            echo "AZURE_STATIC_WEB_APPS_API_TOKEN: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}"
-            echo "AZURE_STATIC_WEB_APPS_API_TOKEN is not set"
+          if [ -z "${{ secrets.CI_AZURE_STATIC_WEB_APPS_API_TOKEN }}" ]; then
+            echo "CI_AZURE_STATIC_WEB_APPS_API_TOKEN (secret) is not set"
           fi
       # echo github.repository and github.event.pull_request.head.repo.full_name
       - run: |
@@ -93,7 +91,7 @@ jobs:
           echo "token=${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}" >> $GITHUB_OUTPUT
         id: get-token
     outputs:
-      token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+      token: ${{ secrets.CI_AZURE_STATIC_WEB_APPS_API_TOKEN }}
   # clean-azure:
   #   needs: azure-api-token
   #   if: needs.azure-api-token.outputs.token != ''
