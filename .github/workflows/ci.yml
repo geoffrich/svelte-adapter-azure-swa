@@ -72,30 +72,29 @@ jobs:
       - run: npm ci
       - run: npx playwright install chromium --with-deps
       - run: npm run test:swa
-  azure_api_token:
+  do-azure-deploy:
     if: |
       github.repository == github.event.pull_request.head.repo.full_name ||
       github.event_name == 'push'
     runs-on: ubuntu-latest
     outputs:
-      token: ${{ steps.get_token.outputs.token }}
+      deploy: ${{ steps.token.outputs.available }}
     steps:
-      # echo if secrets.CI_AZURE_STATIC_WEB_APPS_API_TOKEN is not set
-      - id: get_token
+      - id: token
         run: |
           echo "github.repository: ${{ github.repository }}"
           echo "github.event.pull_request.head.repo.full_name: ${{ github.event.pull_request.head.repo.full_name }}"
           echo "github.event.pull_request.head.repo.name: ${{ github.event.pull_request.head.repo.name }}"
           if [ -z "${{ secrets.CI_AZURE_STATIC_WEB_APPS_API_TOKEN }}" ]; then
-            echo "CI_AZURE_STATIC_WEB_APPS_API_TOKEN (secret) is not set"
+            echo "CI_AZURE_STATIC_WEB_APPS_API_TOKEN (secret) is NOT available"
+            echo "available=false" >> "$GITHUB_OUTPUT"
           else
             echo "CI_AZURE_STATIC_WEB_APPS_API_TOKEN (secret) is available"
+            echo "available=true" >> "$GITHUB_OUTPUT"
           fi
-          echo "token=${{ secrets.CI_AZURE_STATIC_WEB_APPS_API_TOKEN }}"
-          echo "token=${{ secrets.CI_AZURE_STATIC_WEB_APPS_API_TOKEN }}" >> "$GITHUB_OUTPUT"
   # clean-azure:
-  #   needs: azure-api-token
-  #   if: needs.azure-api-token.outputs.token != ''
+  #   needs: do-azure-deploy
+  #   if: needs.do-azure-deploy.outputs.deploy == 'true'
   #   runs-on: ubuntu-latest
   #   name: Delete old bot comment
   #   steps:
@@ -108,11 +107,9 @@ jobs:
   #         user: "github-actions[bot]"
   #         issue: "${{github.event.number}}"
   test-azure:
-    needs: azure_api_token
-    env:
-      CI_AZURE_STATIC_WEB_APPS_API_TOKEN: ${{ needs.azure_api_token.outputs.token }}
+    needs: do-azure-deploy
+    if: needs.do-azure-deploy.outputs.deploy == 'true'
     timeout-minutes: 10
-    # if: needs.azure-api-token.outputs.token != ''
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -127,17 +124,11 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: npm
           cache-dependency-path: ./**/package-lock.json
-      - run: |
-          echo "token = $CI_AZURE_STATIC_WEB_APPS_API_TOKEN"
-          if [ -z "$CI_AZURE_STATIC_WEB_APPS_API_TOKEN" ]; then
-            echo "token is not set"
-            exit 1
-          fi
       - run: npm ci
       - uses: Azure/static-web-apps-deploy@v1
         id: builddeploy
         with:
-          azure_static_web_apps_api_token: ${{ needs.azure_api_token.outputs.token }}
+          azure_static_web_apps_api_token: ${{ secrets.CI_AZURE_STATIC_WEB_APPS_API_TOKEN }}
           repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for Github integrations (i.e. PR comments)
           action: "upload"
           ###### Repository/Build Configurations - These values can be configured to match your app requirements. ######
@@ -149,15 +140,15 @@ jobs:
       - run: npx playwright install chromium --with-deps
       - run: npm test
         env:
-          PLAYWRIGHT_TEST_BASE_URL: ${{ steps.builddeploy.outputs.preview_url }}
+          PLAYWRIGHT_TEST_BASE_URL: ${{ steps.builddeploy.outputs.static_web_app_url }}
   close-azure:
-    needs: azure_api_token
+    needs: do-azure-deploy
     if: |
-      ${{ needs.azure_api_token.outputs.token }} != '' &&
+      needs.do-azure-deploy.outputs.deploy == 'true' &&
       (github.event_name == 'pull_request' && github.event.action == 'closed')
     runs-on: ubuntu-latest
     steps:
       - uses: Azure/static-web-apps-deploy@v1
         with:
-          azure_static_web_apps_api_token: ${{ needs.azure_api_token.outputs.token }}
+          azure_static_web_apps_api_token: ${{ secrets.CI_AZURE_STATIC_WEB_APPS_API_TOKEN }}
           action: "close"
