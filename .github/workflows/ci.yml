@@ -73,7 +73,8 @@ jobs:
       - run: npm run test:swa
   azure-api-token:
     if: |
-      github.repository == github.event.pull_request.head.repo.name
+      github.repository == github.event.pull_request.head.repo.full_name ||
+      github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
       # echo if secrets.AZURE_STATIC_WEB_APPS_API_TOKEN is not set
@@ -95,12 +96,7 @@ jobs:
       token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN || '' }}"
   # clean-azure:
   #   needs: azure-api-token
-  #   if: |
-  #     ${{
-  #       github.repository == github.event.pull_request.head.repo.full_name &&
-  #       !(github.event_name == 'pull_request' && github.event.action == 'closed') &&
-  #       ${{ needs.azure-api-token.outputs.token != '' }}
-  #     }}
+  #   if: needs.azure-api-token.outputs.token != ''
   #   runs-on: ubuntu-latest
   #   name: Delete old bot comment
   #   steps:
@@ -115,10 +111,7 @@ jobs:
   test-azure:
     needs: azure-api-token
     timeout-minutes: 10
-    if: |
-      github.repository == github.event.pull_request.head.repo.full_name &&
-      !(github.event_name == 'pull_request' && github.event.action == 'closed') &&
-      needs.azure-api-token.outputs.token != ''
+    if: needs.azure-api-token.outputs.token != ''
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -158,9 +151,8 @@ jobs:
   close-azure:
     needs: azure-api-token
     if: |
-      github.repository == github.event.pull_request.head.repo.full_name &&
-      (github.event_name == 'pull_request' && github.event.action == 'closed') &&
-      needs.azure-api-token.outputs.token != ''
+      needs.azure-api-token.outputs.token != '' &&
+      (github.event_name == 'pull_request' && github.event.action == 'closed')
     runs-on: ubuntu-latest
     steps:
       - uses: Azure/static-web-apps-deploy@v1
