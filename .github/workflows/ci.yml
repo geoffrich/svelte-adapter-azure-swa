@@ -158,9 +158,6 @@ jobs:
         env:
           PLAYWRIGHT_TEST_BASE_URL: ${{ steps.builddeploy.outputs.static_web_app_url }}
   close-azure:
-    concurrency:
-      group: ${{ github.workflow }}-${{ github.event.number || github.ref_name }}-azure
-      cancel-in-progress: false
     needs: do-test-azure
     if: |
       needs.do-test-azure.outputs.do-test == 'true' &&
