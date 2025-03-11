@@ -111,7 +111,6 @@ jobs:
       # we have only one slot we deploy to for all jobs and prs
       group: ${{ github.workflow }}-azure
     needs: do-azure-deploy
-    if: needs.do-azure-deploy.outputs.deploy == 'true'
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -121,6 +120,10 @@ jobs:
         working-directory: demo
     steps:
       - uses: actions/checkout@v4
+      # if azure deployment is not required, just exit with success
+      # so we can report success status to github
+      - if: needs.do-azure-deploy.outputs.deploy != 'true'
+        run: exit 0
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
