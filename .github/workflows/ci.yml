@@ -112,7 +112,6 @@ jobs:
       group: ${{ github.workflow }}-azure
     needs: do-azure-deploy
     if: needs.do-azure-deploy.outputs.deploy == 'true'
-    timeout-minutes: 10
     runs-on: ubuntu-latest
     strategy:
       matrix:
