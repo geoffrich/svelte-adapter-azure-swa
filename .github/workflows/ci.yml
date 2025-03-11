@@ -135,7 +135,7 @@ jobs:
       - uses: Azure/static-web-apps-deploy@v1
         id: builddeploy
         with:
-          azure_static_web_apps_api_token: ${{ needs.azure-api-token.outputs.token }}
+          azure_static_web_apps_api_token: ${{ needs.azure_api_token.outputs.token }}
           repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for Github integrations (i.e. PR comments)
           action: "upload"
           ###### Repository/Build Configurations - These values can be configured to match your app requirements. ######
@@ -149,13 +149,13 @@ jobs:
         env:
           PLAYWRIGHT_TEST_BASE_URL: ${{ steps.builddeploy.outputs.preview_url }}
   close-azure:
-    needs: azure-api-token
+    needs: azure_api_token
     if: |
-      needs.azure-api-token.outputs.token != '' &&
+      needs.azure_api_token.outputs.token != '' &&
       (github.event_name == 'pull_request' && github.event.action == 'closed')
     runs-on: ubuntu-latest
     steps:
       - uses: Azure/static-web-apps-deploy@v1
         with:
-          azure_static_web_apps_api_token: ${{ needs.azure-api-token.outputs.token }}
+          azure_static_web_apps_api_token: ${{ needs.azure_api_token.outputs.token }}
           action: "close"
