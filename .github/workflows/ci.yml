@@ -114,6 +114,7 @@ jobs:
   #         user: "github-actions[bot]"
   #         issue: "${{github.event.number}}"
   test-azure:
+    if: ${{ !(github.event_name == 'pull_request' && github.event.action == 'closed') }}
     concurrency:
       # we have only one slot we deploy to for all jobs and prs
       group: ${{ github.workflow }}-azure

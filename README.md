@@ -1,4 +1,4 @@
-# DELETE ME: Checking CI PR again
+# Let's do PR 4
 
 # svelte-adapter-azure-swa
 
