@@ -92,11 +92,9 @@ jobs:
   test-azure:
     timeout-minutes: 10
     if: |
-      ${{
-        github.repository == github.event.pull_request.head.repo.full_name &&
-        !(github.event_name == 'pull_request' && github.event.action == 'closed') &&
-        ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
-      }}
+      github.repository == github.event.pull_request.head.repo.full_name &&
+      !(github.event_name == 'pull_request' && github.event.action == 'closed') &&
+      ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
