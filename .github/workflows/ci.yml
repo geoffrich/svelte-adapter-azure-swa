@@ -151,7 +151,7 @@ jobs:
   close-azure:
     needs: azure_api_token
     if: |
-      needs.azure_api_token.outputs.token != '' &&
+      ${{ needs.azure_api_token.outputs.token }} != '' &&
       (github.event_name == 'pull_request' && github.event.action == 'closed')
     runs-on: ubuntu-latest
     steps:
