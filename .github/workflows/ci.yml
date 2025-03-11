@@ -19,6 +19,7 @@ concurrency:
 
 permissions:
   contents: read # to fetch code (actions/checkout)
+  pull-requests: write # to create comments (actions/github-script)
 
 jobs:
   lint:
