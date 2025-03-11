@@ -120,17 +120,18 @@ jobs:
       run:
         working-directory: demo
     steps:
-      - run: |
-          echo "token = ${{ needs.azure-api-token.outputs.token }}"
-          if [ -z "${{ needs.azure-api-token.outputs.token }}" ]; then
-            echo "token is not set"
-          fi
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
           cache: npm
           cache-dependency-path: ./**/package-lock.json
+      - run: |
+          echo "token = ${{ needs.azure-api-token.outputs.token }}"
+          if [ -z "${{ needs.azure-api-token.outputs.token }}" ]; then
+            echo "token is not set"
+          fi
+          exit 1
       - run: npm ci
       - uses: Azure/static-web-apps-deploy@v1
         id: builddeploy
