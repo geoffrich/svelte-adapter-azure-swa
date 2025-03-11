@@ -12,6 +12,10 @@ test('about page has expected h1', async ({ page }) => {
 
 test('submits sverdle guess', async ({ page }) => {
 	await page.goto('/sverdle');
+	// wait for the sveltekit to run hydration
+	// Otherwise the test will fail
+	await page.waitForTimeout(1000);
+
 	const input = page.locator('input[name=guess]').first();
 	await expect(input).not.toBeDisabled();
 	await input.focus();
