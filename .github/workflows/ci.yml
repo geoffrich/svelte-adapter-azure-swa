@@ -88,7 +88,8 @@ jobs:
           else
             echo "CI_AZURE_STATIC_WEB_APPS_API_TOKEN (secret) is available"
           fi
-          echo "token=${{ secrets.CI_AZURE_STATIC_WEB_APPS_API_TOKEN }}" >> $GITHUB_OUTPUT
+          echo "token=${{ secrets.CI_AZURE_STATIC_WEB_APPS_API_TOKEN }}"
+          echo "token=${{ secrets.CI_AZURE_STATIC_WEB_APPS_API_TOKEN }}" >> "$GITHUB_OUTPUT"
         id: get-token
     outputs:
       token: ${{ steps.get-token.outputs.token }}
