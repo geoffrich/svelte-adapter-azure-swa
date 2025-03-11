@@ -89,6 +89,8 @@ jobs:
           echo "github.repository: ${{ github.repository }}"
           echo "github.event.pull_request.head.repo.full_name: ${{ github.event.pull_request.head.repo.full_name }}"
           echo "github.event.pull_request.head.repo.name: ${{ github.event.pull_request.head.repo.name }}"
+          echo "token=${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN || '' }}" >> $GITHUB_OUTPUT
+        id: get-token
     outputs:
       token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN || '' }}"
   # clean-azure:
@@ -125,6 +127,11 @@ jobs:
       run:
         working-directory: ./demo
     steps:
+      - run: |
+          echo "token = ${{ needs.azure-api-token.outputs.token }}"
+          if [ -z "${{ needs.azure-api-token.outputs.token }}" ]; then
+            echo "token is not set"
+          fi
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
