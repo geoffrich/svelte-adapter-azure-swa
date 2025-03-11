@@ -5,6 +5,7 @@ on:
     branches:
       - main
   pull_request:
+    types: [opened, synchronize, reopened, closed]
 
 env:
   # we call `pnpm playwright install` instead
@@ -20,6 +21,7 @@ permissions:
 
 jobs:
   lint:
+    if: ${{ !(github.event_name == 'pull_request' && github.event.action == 'closed') }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -32,6 +34,7 @@ jobs:
       - run: npm run check-types
       - run: npm run check-format
   test-swa:
+    if: ${{ !(github.event_name == 'pull_request' && github.event.action == 'closed') }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -49,3 +52,20 @@ jobs:
       - run: npm ci
       - run: npx playwright install chromium --with-deps
       - run: npm run test:swa
+  test-azure:
+    if: ${{ !(github.event_name == 'pull_request' && github.event.action == 'closed') }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+    defaults:
+      run:
+        working-directory: ./demo
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+          cache-dependency-path: ./**/package-lock.json
+      - run: echo "AZURE TEST"
