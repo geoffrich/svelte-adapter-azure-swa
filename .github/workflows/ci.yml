@@ -80,7 +80,6 @@ jobs:
       - run: |
           if [ -z "${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}" ]; then
             echo "AZURE_STATIC_WEB_APPS_API_TOKEN is not set"
-            exit 1
           fi
       # echo github.repository and github.event.pull_request.head.repo.full_name
       - run: |
