@@ -82,13 +82,15 @@ jobs:
       - run: |
           if [ -z "${{ secrets.CI_AZURE_STATIC_WEB_APPS_API_TOKEN }}" ]; then
             echo "CI_AZURE_STATIC_WEB_APPS_API_TOKEN (secret) is not set"
+          else
+            echo "CI_AZURE_STATIC_WEB_APPS_API_TOKEN (secret) is available"
           fi
       # echo github.repository and github.event.pull_request.head.repo.full_name
       - run: |
           echo "github.repository: ${{ github.repository }}"
           echo "github.event.pull_request.head.repo.full_name: ${{ github.event.pull_request.head.repo.full_name }}"
           echo "github.event.pull_request.head.repo.name: ${{ github.event.pull_request.head.repo.name }}"
-          echo "token=${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}" >> $GITHUB_OUTPUT
+          echo "token=${{ secrets.CI_AZURE_STATIC_WEB_APPS_API_TOKEN }}" >> $GITHUB_OUTPUT
         id: get-token
     outputs:
       token: ${{ secrets.CI_AZURE_STATIC_WEB_APPS_API_TOKEN }}
