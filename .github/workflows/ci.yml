@@ -161,11 +161,8 @@ jobs:
         if: needs.do-test-azure.outputs.do-test == 'true'
 
       - id: api-runtime
-        uses: actions/github-script@0.9.0
-        with:
-          script: |
-            const major = ${{ matrix.node-version }}.substring(0, 2);
-            core.setOutput('major', major)
+        run: |
+          echo "major=$(node -v | cut -d. -f1 | cut -dv -f2)" >> "$GITHUB_OUTPUT"
 
       - uses: Azure/static-web-apps-deploy@v1
         if: needs.do-test-azure.outputs.do-test == 'true'
