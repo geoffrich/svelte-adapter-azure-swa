@@ -163,7 +163,7 @@ jobs:
         if: needs.do-test-azure.outputs.do-test == 'true'
         run: echo "major=$(node -v | cut -d. -f1 | cut -dv -f2)" >> "$GITHUB_OUTPUT"
 
-      - uses: ktarmyshov/github-actions/actions/static-web-apps-deploy-wrapper@main
+      - uses: ktarmyshov/github-actions/actions/static-web-apps-deploy-wrapper@v1
         if: needs.do-test-azure.outputs.do-test == 'true'
         id: build-deploy
         env:
@@ -219,7 +219,7 @@ jobs:
       (github.event_name == 'pull_request' && github.event.action == 'closed')
     runs-on: ubuntu-latest
     steps:
-      - uses: ktarmyshov/github-actions/actions/static-web-apps-deploy-wrapper@main
+      - uses: ktarmyshov/github-actions/actions/static-web-apps-deploy-wrapper@v1
         with:
           azure_static_web_apps_api_token: ${{ secrets.CI_AZURE_STATIC_WEB_APPS_API_TOKEN }}
           action: "close"
