@@ -10,7 +10,7 @@ on:
 env:
   # we call `pnpm playwright install` instead
   PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
-  NODE_MATRIX: '["18", "20"]'
+  NODE_MATRIX: '["18.x", "20.x"]'
 
 # cancel in-progress runs on new commits to same PR (gitub.event.number)
 # cancel in-progress runs on new pushes to same branch (github.ref_name)
