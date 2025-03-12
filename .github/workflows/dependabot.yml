@@ -27,7 +27,7 @@ jobs:
           token: ${{ steps.generate_token.outputs.token }}
 
       - id: add_changeset
-        uses: ktarmyshov/github-actions/actions/add_pr_changeset@v1
+        uses: ktarmyshov/github-actions/actions/add_pr_changeset@v1.2
         with:
           token: ${{ steps.generate_token.outputs.token }}
           package-name: svelte-adapter-azure-swa
