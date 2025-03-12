@@ -40,12 +40,23 @@ jobs:
           npm ci
           npm run check
         working-directory: demo
+  define-matrix:
+    runs-on: ubuntu-latest
+
+    outputs:
+      node-versions: ${{ steps.node.outputs.node-versions }}
+
+    steps:
+      - id: node
+        run: |
+          echo "node-versions=$NODE_MATRIX" >> "$GITHUB_OUTPUT"
   test:
+    needs: define-matrix
     if: ${{ !(github.event_name == 'pull_request' && github.event.action == 'closed') }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: ${{ fromJson(env.NODE_MATRIX) }}
+        node-version: ${{ fromJson(needs.define-matrix.outputs.node-versions) }}
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -56,11 +67,12 @@ jobs:
       - run: npm ci
       - run: npm test
   test-swa:
+    needs: define-matrix
     if: ${{ !(github.event_name == 'pull_request' && github.event.action == 'closed') }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: ${{ fromJson(env.NODE_MATRIX) }}
+        node-version: ${{ fromJson(needs.define-matrix.outputs.node-versions) }}
     defaults:
       run:
         working-directory: demo
@@ -101,10 +113,15 @@ jobs:
             echo "Deployment to azure will be executed"
             echo "result=true" >> "$GITHUB_OUTPUT"
           fi
-  clean-azure:
-    needs: do-test-azure
+  clean-test-azure:
+    needs:
+      - do-test-azure
+      - define-matrix
     if: needs.do-test-azure.outputs.do-test == 'true'
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: ${{ fromJson(needs.define-matrix.outputs.node-versions) }}
     steps:
       - name: pr-deleter
         uses: maheshrayas/action-pr-comment-delete@v3.0
@@ -115,15 +132,17 @@ jobs:
           user: "github-actions[bot]"
           issue: "${{github.event.number}}"
   test-azure:
+    needs:
+      - do-test-azure
+      - define-matrix
     if: ${{ !(github.event_name == 'pull_request' && github.event.action == 'closed') }}
     concurrency:
       group: ${{ github.workflow }}-${{ github.event.number || github.ref_name }}-azure
       cancel-in-progress: false
-    needs: do-test-azure
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: ${{ fromJson(env.NODE_MATRIX) }}
+        node-version: ${{ fromJson(needs.define-matrix.outputs.node-versions) }}
     defaults:
       run:
         working-directory: demo
@@ -157,6 +176,25 @@ jobs:
         if: needs.do-test-azure.outputs.do-test == 'true'
         env:
           PLAYWRIGHT_TEST_BASE_URL: ${{ steps.builddeploy.outputs.static_web_app_url }}
+      - id: complete
+        # Check if node version is 18.x and write to output complete-node-18
+        # Check if node version is 20.x and write to output complete-node-20
+        run: |
+          if [ "${{ matrix.node-version }}" == "18.x" ]; then
+            echo "complete-node-18=true" >> "$GITHUB_OUTPUT"
+          elif [ "${{ matrix.node-version }}" == "20.x" ]; then
+            echo "complete-node-20=true" >> "$GITHUB_OUTPUT"
+          fi
+    outputs:
+      complete-node-18: ${{ steps.complete.outputs.complete-node-18 }}
+      complete-node-20: ${{ steps.complete.outputs.complete-node-20 }}
+  complete-test-azure:
+    needs: test-azure
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "complete-node-18=${{ needs.test-azure.outputs.complete-node-18 }}"
+          echo "complete-node-20=${{ needs.test-azure.outputs.complete-node-20 }}"
   close-azure:
     needs: do-test-azure
     if: |
