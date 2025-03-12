@@ -39,12 +39,13 @@ jobs:
           fi
 
       - name: Add changeset to PR
+        id: add_changeset
         if: steps.check_changeset.outputs.committed == 'false'
         run: |
           mkdir -p .changeset
           CHANGESET_FILE="./.changeset/$(uuidgen).md"
           echo "---" >> $CHANGESET_FILE
-          echo "'svelte5kit-localization': patch" >> $CHANGESET_FILE
+          echo "'svelte-adapter-azure-swa': patch" >> $CHANGESET_FILE
           echo "---" >> $CHANGESET_FILE
           echo "" >> $CHANGESET_FILE
           echo "${{ github.event.pull_request.title }}" >> $CHANGESET_FILE
@@ -53,6 +54,7 @@ jobs:
           git add $CHANGESET_FILE
           git commit -m "Add changeset for Dependabot PR" --author="mergeprbot[bot] <mergeprbot[bot]@users.noreply.github.com>"
           git push
+          echo "committed=true" >> $GITHUB_OUTPUT
         env:
           GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
 
@@ -60,7 +62,7 @@ jobs:
         if: |
           (steps.metadata.outputs.update-type == 'version-update:semver-minor' || 
           steps.metadata.outputs.update-type == 'version-update:semver-patch') &&
-          steps.check_changeset.outputs.committed == 'false'
+          (steps.check_changeset.outputs.committed == 'true' || steps.add_changeset.outputs.committed == 'true')
         run: gh pr merge --auto --squash "$PR_URL"
         env:
           PR_URL: ${{github.event.pull_request.html_url}}
