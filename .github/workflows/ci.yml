@@ -10,7 +10,7 @@ on:
 env:
   # we call `pnpm playwright install` instead
   PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
-  NODE_MATRIX: '["18.x", "20.x"]'
+  NODE_MATRIX: '["18", "20"]'
 
 # cancel in-progress runs on new commits to same PR (gitub.event.number)
 # cancel in-progress runs on new pushes to same branch (github.ref_name)
@@ -162,6 +162,8 @@ jobs:
       - uses: Azure/static-web-apps-deploy@v1
         if: needs.do-test-azure.outputs.do-test == 'true'
         id: builddeploy
+        env:
+          NODE_API_RUNTIME: node:${{ matrix.node-version }}
         with:
           azure_static_web_apps_api_token: ${{ secrets.CI_AZURE_STATIC_WEB_APPS_API_TOKEN }}
           repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for Github integrations (i.e. PR comments)
