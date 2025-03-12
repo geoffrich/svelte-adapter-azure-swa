@@ -20,7 +20,7 @@ concurrency:
 
 permissions:
   contents: read # to fetch code (actions/checkout)
-  pull-requests: write # to create comments (actions/github-script)
+  # pull-requests: write # to create comments (actions/github-script)
 
 jobs:
   lint:
@@ -113,31 +113,31 @@ jobs:
             echo "Deployment to azure will be executed"
             echo "result=true" >> "$GITHUB_OUTPUT"
           fi
-  clean-test-azure:
-    needs:
-      - do-test-azure
-      - define-matrix
-    if: needs.do-test-azure.outputs.do-test == 'true'
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: ${{ fromJson(needs.define-matrix.outputs.node-versions) }}
-    concurrency:
-      group: ci-clean-test-azure
-    steps:
-      - name: pr-deleter
-        uses: maheshrayas/action-pr-comment-delete@v3.0
-        with:
-          github_token: "${{ secrets.GITHUB_TOKEN }}"
-          org: "geoffrich"
-          repo: "svelte-adapter-azure-swa"
-          user: "github-actions[bot]"
-          issue: "${{github.event.number}}"
+  # clean-test-azure:
+  #   needs:
+  #     - do-test-azure
+  #     - define-matrix
+  #   if: needs.do-test-azure.outputs.do-test == 'true'
+  #   runs-on: ubuntu-latest
+  #   strategy:
+  #     matrix:
+  #       node-version: ${{ fromJson(needs.define-matrix.outputs.node-versions) }}
+  #   concurrency:
+  #     group: ci-clean-test-azure
+  #   steps:
+  #     - name: pr-deleter
+  #       uses: maheshrayas/action-pr-comment-delete@v3.0
+  #       with:
+  #         github_token: "${{ secrets.GITHUB_TOKEN }}"
+  #         org: "geoffrich"
+  #         repo: "svelte-adapter-azure-swa"
+  #         user: "github-actions[bot]"
+  #         issue: "${{github.event.number}}"
   test-azure:
     needs:
       - do-test-azure
       - define-matrix
-      - clean-test-azure
+      # - clean-test-azure
     if: ${{ !(github.event_name == 'pull_request' && github.event.action == 'closed') }}
     concurrency:
       group: ci-test-azure
