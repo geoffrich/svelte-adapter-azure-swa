@@ -36,9 +36,9 @@ jobs:
       - run: npm ci
       - run: npm run check-types
       - run: npm run check-format
-      - run: |
-          npm ci
-          npm run check
+      - run: npm ci
+        working-directory: demo
+      - run: npm run check
         working-directory: demo
   define-matrix:
     runs-on: ubuntu-latest
@@ -48,8 +48,7 @@ jobs:
 
     steps:
       - id: node
-        run: |
-          echo "node-versions=$NODE_MATRIX" >> "$GITHUB_OUTPUT"
+        run: echo "node-versions=$NODE_MATRIX" >> "$GITHUB_OUTPUT"
   test:
     needs: define-matrix
     if: ${{ !(github.event_name == 'pull_request' && github.event.action == 'closed') }}
@@ -161,8 +160,7 @@ jobs:
         if: needs.do-test-azure.outputs.do-test == 'true'
 
       - id: api-runtime
-        run: |
-          echo "major=$(node -v | cut -d. -f1 | cut -dv -f2)" >> "$GITHUB_OUTPUT"
+        run: echo "major=$(node -v | cut -d. -f1 | cut -dv -f2)" >> "$GITHUB_OUTPUT"
 
       - uses: ./.github/actions/static-web-apps-deploy-wrapper
         if: needs.do-test-azure.outputs.do-test == 'true'

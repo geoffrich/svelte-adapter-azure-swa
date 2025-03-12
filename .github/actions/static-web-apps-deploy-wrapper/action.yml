@@ -37,17 +37,4 @@ runs:
         app_location: ${{ inputs.app_location }}
         api_location: ${{ inputs.api_location }}
         output_location: ${{ inputs.output_location }}
-
-    # svelte-adapter-azure-swa
-    - uses: actions/checkout@v4
-      with:
-        repository: ETF-Math/svelte-adapter-azure-swa
-        ref: ${{ inputs.ref }}
-        path: "${{ inputs.working-directory }}/svelte-adapter-azure-swa"
-
-    # svelte5kit-localization
-    - uses: actions/checkout@v4
-      with:
-        repository: "ktarmyshov/svelte5kit-localization"
-        ref: ${{ inputs.ref }}
-        path: "${{ inputs.working-directory }}/svelte5kit-localization"
+        verbose: true
