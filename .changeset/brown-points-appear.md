@@ -1,0 +1,5 @@
+---
+"svelte-adapter-azure-swa": patch
+---
+
+dependabot(deps): bump esbuild from 0.25.0 to 0.25.1 in the production-dependencies group
