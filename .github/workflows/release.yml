@@ -1,0 +1,49 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
+permissions: {}
+jobs:
+  release:
+    # prevents this action from running on forks
+    if: github.repository == 'ETF-Math/svelte-adapter-azure-swa'
+    permissions:
+      contents: write # to create release (changesets/action)
+      id-token: write # OpenID Connect token needed for provenance
+      pull-requests: write # to create pull request (changesets/action)
+    runs-on: ubuntu-latest
+    steps:
+      - id: generate_token
+        uses: tibdex/github-app-token@v2
+        with:
+          app_id: ${{ secrets.MERGEPRBOT_APP_ID }}
+          private_key: ${{ secrets.MERGEPRBOT_PRIVATE_KEY }}
+
+      - uses: actions/checkout@v4
+        with:
+          # This makes Actions fetch all Git history so that Changesets can generate changelogs with the correct commits
+          fetch-depth: 0
+          token: ${{ steps.generate_token.outputs.token }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: npm
+
+      - run: npm ci
+
+      - id: changesets
+        uses: changesets/action@v1
+        with:
+          #   # This expects you to have a script called release which does a build for your packages and calls changeset publish
+          publish: npm run changeset:publish
+          version: npm run changeset:version
+        env:
+          GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
+          NPM_CONFIG_PROVENANCE: true
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
