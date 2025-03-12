@@ -139,7 +139,7 @@ jobs:
       # - clean-test-azure
     if: ${{ !(github.event_name == 'pull_request' && github.event.action == 'closed') }}
     concurrency:
-      group: ci-test-azure
+      group: ci-test-azure-${{ github.event.pull_request.head.repo.full_name || github.repository }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -160,6 +160,7 @@ jobs:
         if: needs.do-test-azure.outputs.do-test == 'true'
 
       - id: api-runtime
+        if: needs.do-test-azure.outputs.do-test == 'true'
         run: echo "major=$(node -v | cut -d. -f1 | cut -dv -f2)" >> "$GITHUB_OUTPUT"
 
       - uses: ./.github/actions/static-web-apps-deploy-wrapper
@@ -184,6 +185,7 @@ jobs:
         env:
           PLAYWRIGHT_TEST_BASE_URL: ${{ steps.build-deploy.outputs.static_web_app_url }}
       - id: complete
+        working-directory: ./
         # Check if node version is 18.x and write to output complete-node-18
         # Check if node version is 20.x and write to output complete-node-20
         run: |
