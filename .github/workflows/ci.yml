@@ -45,7 +45,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: ${{ fromJson($NODE_MATRIX) }}
+        node-version: ${{ fromJson(env.NODE_MATRIX) }}
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -60,7 +60,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: ${{ fromJson($NODE_MATRIX) }}
+        node-version: ${{ fromJson(env.NODE_MATRIX) }}
     defaults:
       run:
         working-directory: demo
@@ -123,7 +123,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: ${{ fromJson($NODE_MATRIX) }}
+        node-version: ${{ fromJson(env.NODE_MATRIX) }}
     defaults:
       run:
         working-directory: demo
