@@ -139,7 +139,7 @@ jobs:
       # - clean-test-azure
     if: ${{ !(github.event_name == 'pull_request' && github.event.action == 'closed') }}
     concurrency:
-      group: ci-test-azure
+      group: ci-test-azure-${{ github.event.pull_request.head.repo.full_name || github.repository }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
