@@ -160,6 +160,7 @@ jobs:
         if: needs.do-test-azure.outputs.do-test == 'true'
 
       - id: api-runtime
+        if: needs.do-test-azure.outputs.do-test == 'true'
         run: echo "major=$(node -v | cut -d. -f1 | cut -dv -f2)" >> "$GITHUB_OUTPUT"
 
       - uses: ./.github/actions/static-web-apps-deploy-wrapper
