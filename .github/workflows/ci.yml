@@ -190,9 +190,17 @@ jobs:
         # Check if node version is 20.x and write to output complete-node-20
         run: |
           if [ "${{ matrix.node-version }}" == "18.x" ]; then
-            echo "complete-node-18=true" >> "$GITHUB_OUTPUT"
+            if [ ${{needs.do-test-azure.outputs.do-test}} == 'true' ]; then
+              echo "complete-node-18=true" >> "$GITHUB_OUTPUT"
+            else
+              echo "complete-node-18=false" >> "$GITHUB_OUTPUT"
+            fi
           elif [ "${{ matrix.node-version }}" == "20.x" ]; then
-            echo "complete-node-20=true" >> "$GITHUB_OUTPUT"
+            if [ ${{needs.do-test-azure.outputs.do-test}} == 'true' ]; then
+              echo "complete-node-20=true" >> "$GITHUB_OUTPUT"
+            else
+              echo "complete-node-20=false" >> "$GITHUB_OUTPUT"
+            fi
           fi
     outputs:
       complete-node-18: ${{ steps.complete.outputs.complete-node-18 }}
