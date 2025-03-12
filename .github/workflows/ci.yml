@@ -122,6 +122,8 @@ jobs:
     strategy:
       matrix:
         node-version: ${{ fromJson(needs.define-matrix.outputs.node-versions) }}
+    concurrency:
+      group: ci-clean-test-azure
     steps:
       - name: pr-deleter
         uses: maheshrayas/action-pr-comment-delete@v3.0
@@ -135,10 +137,10 @@ jobs:
     needs:
       - do-test-azure
       - define-matrix
+      - clean-test-azure
     if: ${{ !(github.event_name == 'pull_request' && github.event.action == 'closed') }}
     concurrency:
       group: ci-test-azure
-      cancel-in-progress: false
     runs-on: ubuntu-latest
     strategy:
       matrix:
