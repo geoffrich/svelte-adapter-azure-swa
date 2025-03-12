@@ -10,53 +10,32 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event.pull_request.user.login == 'dependabot[bot]'
     steps:
-      - name: Generate token
-        id: generate_token
+      - id: generate_token
         uses: tibdex/github-app-token@v2
         with:
           app_id: ${{ secrets.MERGEPRBOT_APP_ID }}
           private_key: ${{ secrets.MERGEPRBOT_PRIVATE_KEY }}
 
-      - name: Dependabot metadata
-        id: metadata
+      - id: metadata
         uses: dependabot/fetch-metadata@v2
         with:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
 
-      - name: Checkout source branch code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           ref: ${{ github.head_ref }}
           token: ${{ steps.generate_token.outputs.token }}
 
-      - name: Check if already commited changeset
-        id: check_changeset
-        run: |
-          if git log --oneline -n 1 | grep -q "Add changeset for Dependabot PR"; then
-            echo "committed=true" >> $GITHUB_OUTPUT
-          else
-            echo "committed=false" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Add changeset to PR
-        id: add_changeset
-        if: steps.check_changeset.outputs.committed == 'false'
-        run: |
-          mkdir -p .changeset
-          CHANGESET_FILE="./.changeset/$(uuidgen).md"
-          echo "---" >> $CHANGESET_FILE
-          echo "'svelte-adapter-azure-swa': patch" >> $CHANGESET_FILE
-          echo "---" >> $CHANGESET_FILE
-          echo "" >> $CHANGESET_FILE
-          echo "${{ github.event.pull_request.title }}" >> $CHANGESET_FILE
-          git config --global user.name 'mergeprbot[bot]'
-          git config --global user.email 'mergeprbot[bot]@users.noreply.github.com'
-          git add $CHANGESET_FILE
-          git commit -m "Add changeset for Dependabot PR" --author="mergeprbot[bot] <mergeprbot[bot]@users.noreply.github.com>"
-          git push
-          echo "committed=true" >> $GITHUB_OUTPUT
-        env:
-          GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
+      - id: add_changeset
+        uses: ktarmyshov/github-actions/actions/add_pr_changeset@v1
+        with:
+          token: ${{ steps.generate_token.outputs.token }}
+          package-name: svelte-adapter-azure-swa
+          version-update: patch
+          changeset-message: "${{ github.event.pull_request.title }}"
+          commit-user: mergeprbot[bot]
+          commit-email: mergeprbot[bot]@users.noreply.github.com
+          commit-message: "Add changeset for Dependabot PR"
 
       - name: Enable auto-merge for Dependabot PRs
         if: |
