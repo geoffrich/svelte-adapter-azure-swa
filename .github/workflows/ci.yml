@@ -137,7 +137,7 @@ jobs:
       - define-matrix
     if: ${{ !(github.event_name == 'pull_request' && github.event.action == 'closed') }}
     concurrency:
-      group: ${{ github.workflow }}-${{ github.event.number || github.ref_name }}-azure
+      group: ci-test-azure
       cancel-in-progress: false
     runs-on: ubuntu-latest
     strategy:
