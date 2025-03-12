@@ -100,20 +100,19 @@ jobs:
             echo "Deployment to azure will be executed"
             echo "result=true" >> "$GITHUB_OUTPUT"
           fi
-  # clean-azure:
-  #   needs: do-test-azure
-  #   if: needs.do-test-azure.outputs.do-test == 'true'
-  #   runs-on: ubuntu-latest
-  #   name: Delete old bot comment
-  #   steps:
-  #     - name: pr-deleter
-  #       uses: maheshrayas/action-pr-comment-delete@06d7254b4aeba4491a66a7e0f755b107f7373ccd
-  #       with:
-  #         github_token: "${{ secrets.GITHUB_TOKEN }}"
-  #         org: "geoffrich"
-  #         repo: "svelte-adapter-azure-swa"
-  #         user: "github-actions[bot]"
-  #         issue: "${{github.event.number}}"
+  clean-azure:
+    needs: do-test-azure
+    if: needs.do-test-azure.outputs.do-test == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: pr-deleter
+        uses: maheshrayas/action-pr-comment-delete@06d7254b4aeba4491a66a7e0f755b107f7373ccd
+        with:
+          github_token: "${{ secrets.GITHUB_TOKEN }}"
+          org: "geoffrich"
+          repo: "svelte-adapter-azure-swa"
+          user: "github-actions[bot]"
+          issue: "${{github.event.number}}"
   test-azure:
     if: ${{ !(github.event_name == 'pull_request' && github.event.action == 'closed') }}
     concurrency:
