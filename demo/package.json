@@ -16,7 +16,7 @@
 	"devDependencies": {
 		"@azure/static-web-apps-cli": "^2.0.4",
 		"@fontsource/fira-mono": "^5.0.0",
-		"@neoconfetti/svelte": "^2.2.2",
+		"@neoconfetti/svelte": "^2.2.0",
 		"@playwright/test": "^1.51.0",
 		"@sveltejs/adapter-auto": "^4.0.0",
 		"@sveltejs/kit": "^2.16.0",
