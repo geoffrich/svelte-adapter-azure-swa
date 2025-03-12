@@ -164,9 +164,9 @@ jobs:
         run: |
           echo "major=$(node -v | cut -d. -f1 | cut -dv -f2)" >> "$GITHUB_OUTPUT"
 
-      - uses: Azure/static-web-apps-deploy@v1
+      - uses: ./github/actions/static-web-apps-deploy-wrapper
         if: needs.do-test-azure.outputs.do-test == 'true'
-        id: builddeploy
+        id: build-deploy
         env:
           NODE_API_RUNTIME: node:${{ steps.api-runtime.outputs.major }}
         with:
@@ -184,7 +184,7 @@ jobs:
       - run: npm test
         if: needs.do-test-azure.outputs.do-test == 'true'
         env:
-          PLAYWRIGHT_TEST_BASE_URL: ${{ steps.builddeploy.outputs.static_web_app_url }}
+          PLAYWRIGHT_TEST_BASE_URL: ${{ steps.build-deploy.outputs.static_web_app_url }}
       - id: complete
         # Check if node version is 18.x and write to output complete-node-18
         # Check if node version is 20.x and write to output complete-node-20
@@ -211,7 +211,7 @@ jobs:
       (github.event_name == 'pull_request' && github.event.action == 'closed')
     runs-on: ubuntu-latest
     steps:
-      - uses: Azure/static-web-apps-deploy@v1
+      - uses: ./github/actions/static-web-apps-deploy-wrapper
         with:
           azure_static_web_apps_api_token: ${{ secrets.CI_AZURE_STATIC_WEB_APPS_API_TOKEN }}
           action: "close"

@@ -1,0 +1,53 @@
+name: Wrapper for Azure/static-web-apps-deploy
+description: Wrapper for Azure/static-web-apps-deploy so build of action is not called if action is skipped
+
+inputs:
+  azure_static_web_apps_api_token:
+    required: true
+    description: "Azure Static Web Apps API token"
+  action:
+    required: true
+    description: "Action command"
+  repo_token:
+    required: false
+    description: "Repo token"
+  app_location:
+    required: false
+    description: "App source code path"
+  api_location:
+    required: false
+    description: "Api source code path"
+  output_location:
+    required: false
+    description: "Built app content directory"
+outputs:
+  static_web_app_url:
+    description: "The URL of the deployed static web app"
+    value: ${{ steps.build-deploy.outputs.static_web_app_url }}
+
+runs:
+  using: "composite"
+  steps:
+    - uses: Azure/static-web-apps-deploy@v1
+      id: build-deploy
+      with:
+        azure_static_web_apps_api_token: ${{ inputs.azure_static_web_apps_api_token }}
+        repo_token: ${{ inputs.repo_token }}
+        action: ${{ inputs.action }}
+        app_location: ${{ inputs.app_location }}
+        api_location: ${{ inputs.api_location }}
+        output_location: ${{ inputs.output_location }}
+
+    # svelte-adapter-azure-swa
+    - uses: actions/checkout@v4
+      with:
+        repository: ETF-Math/svelte-adapter-azure-swa
+        ref: ${{ inputs.ref }}
+        path: "${{ inputs.working-directory }}/svelte-adapter-azure-swa"
+
+    # svelte5kit-localization
+    - uses: actions/checkout@v4
+      with:
+        repository: "ktarmyshov/svelte5kit-localization"
+        ref: ${{ inputs.ref }}
+        path: "${{ inputs.working-directory }}/svelte5kit-localization"
