@@ -106,7 +106,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: pr-deleter
-        uses: maheshrayas/action-pr-comment-delete@06d7254b4aeba4491a66a7e0f755b107f7373ccd
+        uses: maheshrayas/action-pr-comment-delete@v3
         with:
           github_token: "${{ secrets.GITHUB_TOKEN }}"
           org: "geoffrich"
