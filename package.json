@@ -12,7 +12,7 @@
 		"test:coverage": "vitest run --coverage",
 		"changeset:version": "changeset version && git add --all",
 		"changeset:publish": "changeset publish"
-		},
+	},
 	"exports": {
 		".": {
 			"types": "./index.d.ts",
