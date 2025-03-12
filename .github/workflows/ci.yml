@@ -10,6 +10,7 @@ on:
 env:
   # we call `pnpm playwright install` instead
   PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
+  NODE_MATRIX: '["18.x", "20.x"]'
 
 # cancel in-progress runs on new commits to same PR (gitub.event.number)
 # cancel in-progress runs on new pushes to same branch (github.ref_name)
@@ -44,7 +45,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [18.x, 20.x]
+        node-version: ${{ fromJson($NODE_MATRIX) }}
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -59,7 +60,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [18.x, 20.x]
+        node-version: ${{ fromJson($NODE_MATRIX) }}
     defaults:
       run:
         working-directory: demo
@@ -122,7 +123,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [18.x, 20.x]
+        node-version: ${{ fromJson($NODE_MATRIX) }}
     defaults:
       run:
         working-directory: demo
