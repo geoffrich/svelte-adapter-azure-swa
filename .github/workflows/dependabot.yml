@@ -41,6 +41,7 @@ jobs:
       - name: Add changeset to PR
         if: steps.check_changeset.outputs.committed == 'false'
         run: |
+          mkdir -p .changeset
           CHANGESET_FILE="./.changeset/$(uuidgen).md"
           echo "---" >> $CHANGESET_FILE
           echo "'svelte5kit-localization': patch" >> $CHANGESET_FILE
