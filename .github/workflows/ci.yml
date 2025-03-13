@@ -86,8 +86,8 @@ jobs:
       - uses: actions/cache@v4
         id: playwright-cache
         with:
-          path: "**/node_modules/playwright"
-          key: cache-playwright
+          path: /home/runner/.cache/ms-playwright
+          key: cache-playwright-${{ matrix.node-version }}
       - run: npx playwright install chromium --with-deps
         if: steps.playwright-cache.outputs.cache-hit != 'true'
       - run: npm run test:swa
@@ -188,8 +188,8 @@ jobs:
         id: playwright-cache
         if: needs.do-test-azure.outputs.do-test == 'true'
         with:
-          path: "**/node_modules/playwright"
-          key: cache-playwright
+          path: /home/runner/.cache/ms-playwright
+          key: cache-playwright-${{ matrix.node-version }}
       - run: npx playwright install chromium --with-deps
         if: steps.playwright-cache.outputs.cache-hit != 'true' && needs.do-test-azure.outputs.do-test == 'true'
       - run: npm test
