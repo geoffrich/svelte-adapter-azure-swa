@@ -11,6 +11,7 @@ env:
   # we call `pnpm playwright install` instead
   PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
   NODE_MATRIX: '["18.x", "20.x"]'
+  CI_AZURE_STATIC_WEB_APPS_API_TOKEN_NAME: CI_AZURE_STATIC_WEB_APPS_API_TOKEN
 
 # cancel in-progress runs on new commits to same PR (gitub.event.number)
 # cancel in-progress runs on new pushes to same branch (github.ref_name)
@@ -83,7 +84,13 @@ jobs:
           cache: npm
           cache-dependency-path: ./**/package-lock.json
       - run: npm ci
+      - uses: actions/cache@v4
+        id: playwright-cache
+        with:
+          path: /home/runner/.cache/ms-playwright
+          key: cache-playwright-${{ matrix.node-version }}
       - run: npx playwright install chromium --with-deps
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
       - run: npm run test:swa
   do-test-azure:
     runs-on: ubuntu-latest
@@ -100,15 +107,19 @@ jobs:
           echo "No deployment to azure will be executed"
           echo "result=false" >> "$GITHUB_OUTPUT"
 
+      - id: azure-token
+        if: steps.event.outputs.result != 'false'
+        run: echo "token=${{ secrets[format('{0}', env.CI_AZURE_STATIC_WEB_APPS_API_TOKEN_NAME)] }}" >> "$GITHUB_OUTPUT"
+
       - id: token
         if: steps.event.outputs.result != 'false'
         run: |
-          if [ -z "${{ secrets.CI_AZURE_STATIC_WEB_APPS_API_TOKEN }}" ]; then
-            echo "CI_AZURE_STATIC_WEB_APPS_API_TOKEN (secret) is NOT available"
+          if [ -z "${{ steps.azure-token.outputs.token }}" ]; then
+            echo "secrets['$CI_AZURE_STATIC_WEB_APPS_API_TOKEN_NAME'] is NOT available"
             echo "No deployment to azure will be executed"
             # echo "result=false" >> "$GITHUB_OUTPUT"
           else
-            echo "CI_AZURE_STATIC_WEB_APPS_API_TOKEN (secret) is available"
+            echo "secrets['$CI_AZURE_STATIC_WEB_APPS_API_TOKEN_NAME'] is available"
             echo "Deployment to azure will be executed"
             echo "result=true" >> "$GITHUB_OUTPUT"
           fi
@@ -163,13 +174,17 @@ jobs:
         if: needs.do-test-azure.outputs.do-test == 'true'
         run: echo "major=$(node -v | cut -d. -f1 | cut -dv -f2)" >> "$GITHUB_OUTPUT"
 
+      - id: azure-token
+        if: needs.do-test-azure.outputs.do-test == 'true'
+        run: echo "token=${{ secrets[format('{0}', env.CI_AZURE_STATIC_WEB_APPS_API_TOKEN_NAME)] }}" >> "$GITHUB_OUTPUT"
+
       - uses: ./.github/actions/static-web-apps-deploy-wrapper
         if: needs.do-test-azure.outputs.do-test == 'true'
         id: build-deploy
         env:
           NODE_API_RUNTIME: node:${{ steps.api-runtime.outputs.major }}
         with:
-          azure_static_web_apps_api_token: ${{ secrets.CI_AZURE_STATIC_WEB_APPS_API_TOKEN }}
+          azure_static_web_apps_api_token: ${{ steps.azure-token.outputs.token }}
           repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for Github integrations (i.e. PR comments)
           action: "upload"
           ###### Repository/Build Configurations - These values can be configured to match your app requirements. ######
@@ -178,8 +193,14 @@ jobs:
           api_location: "demo/func" # Api source code path - optional
           output_location: "build/static" # Built app content directory - optional
           ###### End of Repository/Build Configurations ######
-      - run: npx playwright install chromium --with-deps
+      - uses: actions/cache@v4
+        id: playwright-cache
         if: needs.do-test-azure.outputs.do-test == 'true'
+        with:
+          path: /home/runner/.cache/ms-playwright
+          key: cache-playwright-${{ matrix.node-version }}
+      - run: npx playwright install chromium --with-deps
+        if: steps.playwright-cache.outputs.cache-hit != 'true' && needs.do-test-azure.outputs.do-test == 'true'
       - run: npm test
         if: needs.do-test-azure.outputs.do-test == 'true'
         env:
@@ -220,7 +241,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - id: azure-token
+        run: echo "token=${{ secrets[format('{0}', env.CI_AZURE_STATIC_WEB_APPS_API_TOKEN_NAME)] }}" >> "$GITHUB_OUTPUT"
       - uses: ./.github/actions/static-web-apps-deploy-wrapper
         with:
-          azure_static_web_apps_api_token: ${{ secrets.CI_AZURE_STATIC_WEB_APPS_API_TOKEN }}
+          azure_static_web_apps_api_token: ${{ steps.azure-token.outputs.token }}
           action: "close"
