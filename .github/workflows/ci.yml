@@ -83,7 +83,14 @@ jobs:
           cache: npm
           cache-dependency-path: ./**/package-lock.json
       - run: npm ci
+      - uses: actions/cache@v2
+        id: playwright-cache
+        with:
+          path: |
+            **/node_modules/playwright
+          key: cache-playwright
       - run: npx playwright install chromium --with-deps
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
       - run: npm run test:swa
   do-test-azure:
     runs-on: ubuntu-latest
@@ -178,8 +185,15 @@ jobs:
           api_location: "demo/func" # Api source code path - optional
           output_location: "build/static" # Built app content directory - optional
           ###### End of Repository/Build Configurations ######
-      - run: npx playwright install chromium --with-deps
+      - uses: actions/cache@v2
+        id: playwright-cache
         if: needs.do-test-azure.outputs.do-test == 'true'
+        with:
+          path: |
+            **/node_modules/playwright
+          key: cache-playwright
+      - run: npx playwright install chromium --with-deps
+        if: steps.playwright-cache.outputs.cache-hit != 'true' && needs.do-test-azure.outputs.do-test == 'true'
       - run: npm test
         if: needs.do-test-azure.outputs.do-test == 'true'
         env:
