@@ -114,7 +114,7 @@ jobs:
       - id: token
         if: steps.event.outputs.result != 'false'
         run: |
-          if [ -z "${{ steps.azure-token.outputs }}" ]; then
+          if [ -z "${{ steps.azure-token.outputs.token }}" ]; then
             echo "CI_AZURE_STATIC_WEB_APPS_API_TOKEN (secret) is NOT available"
             echo "No deployment to azure will be executed"
             # echo "result=false" >> "$GITHUB_OUTPUT"
