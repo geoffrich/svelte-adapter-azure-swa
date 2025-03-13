@@ -11,6 +11,7 @@ env:
   # we call `pnpm playwright install` instead
   PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
   NODE_MATRIX: '["18.x", "20.x"]'
+  CI_AZURE_STATIC_WEB_APPS_API_TOKEN: ${{ secrets.CI_AZURE_STATIC_WEB_APPS_API_TOKEN }}
 
 # cancel in-progress runs on new commits to same PR (gitub.event.number)
 # cancel in-progress runs on new pushes to same branch (github.ref_name)
@@ -109,7 +110,7 @@ jobs:
       - id: token
         if: steps.event.outputs.result != 'false'
         run: |
-          if [ -z "${{ secrets.CI_AZURE_STATIC_WEB_APPS_API_TOKEN }}" ]; then
+          if [ -z "$CI_AZURE_STATIC_WEB_APPS_API_TOKEN" ]; then
             echo "CI_AZURE_STATIC_WEB_APPS_API_TOKEN (secret) is NOT available"
             echo "No deployment to azure will be executed"
             # echo "result=false" >> "$GITHUB_OUTPUT"
@@ -175,7 +176,7 @@ jobs:
         env:
           NODE_API_RUNTIME: node:${{ steps.api-runtime.outputs.major }}
         with:
-          azure_static_web_apps_api_token: ${{ secrets.CI_AZURE_STATIC_WEB_APPS_API_TOKEN }}
+          azure_static_web_apps_api_token: $CI_AZURE_STATIC_WEB_APPS_API_TOKEN
           repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for Github integrations (i.e. PR comments)
           action: "upload"
           ###### Repository/Build Configurations - These values can be configured to match your app requirements. ######
@@ -234,5 +235,5 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/static-web-apps-deploy-wrapper
         with:
-          azure_static_web_apps_api_token: ${{ secrets.CI_AZURE_STATIC_WEB_APPS_API_TOKEN }}
+          azure_static_web_apps_api_token: $CI_AZURE_STATIC_WEB_APPS_API_TOKEN
           action: "close"
