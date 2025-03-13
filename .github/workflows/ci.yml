@@ -109,7 +109,7 @@ jobs:
 
       - id: azure-token
         if: steps.event.outputs.result != 'false'
-        run: echo "token=${{ secrets[format({0}, env.CI_AZURE_STATIC_WEB_APPS_API_TOKEN_NAME)] }}" >> "$GITHUB_OUTPUT"
+        run: echo "token=${{ secrets[format('{0}', env.CI_AZURE_STATIC_WEB_APPS_API_TOKEN_NAME)] }}" >> "$GITHUB_OUTPUT"
 
       - id: token
         if: steps.event.outputs.result != 'false'
@@ -176,7 +176,7 @@ jobs:
 
       - id: azure-token
         if: needs.do-test-azure.outputs.do-test == 'true'
-        run: echo "token=${{ secrets[format({0}, env.CI_AZURE_STATIC_WEB_APPS_API_TOKEN_NAME)] }}" >> "$GITHUB_OUTPUT"
+        run: echo "token=${{ secrets[format('{0}', env.CI_AZURE_STATIC_WEB_APPS_API_TOKEN_NAME)] }}" >> "$GITHUB_OUTPUT"
 
       - uses: ./.github/actions/static-web-apps-deploy-wrapper
         if: needs.do-test-azure.outputs.do-test == 'true'
@@ -242,7 +242,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - id: azure-token
-        run: echo "token=${{ secrets[format({0}, env.CI_AZURE_STATIC_WEB_APPS_API_TOKEN_NAME)] }}" >> "$GITHUB_OUTPUT"
+        run: echo "token=${{ secrets[format('{0}', env.CI_AZURE_STATIC_WEB_APPS_API_TOKEN_NAME)] }}" >> "$GITHUB_OUTPUT"
       - uses: ./.github/actions/static-web-apps-deploy-wrapper
         with:
           azure_static_web_apps_api_token: ${{ steps.azure-token.outputs.token }}
