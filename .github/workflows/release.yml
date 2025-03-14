@@ -11,7 +11,7 @@ permissions: {}
 jobs:
   release:
     # prevents this action from running on forks
-    if: github.repository == 'ETF-Math/svelte-adapter-azure-swa'
+    if: github.repository == 'ktarmyshov/svelte-adapter-azure-swa'
     permissions:
       contents: write # to create release (changesets/action)
       id-token: write # OpenID Connect token needed for provenance
