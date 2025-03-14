@@ -26,11 +26,22 @@ jobs:
           ref: ${{ github.head_ref }}
           token: ${{ steps.generate_token.outputs.token }}
 
+      - id: get-package-info
+        run: |
+          PKG_NAME=$(jq -r '.name' package.json)
+          PKG_VERSION=$(jq -r '.version' package.json)
+          echo "name=$PKG_NAME" >> $GITHUB_OUTPUT
+          echo "version=$PKG_VERSION" >> $GITHUB_OUTPUT
+          if [ -z "$PKG_NAME" ] || [ -z "$PKG_VERSION" ]; then
+            echo "Failed to get package info"
+            exit 1
+          fi
+
       - id: add_changeset
         uses: ktarmyshov/github-actions/actions/add_pr_changeset@14a4ec0614dffcafcdc429004489877c54bd0c81
         with:
           token: ${{ steps.generate_token.outputs.token }}
-          package-name: svelte-adapter-azure-swa
+          package-name: ${{ steps.get-package-info.outputs.name }}
           version-update: patch
           changeset-message: "${{ github.event.pull_request.title }}"
           commit-user: mergeprbot[bot]
