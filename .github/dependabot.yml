@@ -11,6 +11,8 @@ updates:
       - "/demo"
     schedule:
       interval: "daily"
+      time: "03:00"
+      timezone: "Europe/Berlin"
     ignore:
       - dependency-name: "npm"
         versions: ["<10.0.0", ">=11.0.0"]
