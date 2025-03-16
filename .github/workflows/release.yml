@@ -45,5 +45,5 @@ jobs:
           version: npm run changeset:version
         env:
           GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
-          NPM_CONFIG_PROVENANCE: true
+          NPM_CONFIG_PROVENANCE: false
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
