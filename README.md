@@ -1,4 +1,5 @@
 # svelte-adapter-azure-swa-experimental
+
 The experimental fork of the official adapter repo (see below)
 
 # svelte-adapter-azure-swa
