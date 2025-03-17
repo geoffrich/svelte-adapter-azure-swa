@@ -21,6 +21,7 @@ concurrency:
 
 permissions:
   contents: read # to fetch code (actions/checkout)
+  checks: read
   # pull-requests: write # to create comments (actions/github-script)
 
 jobs:
@@ -137,6 +138,8 @@ jobs:
         working-directory: demo
     steps:
       - uses: actions/checkout@v4
+        if: needs.do-test-azure.outputs.do-test == 'true'
+      - run: exit 1
         if: needs.do-test-azure.outputs.do-test == 'true'
       - uses: actions/setup-node@v4
         if: needs.do-test-azure.outputs.do-test == 'true'
