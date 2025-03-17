@@ -10,6 +10,14 @@ concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 permissions: {}
 jobs:
+  echo:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Release"
+      - run: echo ${{ github.ref }}
+      - run: echo ${{ github.event.workflow_run.conclusion }}
+      - run: echo ${{ github.repository }}
+      - run: echo ${{ github.event_name }}
   release:
     # prevents this action from running on forks
     if: ${{ github.event_name == 'push' && github.event.workflow_run.conclusion == 'success' && github.repository == 'ktarmyshov/svelte-adapter-azure-swa' }}
