@@ -200,9 +200,6 @@ jobs:
               echo "complete-node-20=false" >> "$GITHUB_OUTPUT"
             fi
           fi
-      # TODO: Delete this, fail the job
-      - run: exit 1
-        if: needs.do-test-azure.outputs.do-test == 'true'
     outputs:
       complete-node-18: ${{ steps.complete.outputs.complete-node-18 }}
       complete-node-20: ${{ steps.complete.outputs.complete-node-20 }}
