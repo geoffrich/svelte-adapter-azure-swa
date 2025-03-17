@@ -43,10 +43,8 @@ jobs:
         working-directory: demo
   define-matrix:
     runs-on: ubuntu-latest
-
     outputs:
       node-versions: ${{ steps.node.outputs.node-versions }}
-
     steps:
       - id: node
         run: echo "node-versions=$NODE_MATRIX" >> "$GITHUB_OUTPUT"
