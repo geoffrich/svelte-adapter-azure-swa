@@ -139,8 +139,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         if: needs.do-test-azure.outputs.do-test == 'true'
-      - run: exit 1
-        if: needs.do-test-azure.outputs.do-test == 'true'
       - uses: actions/setup-node@v4
         if: needs.do-test-azure.outputs.do-test == 'true'
         with:
