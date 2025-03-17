@@ -13,7 +13,7 @@ jobs:
   echo:
     runs-on: ubuntu-latest
     steps:
-      - run: ${{ tojson(github.event) }}
+      - run: ${{ tojson(github) }}
         shell: cat {0}
       - run: echo "Release"
       - run: echo ${{ github.ref }}
