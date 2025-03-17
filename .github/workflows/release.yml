@@ -15,12 +15,13 @@ jobs:
     steps:
       - run: echo "Release"
       - run: echo ${{ github.ref }}
+      - run: echo ${{ github.event.workflow_run.event }}
       - run: echo ${{ github.event.workflow_run.conclusion }}
       - run: echo ${{ github.repository }}
       - run: echo ${{ github.event_name }}
   release:
     # prevents this action from running on forks
-    if: ${{ github.event_name == 'push' && github.event.workflow_run.conclusion == 'success' && github.repository == 'ktarmyshov/svelte-adapter-azure-swa' }}
+    if: ${{ github.event.workflow_run.event == 'push' && github.event.workflow_run.conclusion == 'success' && github.repository == 'ktarmyshov/svelte-adapter-azure-swa' }}
     permissions:
       contents: write # to create release (changesets/action)
       id-token: write # OpenID Connect token needed for provenance
