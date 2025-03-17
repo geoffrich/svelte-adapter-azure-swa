@@ -125,9 +125,8 @@ jobs:
     needs:
       - do-test-azure
       - define-matrix
-    if: |
-      ${{ !(github.event_name == 'pull_request' && github.event.action == 'closed') }} &&
-      needs.do-test-azure.outputs.do-test == 'true'
+    if: ${{ !(github.event_name == 'pull_request' && github.event.action == 'closed') && needs.do-test-azure.outputs.do-test == 'true' }}
+
     concurrency:
       group: ci-test-azure-${{ github.event.pull_request.head.repo.full_name || github.repository }}
     runs-on: ubuntu-latest
