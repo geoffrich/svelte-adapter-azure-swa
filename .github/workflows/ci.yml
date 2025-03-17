@@ -77,7 +77,6 @@ jobs:
         working-directory: demo
     steps:
       - uses: actions/checkout@v4
-      - run: exit 1
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
@@ -139,8 +138,6 @@ jobs:
         working-directory: demo
     steps:
       - uses: actions/checkout@v4
-        if: needs.do-test-azure.outputs.do-test == 'true'
-      - run: exit 1
         if: needs.do-test-azure.outputs.do-test == 'true'
       - uses: actions/setup-node@v4
         if: needs.do-test-azure.outputs.do-test == 'true'
