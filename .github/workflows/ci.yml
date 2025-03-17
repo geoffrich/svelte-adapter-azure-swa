@@ -11,7 +11,7 @@ env:
   # we call `pnpm playwright install` instead
   PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
   NODE_MATRIX: '["20.x"]'
-  CI_AZURE_STATIC_WEB_APPS_API_TOKEN_NAME: CI_AZURE_STATIC_WEB_APPS_API_TOKENXXX
+  CI_AZURE_STATIC_WEB_APPS_API_TOKEN_NAME: CI_AZURE_STATIC_WEB_APPS_API_TOKEN
 
 # cancel in-progress runs on new commits to same PR (gitub.event.number)
 # cancel in-progress runs on new pushes to same branch (github.ref_name)
