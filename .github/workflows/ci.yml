@@ -24,7 +24,7 @@ permissions:
   # pull-requests: write # to create comments (actions/github-script)
 
 jobs:
-  lint:
+  check:
     if: ${{ !(github.event_name == 'pull_request' && github.event.action == 'closed') }}
     runs-on: ubuntu-latest
     steps:
@@ -43,10 +43,8 @@ jobs:
         working-directory: demo
   define-matrix:
     runs-on: ubuntu-latest
-
     outputs:
       node-versions: ${{ steps.node.outputs.node-versions }}
-
     steps:
       - id: node
         run: echo "node-versions=$NODE_MATRIX" >> "$GITHUB_OUTPUT"
@@ -202,9 +200,6 @@ jobs:
               echo "complete-node-20=false" >> "$GITHUB_OUTPUT"
             fi
           fi
-      # TODO: Delete this, fail the job
-      - run: exit 1
-        if: needs.do-test-azure.outputs.do-test == 'true'
     outputs:
       complete-node-18: ${{ steps.complete.outputs.complete-node-18 }}
       complete-node-20: ${{ steps.complete.outputs.complete-node-20 }}
