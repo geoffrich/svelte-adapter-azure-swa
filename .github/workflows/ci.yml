@@ -24,7 +24,7 @@ permissions:
   # pull-requests: write # to create comments (actions/github-script)
 
 jobs:
-  lint:
+  check:
     if: ${{ !(github.event_name == 'pull_request' && github.event.action == 'closed') }}
     runs-on: ubuntu-latest
     steps:
