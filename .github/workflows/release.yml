@@ -13,6 +13,8 @@ jobs:
   echo:
     runs-on: ubuntu-latest
     steps:
+      - run: ${{ tojson(github.event) }}
+        shell: cat {0}
       - run: echo "Release"
       - run: echo ${{ github.ref }}
       - run: echo ${{ github.event.workflow_run.event }}
@@ -21,7 +23,7 @@ jobs:
       - run: echo ${{ github.event_name }}
   release:
     # prevents this action from running on forks
-    if: ${{ github.event.workflow_run.event == 'push' && github.event.workflow_run.conclusion == 'success' && github.repository == 'ktarmyshov/svelte-adapter-azure-swa' }}
+    if: ${{ github.repository == 'ktarmyshov/svelte-adapter-azure-swa' && github.event.workflow_run.event == 'push' && github.event.workflow_run.conclusion == 'success' }}
     permissions:
       contents: write # to create release (changesets/action)
       id-token: write # OpenID Connect token needed for provenance
