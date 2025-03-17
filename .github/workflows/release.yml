@@ -10,17 +10,11 @@ concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 permissions: {}
 jobs:
-  echo:
-    runs-on: ubuntu-latest
-    steps:
-      - run: ${{ tojson(github) }}
-        shell: cat {0}
-      - run: echo "Release"
-      - run: echo ${{ github.ref }}
-      - run: echo ${{ github.event.workflow_run.event }}
-      - run: echo ${{ github.event.workflow_run.conclusion }}
-      - run: echo ${{ github.repository }}
-      - run: echo ${{ github.event_name }}
+  # echo:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - run: ${{ tojson(github) }}
+  #       shell: cat {0}
   release:
     # prevents this action from running on forks
     if: ${{ github.repository == 'ktarmyshov/svelte-adapter-azure-swa' && github.ref = 'refs/heads/main' && github.event.workflow_run.event == 'push' && github.event.workflow_run.conclusion == 'success' }}
