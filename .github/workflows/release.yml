@@ -17,7 +17,7 @@ jobs:
   #       shell: cat {0}
   release:
     # prevents this action from running on forks
-    if: ${{ github.repository == 'ktarmyshov/svelte-adapter-azure-swa' && github.ref = 'refs/heads/main' && github.event.workflow_run.event == 'push' && github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ github.repository == 'ktarmyshov/svelte-adapter-azure-swa' && github.ref == 'refs/heads/main' && github.event.workflow_run.event == 'push' && github.event.workflow_run.conclusion == 'success' }}
     permissions:
       contents: write # to create release (changesets/action)
       id-token: write # OpenID Connect token needed for provenance
