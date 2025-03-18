@@ -17,7 +17,7 @@
 		"@azure/static-web-apps-cli": "^2.0.4",
 		"@fontsource/fira-mono": "^5.2.5",
 		"@neoconfetti/svelte": "^2.2.2",
-		"@playwright/test": "^1.51.0",
+		"@playwright/test": "^1.51.1",
 		"@sveltejs/adapter-auto": "^4.0.0",
 		"@sveltejs/kit": "^2.19.0",
 		"@sveltejs/vite-plugin-svelte": "^5.0.3",
