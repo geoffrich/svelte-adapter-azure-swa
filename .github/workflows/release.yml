@@ -31,7 +31,12 @@ jobs:
           app_id: ${{ secrets.MERGEPRBOT_APP_ID }}
           private_key: ${{ secrets.MERGEPRBOT_PRIVATE_KEY }}
 
-      - run: echo ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN}}
+      - run: |
+          echo TOKEN=${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN}}
+          if [ -z "${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}" ]; then
+            echo "AZURE_STATIC_WEB_APPS_API_TOKEN is not set"
+            exit 1
+          fi
 
       - uses: actions/checkout@v4
         with:
