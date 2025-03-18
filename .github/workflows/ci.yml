@@ -11,7 +11,7 @@ env:
   # we call `pnpm playwright install` instead
   PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
   NODE_MATRIX: '["20.x"]'
-  CI_AZURE_STATIC_WEB_APPS_API_TOKEN_NAME: CI_AZURE_STATIC_WEB_APPS_API_TOKEN
+  CI_AZURE_STATIC_WEB_APPS_API_TOKEN_NAME: AZURE_STATIC_WEB_APPS_API_TOKEN
 
 # cancel in-progress runs on new commits to same PR (gitub.event.number)
 # cancel in-progress runs on new pushes to same branch (github.ref_name)
@@ -91,6 +91,7 @@ jobs:
         if: steps.playwright-cache.outputs.cache-hit != 'true'
       - run: npm run test:swa
   do-test-azure:
+    environment: development
     runs-on: ubuntu-latest
     outputs:
       do-test: ${{ steps.event.outputs.result || steps.token.outputs.result || 'false' }}
