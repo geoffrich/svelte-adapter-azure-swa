@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.21.3
+
+### Patch Changes
+
+- 070f870: dependabot(deps-dev): bump the development-dependencies group across 2 directories with 3 updates
+
 ## 0.21.2
 
 ### Patch Changes
