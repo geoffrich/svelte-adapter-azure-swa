@@ -123,6 +123,7 @@ jobs:
             echo "result=true" >> "$GITHUB_OUTPUT"
           fi
   test-azure:
+    environment: development
     needs:
       - do-test-azure
       - define-matrix
