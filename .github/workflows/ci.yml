@@ -154,7 +154,7 @@ jobs:
       - id: azure-token
         if: needs.do-test-azure.outputs.do-test == 'true'
         run: |
-          TOKEN=${{ secrets[format('{0}', env.CI_AZURE_STATIC_WEB_APPS_API_TOKEN_NAMEX)] }}
+          TOKEN=${{ secrets[format('{0}', env.CI_AZURE_STATIC_WEB_APPS_API_TOKEN_NAME)] }}
           if [ -z "$TOKEN" ]; then
             echo "secrets['$CI_AZURE_STATIC_WEB_APPS_API_TOKEN_NAME'] is NOT available"
             echo "No deployment to azure can be executed"
