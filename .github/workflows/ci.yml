@@ -154,13 +154,13 @@ jobs:
       - id: azure-token
         if: needs.do-test-azure.outputs.do-test == 'true'
         run: |
-          token=${{ secrets[format('{0}', env.CI_AZURE_STATIC_WEB_APPS_API_TOKEN_NAME)] }
-          if [ -z "$token" ]; then
-            echo "secrets['CI_AZURE_STATIC_WEB_APPS_API_TOKEN_NAME'] is NOT available"
+          TOKEN=${{ secrets[format('{0}', env.CI_AZURE_STATIC_WEB_APPS_API_TOKEN_NAMEX)] }}
+          if [ -z "$TOKEN" ]; then
+            echo "secrets['$CI_AZURE_STATIC_WEB_APPS_API_TOKEN_NAME'] is NOT available"
             echo "No deployment to azure can be executed"
             exit 1
           fi
-          echo "token=$token" >> "$GITHUB_OUTPUT"
+          echo "token=$TOKEN" >> "$GITHUB_OUTPUT"
 
       - uses: ./.github/actions/static-web-apps-deploy-wrapper
         if: needs.do-test-azure.outputs.do-test == 'true'
