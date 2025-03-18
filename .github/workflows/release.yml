@@ -31,6 +31,8 @@ jobs:
           app_id: ${{ secrets.MERGEPRBOT_APP_ID }}
           private_key: ${{ secrets.MERGEPRBOT_PRIVATE_KEY }}
 
+      - run: echo ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN}}
+
       - uses: actions/checkout@v4
         with:
           # This makes Actions fetch all Git history so that Changesets can generate changelogs with the correct commits
