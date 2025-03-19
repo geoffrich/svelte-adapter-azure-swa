@@ -20,6 +20,9 @@ inputs:
   output_location:
     required: false
     description: "Built app content directory"
+  deployment_environment:
+    description: "Name of the Azure Static Web Apps environment to deploy to."
+    required: false
 outputs:
   static_web_app_url:
     description: "The URL of the deployed static web app"
@@ -38,3 +41,4 @@ runs:
         api_location: ${{ inputs.api_location }}
         output_location: ${{ inputs.output_location }}
         verbose: true
+        deployment_environment: ${{ inputs.deployment_environment }}

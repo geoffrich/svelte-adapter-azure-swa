@@ -163,12 +163,21 @@ jobs:
           fi
           echo "token=$TOKEN" >> "$GITHUB_OUTPUT"
 
+      - id: deployment-environment
+        if: needs.do-test-azure.outputs.do-test == 'true'
+        run: |
+          echo "environment=PR-${{ github.event.number }}-${{ matrix.node-version }}"
+          if [ -z "${{ github.event.number }}" ]; then
+            echo "environment=PR-${{ github.event.number }}-${{ matrix.node-version }}" >> "$GITHUB_OUTPUT"
+          fi
+
       - uses: ./.github/actions/static-web-apps-deploy-wrapper
         if: needs.do-test-azure.outputs.do-test == 'true'
         id: build-deploy
         env:
           NODE_API_RUNTIME: node:${{ steps.api-runtime.outputs.major }}
         with:
+          deployment_environment: ${{ steps.deployment-environment.outputs.environment }}
           azure_static_web_apps_api_token: ${{ steps.azure-token.outputs.token }}
           repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for Github integrations (i.e. PR comments)
           action: "upload"
@@ -200,7 +209,15 @@ jobs:
       - uses: actions/checkout@v4
       - id: azure-token
         run: echo "token=${{ secrets[format('{0}', env.CI_AZURE_STATIC_WEB_APPS_API_TOKEN_NAME)] }}" >> "$GITHUB_OUTPUT"
+      - id: deployment-environment
+        if: needs.do-test-azure.outputs.do-test == 'true'
+        run: |
+          echo "environment=PR-${{ github.event.number }}-${{ matrix.node-version }}"
+          if [ -z "${{ github.event.number }}" ]; then
+            echo "environment=PR-${{ github.event.number }}" >> "$GITHUB_OUTPUT"
+          fi
       - uses: ./.github/actions/static-web-apps-deploy-wrapper
         with:
+          deployment_environment: ${{ steps.deployment-environment.outputs.environment }}
           azure_static_web_apps_api_token: ${{ steps.azure-token.outputs.token }}
           action: "close"
