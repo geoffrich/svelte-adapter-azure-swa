@@ -167,7 +167,7 @@ jobs:
         if: needs.do-test-azure.outputs.do-test == 'true'
         run: |
           echo "environment=PR_${{ github.event.number }}_${{ matrix.node-version }}"
-          if [ -n "${{ github.event.number }}" ]; then
+          if [ -z "${{ github.event.number }}" ]; then
             echo "environment=PR_${{ github.event.number }}_${{ matrix.node-version }}" >> "$GITHUB_OUTPUT"
           fi
 
