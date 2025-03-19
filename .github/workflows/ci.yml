@@ -166,9 +166,9 @@ jobs:
       - id: deployment-environment
         if: needs.do-test-azure.outputs.do-test == 'true'
         run: |
-          echo "environment=PR-${{ github.event.number }}-${{ matrix.node-version }}"
+          echo "environment=PR_${{ github.event.number }}_${{ matrix.node-version }}"
           if [ -n "${{ github.event.number }}" ]; then
-            echo "environment=PR-${{ github.event.number }}-${{ matrix.node-version }}" >> "$GITHUB_OUTPUT"
+            echo "environment=PR_${{ github.event.number }}_${{ matrix.node-version }}" >> "$GITHUB_OUTPUT"
           fi
 
       - uses: ./.github/actions/static-web-apps-deploy-wrapper
@@ -210,11 +210,10 @@ jobs:
       - id: azure-token
         run: echo "token=${{ secrets[format('{0}', env.CI_AZURE_STATIC_WEB_APPS_API_TOKEN_NAME)] }}" >> "$GITHUB_OUTPUT"
       - id: deployment-environment
-        if: needs.do-test-azure.outputs.do-test == 'true'
         run: |
-          echo "environment=PR-${{ github.event.number }}-${{ matrix.node-version }}"
+          echo "environment=PR_${{ github.event.number }}_${{ matrix.node-version }}"
           if [ -n "${{ github.event.number }}" ]; then
-            echo "environment=PR-${{ github.event.number }}-${{ matrix.node-version }}" >> "$GITHUB_OUTPUT"
+            echo "environment=PR_${{ github.event.number }}_${{ matrix.node-version }}" >> "$GITHUB_OUTPUT"
           fi
       - uses: ./.github/actions/static-web-apps-deploy-wrapper
         with:
