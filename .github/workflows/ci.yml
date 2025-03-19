@@ -167,7 +167,7 @@ jobs:
         if: needs.do-test-azure.outputs.do-test == 'true'
         run: |
           echo "environment=PR-${{ github.event.number }}-${{ matrix.node-version }}"
-          if [ -z "${{ github.event.number }}" ]; then
+          if [ -n "${{ github.event.number }}" ]; then
             echo "environment=PR-${{ github.event.number }}-${{ matrix.node-version }}" >> "$GITHUB_OUTPUT"
           fi
 
@@ -213,7 +213,7 @@ jobs:
         if: needs.do-test-azure.outputs.do-test == 'true'
         run: |
           echo "environment=PR-${{ github.event.number }}-${{ matrix.node-version }}"
-          if [ -z "${{ github.event.number }}" ]; then
+          if [ -n "${{ github.event.number }}" ]; then
             echo "environment=PR-${{ github.event.number }}-${{ matrix.node-version }}" >> "$GITHUB_OUTPUT"
           fi
       - uses: ./.github/actions/static-web-apps-deploy-wrapper
