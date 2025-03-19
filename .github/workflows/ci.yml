@@ -124,7 +124,7 @@ jobs:
           fi
   test-azure:
     environment: development
-    concurrency: ${{ github.workflow }}-${{ github.event.number || github.ref_name }}
+    concurrency: test-azure-${{ github.workflow }}-${{ github.event.number || github.ref_name }}
     needs:
       - do-test-azure
       - define-matrix
