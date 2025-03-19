@@ -214,7 +214,7 @@ jobs:
         run: |
           echo "environment=PR-${{ github.event.number }}-${{ matrix.node-version }}"
           if [ -z "${{ github.event.number }}" ]; then
-            echo "environment=PR-${{ github.event.number }}" >> "$GITHUB_OUTPUT"
+            echo "environment=PR-${{ github.event.number }}-${{ matrix.node-version }}" >> "$GITHUB_OUTPUT"
           fi
       - uses: ./.github/actions/static-web-apps-deploy-wrapper
         with:
