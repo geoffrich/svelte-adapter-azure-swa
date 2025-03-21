@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.21.5
+
+### Patch Changes
+
+- eadb239: dependabot(deps-dev): bump @sveltejs/adapter-auto from 4.0.0 to 5.0.0 in /demo in the development-dependencies group across 1 directory
+
 ## 0.21.4
 
 ### Patch Changes
