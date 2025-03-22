@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.21.6
+
+### Patch Changes
+
+- a3560e3: dependabot(deps-dev): bump the development-dependencies group across 2 directories with 3 updates
+
 ## 0.21.5
 
 ### Patch Changes

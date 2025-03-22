@@ -1,7 +1,7 @@
 {
 	"name": "svelte-adapter-azure-swa-experimental",
 	"description": "SvelteKit adapter for Azure Static Web Apps.",
-	"version": "0.21.5",
+	"version": "0.21.6",
 	"main": "index.js",
 	"type": "module",
 	"scripts": {
