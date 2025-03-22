@@ -1,3 +1,10 @@
+# Status
+
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=ktarmyshov_svelte-adapter-azure-swa&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=ktarmyshov_svelte-adapter-azure-swa)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=ktarmyshov_svelte-adapter-azure-swa&metric=bugs)](https://sonarcloud.io/summary/new_code?id=ktarmyshov_svelte-adapter-azure-swa)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=ktarmyshov_svelte-adapter-azure-swa&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=ktarmyshov_svelte-adapter-azure-swa)
+[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=ktarmyshov_svelte-adapter-azure-swa&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=ktarmyshov_svelte-adapter-azure-swa)
+
 # svelte-adapter-azure-swa-experimental
 
 The experimental fork of the official adapter repo (see below)
