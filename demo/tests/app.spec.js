@@ -15,7 +15,7 @@ test('submits sverdle guess', async ({ page }) => {
 	// wait for the sveltekit to run hydration
 	// Otherwise the test will fail
 	await page.waitForLoadState('domcontentloaded');
-	await page.waitForEvent('load');
+	await page.waitForLoadState('networkidle');
 
 	const input = page.locator('input[name=guess]');
 	await expect(input).not.toBeDisabled({ timeout: 10000 });
