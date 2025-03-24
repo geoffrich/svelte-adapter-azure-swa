@@ -17,10 +17,9 @@ updates:
       - dependency-name: "npm"
         versions: ["<10.0.0", ">=11.0.0"]
     groups:
-      production-dependencies:
-        dependency-type: "production"
-      development-dependencies:
-        dependency-type: "development"
+      all:
+        patterns:
+          - "*"
     commit-message:
-      prefix: "dependabot(deps)"
-      prefix-development: "dependabot(deps-dev)"
+      prefix: "dependabot"
+      prefix-development: "dependabot"
