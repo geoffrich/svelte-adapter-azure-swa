@@ -14,6 +14,7 @@ test('submits sverdle guess', async ({ page }) => {
 	await page.goto('/sverdle');
 	// wait for the sveltekit to run hydration
 	// Otherwise the test will fail
+	await page.waitForTimeout(2000);
 	await page.waitForLoadState('domcontentloaded');
 	await page.waitForLoadState('networkidle');
 
