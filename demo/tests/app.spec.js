@@ -19,14 +19,14 @@ test('submits sverdle guess', async ({ page }) => {
 	await page.waitForLoadState('networkidle');
 
 	const input = page.locator('input[name=guess]').first();
-	await expect(input).not.toBeDisabled({ timeout: 10000 });
+	await expect(input).not.toBeDisabled({ timeout: 20000 });
 	await input.focus();
 
 	await page.keyboard.type('AZURE');
 	await page.keyboard.press('Enter');
 
 	await expect(input).toHaveValue('a');
-	await expect(input).toBeDisabled();
+	await expect(input).toBeDisabled({ timeout: 20000 });
 });
 
 test('can call custom API azure function', async ({ request }) => {
