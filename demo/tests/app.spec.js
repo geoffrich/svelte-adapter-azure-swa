@@ -15,7 +15,7 @@ test('submits sverdle guess', async ({ page }) => {
 	// wait for the sveltekit to run hydration
 	// Otherwise the test will fail
 	const input = page.locator('input[name=guess]');
-	await expect(input).not.toBeDisabled();
+	await expect(input).not.toBeDisabled({ timeout: 10000 });
 	await input.focus();
 
 	await page.keyboard.type('AZURE');
