@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.21.9
+
+### Patch Changes
+
+- 2256f09: dependabot: bump the all group across 2 directories with 2 updates
+
 ## 0.21.8
 
 ### Patch Changes
