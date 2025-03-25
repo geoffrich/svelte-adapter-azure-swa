@@ -11,7 +11,6 @@ env:
   # we call `pnpm playwright install` instead
   PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
   NODE_MATRIX: '["20.x"]'
-  CI_AZURE_STATIC_WEB_APPS_API_TOKEN_NAME: CI_AZURE_STATIC_WEB_APPS_API_TOKEN
 
 # cancel in-progress runs on new commits to same PR (gitub.event.number)
 # cancel in-progress runs on new pushes to same branch (github.ref_name)
@@ -108,17 +107,17 @@ jobs:
 
       - id: azure-token
         if: steps.event.outputs.result != 'false'
-        run: echo "token=${{ secrets[format('{0}', env.CI_AZURE_STATIC_WEB_APPS_API_TOKEN_NAME)] }}" >> "$GITHUB_OUTPUT"
+        run: echo "token=${{ secrets.CI_AZURE_STATIC_WEB_APPS_API_TOKEN }}" >> "$GITHUB_OUTPUT"
 
       - id: token
         if: steps.event.outputs.result != 'false'
         run: |
           if [ -z "${{ steps.azure-token.outputs.token }}" ]; then
-            echo "secrets['$CI_AZURE_STATIC_WEB_APPS_API_TOKEN_NAME'] is NOT available"
+            echo "secrets.CI_AZURE_STATIC_WEB_APPS_API_TOKEN is NOT available"
             echo "No deployment to azure will be executed"
             # echo "result=false" >> "$GITHUB_OUTPUT"
           else
-            echo "secrets['$CI_AZURE_STATIC_WEB_APPS_API_TOKEN_NAME'] is available"
+            echo "secrets.CI_AZURE_STATIC_WEB_APPS_API_TOKEN is available"
             echo "Deployment to azure will be executed"
             echo "result=true" >> "$GITHUB_OUTPUT"
           fi
@@ -152,17 +151,6 @@ jobs:
         if: needs.do-test-azure.outputs.do-test == 'true'
         run: echo "major=$(node -v | cut -d. -f1 | cut -dv -f2)" >> "$GITHUB_OUTPUT"
 
-      - id: azure-token
-        if: needs.do-test-azure.outputs.do-test == 'true'
-        run: |
-          TOKEN=${{ secrets[format('{0}', env.CI_AZURE_STATIC_WEB_APPS_API_TOKEN_NAME)] }}
-          if [ -z "$TOKEN" ]; then
-            echo "secrets['$CI_AZURE_STATIC_WEB_APPS_API_TOKEN_NAME'] is NOT available"
-            echo "No deployment to azure can be executed"
-            exit 1
-          fi
-          echo "token=$TOKEN" >> "$GITHUB_OUTPUT"
-
       - id: deployment-environment
         if: needs.do-test-azure.outputs.do-test == 'true'
         run: |
@@ -177,7 +165,7 @@ jobs:
           NODE_API_RUNTIME: node:${{ steps.api-runtime.outputs.major }}
         with:
           deployment_environment: ${{ steps.deployment-environment.outputs.environment }}
-          azure_static_web_apps_api_token: ${{ steps.azure-token.outputs.token }}
+          azure_static_web_apps_api_token: ${{ secrets.CI_AZURE_STATIC_WEB_APPS_API_TOKEN }}
           repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for Github integrations (i.e. PR comments)
           action: "upload"
           ###### Repository/Build Configurations - These values can be configured to match your app requirements. ######
@@ -206,8 +194,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - id: azure-token
-        run: echo "token=${{ secrets[format('{0}', env.CI_AZURE_STATIC_WEB_APPS_API_TOKEN_NAME)] }}" >> "$GITHUB_OUTPUT"
       - id: deployment-environment
         run: |
           if [ -n "${{ github.event.number }}" ]; then
@@ -216,5 +202,6 @@ jobs:
       - uses: ./.github/actions/static-web-apps-deploy-wrapper
         with:
           deployment_environment: ${{ steps.deployment-environment.outputs.environment }}
-          azure_static_web_apps_api_token: ${{ steps.azure-token.outputs.token }}
+          azure_static_web_apps_api_token: ${{ secrets.CI_AZURE_STATIC_WEB_APPS_API_TOKEN }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for Github integrations (i.e. PR comments)
           action: "close"
