@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.21.10
+
+### Patch Changes
+
+- 9d4c800: Update all usages of node to node:20/node20
+
 ## 0.21.9
 
 ### Patch Changes
