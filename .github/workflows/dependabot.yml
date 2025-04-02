@@ -6,53 +6,11 @@ permissions:
   pull-requests: write
 
 jobs:
+  # echo:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - run: ${{ tojson(github) }}
+  #       shell: cat {0}
   dependabot:
-    runs-on: ubuntu-latest
-    if: github.event.pull_request.user.login == 'dependabot[bot]'
-    steps:
-      - id: generate_token
-        uses: tibdex/github-app-token@v2
-        with:
-          app_id: ${{ secrets.MERGEPRBOT_APP_ID }}
-          private_key: ${{ secrets.MERGEPRBOT_PRIVATE_KEY }}
-
-      - id: metadata
-        uses: dependabot/fetch-metadata@v2
-        with:
-          github-token: "${{ secrets.GITHUB_TOKEN }}"
-
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.head_ref }}
-          token: ${{ steps.generate_token.outputs.token }}
-
-      - id: get-package-info
-        run: |
-          PKG_NAME=$(jq -r '.name' package.json)
-          PKG_VERSION=$(jq -r '.version' package.json)
-          echo "name=$PKG_NAME" >> $GITHUB_OUTPUT
-          echo "version=$PKG_VERSION" >> $GITHUB_OUTPUT
-          if [ -z "$PKG_NAME" ] || [ -z "$PKG_VERSION" ]; then
-            echo "Failed to get package info"
-            exit 1
-          fi
-
-      - id: add_changeset
-        uses: ktarmyshov/github-actions/actions/add_pr_changeset@14a4ec0614dffcafcdc429004489877c54bd0c81
-        with:
-          token: ${{ steps.generate_token.outputs.token }}
-          package-name: ${{ steps.get-package-info.outputs.name }}
-          version-update: patch
-          changeset-message: "${{ github.event.pull_request.title }}"
-          commit-user: mergeprbot[bot]
-          commit-email: mergeprbot[bot]@users.noreply.github.com
-          commit-message: "Add changeset for Dependabot PR"
-
-      - name: Enable auto-merge for Dependabot PRs
-        if: |
-          (steps.metadata.outputs.update-type == 'version-update:semver-minor' || 
-            steps.metadata.outputs.update-type == 'version-update:semver-patch')
-        run: gh pr merge --auto --squash "$PR_URL"
-        env:
-          PR_URL: ${{github.event.pull_request.html_url}}
-          GH_TOKEN: ${{ steps.generate_token.outputs.token }}
+    uses: ktarmyshov/github-actions/.github/workflows/dependabot.yml@a04c41924253afe9f74c5bd9e3268bb54046c7f5
+    secrets: inherit
