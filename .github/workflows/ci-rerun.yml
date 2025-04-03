@@ -5,6 +5,11 @@ on:
         required: true
         description: "The run ID of the workflow to rerun"
 jobs:
+  echo:
+    runs-on: ubuntu-latest
+    steps:
+      - run: ${{ tojson(github) }}
+        shell: cat {0}
   rerun:
     runs-on: ubuntu-latest
     steps:

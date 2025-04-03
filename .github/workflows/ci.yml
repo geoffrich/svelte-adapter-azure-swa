@@ -227,7 +227,7 @@ jobs:
       contents: read
   rerun-failed-jobs:
     runs-on: ubuntu-latest
-    needs: [test-azure]
+    needs: [test-azure, codeql]
     if: failure() && fromJSON(github.run_attempt) < 3
     permissions:
       actions: write
