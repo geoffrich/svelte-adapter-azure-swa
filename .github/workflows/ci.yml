@@ -141,7 +141,6 @@ jobs:
       run:
         working-directory: demo
     steps:
-      - run: exit -1
       - uses: actions/checkout@v4
         if: needs.do-test-azure.outputs.do-test == 'true'
       - uses: actions/setup-node@v4
@@ -225,9 +224,9 @@ jobs:
       # only required for workflows in private repositories
       actions: read
       contents: read
-  rerun-failed-jobs:
+  retry-failed:
     runs-on: ubuntu-latest
-    needs: [test-azure, codeql]
+    needs: [test-azure]
     if: failure() && fromJSON(github.run_attempt) < 3
     permissions:
       actions: write
