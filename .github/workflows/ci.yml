@@ -227,7 +227,7 @@ jobs:
   rerun-failed-jobs:
     runs-on: ubuntu-latest
     needs: [test-azure]
-    if: failure()
+    if: failure() && github.run_attempt <= 2 # retry twice
     steps:
       - run: gh run rerun ${{ github.run_id }} --failed
         env:
