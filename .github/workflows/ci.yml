@@ -230,6 +230,7 @@ jobs:
     needs: [test-azure]
     if: failure() && github.run_attempt <= 2 # retry twice
     steps:
+      - uses: actions/checkout@v4
       - run: gh run rerun ${{ github.run_id }} --failed
         env:
           GH_TOKEN: ${{ github.token }}
