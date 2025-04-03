@@ -4,6 +4,14 @@ on:
       run_id:
         required: true
         description: "The run ID of the workflow to rerun"
+      concurrency:
+        required: true
+        description: "The concurrency group to use for the rerun"
+
+concurrency:
+  group: ${{ inputs.concurrency }}
+  cancel-in-progress: true
+
 jobs:
   echo:
     runs-on: ubuntu-latest
