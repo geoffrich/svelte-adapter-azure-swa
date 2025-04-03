@@ -1,3 +1,5 @@
+name: CI-rerun
+
 on:
   workflow_dispatch:
     inputs:
@@ -9,7 +11,7 @@ on:
         description: "The concurrency group to use for the rerun"
 
 concurrency:
-  group: ci-rerun-${{ inputs.concurrency }}
+  group: ${{ github.workflow }}-${{ inputs.concurrency }}
   cancel-in-progress: true
 
 jobs:
