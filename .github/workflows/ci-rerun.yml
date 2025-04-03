@@ -11,6 +11,8 @@ jobs:
       - run: ${{ tojson(github) }}
         shell: cat {0}
   rerun:
+    permissions:
+      actions: write
     runs-on: ubuntu-latest
     steps:
       - name: rerun ${{ inputs.run_id }}
