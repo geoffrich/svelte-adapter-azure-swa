@@ -228,9 +228,10 @@ jobs:
   rerun-failed-jobs:
     runs-on: ubuntu-latest
     needs: [test-azure]
-    if: failure() && github.run_attempt <= 2 # retry twice
+    if: failure() && fromJSON(github.run_attempt) < 3
     steps:
-      - uses: actions/checkout@v4
-      - run: gh run rerun ${{ github.run_id }} --failed
-        env:
+      - env:
+          GH_REPO: ${{ github.repository }}
           GH_TOKEN: ${{ github.token }}
+          GH_DEBUG: api
+        run: gh workflow run ci-rerun.yml -F run_id=${{ github.run_id }}
