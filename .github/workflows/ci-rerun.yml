@@ -9,7 +9,7 @@ on:
         description: "The concurrency group to use for the rerun"
 
 concurrency:
-  group: ${{ inputs.concurrency }}
+  group: ci-rerun-${{ inputs.concurrency }}
   cancel-in-progress: true
 
 jobs:
