@@ -23,11 +23,11 @@ permissions:
   pull-requests: write # to create comments (actions/github-script)
 
 jobs:
-  # echo:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - run: ${{ tojson(github) }}
-  #       shell: cat {0}
+  echo:
+    runs-on: ubuntu-latest
+    steps:
+      - run: ${{ tojson(github) }}
+        shell: cat {0}
   check:
     if: ${{ !(github.event_name == 'pull_request' && github.event.action == 'closed') }}
     runs-on: ubuntu-latest
@@ -224,3 +224,11 @@ jobs:
       # only required for workflows in private repositories
       actions: read
       contents: read
+  rerun-failed-jobs:
+    runs-on: ubuntu-latest
+    needs: [test-azure]
+    if: failure()
+    steps:
+      - run: gh run rerun ${{ github.run_id }} --failed
+        env:
+          GH_TOKEN: ${{ github.token }}
