@@ -236,4 +236,4 @@ jobs:
           GH_REPO: ${{ github.repository }}
           GH_TOKEN: ${{ github.token }}
           GH_DEBUG: api
-        run: gh workflow run ci-rerun.yml -F run_id=${{ github.run_id }} -F concurrency=${{ github.workflow }}-${{ github.event.number || github.ref_name }}
+        run: gh workflow run ci-retry.yml -F run_id=${{ github.run_id }} -F concurrency=${{ github.workflow }}-${{ github.event.number || github.ref_name }}

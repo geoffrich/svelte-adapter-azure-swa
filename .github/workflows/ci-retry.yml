@@ -1,4 +1,4 @@
-name: CI-rerun
+name: CI-retry
 
 on:
   workflow_dispatch:
