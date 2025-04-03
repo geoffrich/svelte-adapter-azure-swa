@@ -20,7 +20,7 @@ jobs:
   #   steps:
   #     - run: ${{ tojson(github) }}
   #       shell: cat {0}
-  rerun:
+  retry:
     permissions:
       actions: write
     runs-on: ubuntu-latest
