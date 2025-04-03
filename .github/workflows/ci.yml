@@ -226,7 +226,7 @@ jobs:
       contents: read
   retry-failed:
     runs-on: ubuntu-latest
-    needs: [test-azure]
+    needs: [test-azure, test-swa]
     if: failure() && fromJSON(github.run_attempt) < 3
     permissions:
       actions: write
