@@ -1,4 +1,4 @@
-[![CI](https://github.com/ktarmyshov/svelte-adapter-azure-swa/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/ktarmyshov/svelte-adapter-azure-swa/actions/workflows/ci.yml)
+[![CI](https://github.com/kt-public/svelte-adapter-azure-swa/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/kt-public/svelte-adapter-azure-swa/actions/workflows/ci.yml)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=ktarmyshov_svelte-adapter-azure-swa&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=ktarmyshov_svelte-adapter-azure-swa)
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=ktarmyshov_svelte-adapter-azure-swa&metric=bugs)](https://sonarcloud.io/summary/new_code?id=ktarmyshov_svelte-adapter-azure-swa)
 [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=ktarmyshov_svelte-adapter-azure-swa&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=ktarmyshov_svelte-adapter-azure-swa)
