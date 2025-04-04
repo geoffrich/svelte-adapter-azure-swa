@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.21.11
+
+### Patch Changes
+
+- 52201cd: dependabot: bump esbuild from 0.25.1 to 0.25.2 in the all group across 1 directory
+- af85e3a: dependabot: bump the all group across 2 directories with 2 updates
+- 3978831: dependabot: bump the all group across 2 directories with 3 updates
+- 23b1c0a: dependabot: bump @types/node from 22.13.13 to 22.13.14 in the all group across 1 directory
+- c3c3885: dependabot: update @azure/static-web-apps-cli
+- c3c3885: dependabot: update @sveltejs/adapter-auto
+- 47c7c6b: dependabot: update @sveltejs/kit
+- c3c3885: dependabot: update @sveltejs/kit
+- c3c3885: dependabot: update @types/node
+- 05e5e1d: dependabot: update vite
+
 ## 0.21.10
 
 ### Patch Changes
