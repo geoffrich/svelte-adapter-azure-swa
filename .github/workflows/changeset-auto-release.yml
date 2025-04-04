@@ -4,7 +4,7 @@ on:
   schedule:
     - cron: "14 4 1 * *" # At 04:XX on day-of-month 1 (UTC)
     # Just for testing purposes - run every 5 minutes
-    # - cron: "*/5 * * * *" # Every 5 minutes
+    - cron: "*/5 * * * *" # Every 5 minutes
 
 permissions:
   contents: read
