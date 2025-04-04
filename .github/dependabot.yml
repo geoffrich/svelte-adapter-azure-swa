@@ -11,7 +11,7 @@ updates:
       - "/demo"
     schedule:
       interval: "daily"
-      time: "03:00"
+      time: "03:19" # UTC
       timezone: "Europe/Berlin"
     ignore:
       - dependency-name: "npm"
