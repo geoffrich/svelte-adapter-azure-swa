@@ -112,22 +112,23 @@ jobs:
 
       - id: azure-token
         if: steps.event.outputs.result != 'false'
-        run: echo "token=${{ secrets.CI_AZURE_STATIC_WEB_APPS_API_TOKEN }}" >> "$GITHUB_OUTPUT"
+        run: echo "token=${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}" >> "$GITHUB_OUTPUT"
 
       - id: token
         if: steps.event.outputs.result != 'false'
         run: |
           if [ -z "${{ steps.azure-token.outputs.token }}" ]; then
-            echo "secrets.CI_AZURE_STATIC_WEB_APPS_API_TOKEN is NOT available"
+            echo "secrets.AZURE_STATIC_WEB_APPS_API_TOKEN is NOT available"
             echo "No deployment to azure will be executed"
             # echo "result=false" >> "$GITHUB_OUTPUT"
           else
-            echo "secrets.CI_AZURE_STATIC_WEB_APPS_API_TOKEN is available"
+            echo "secrets.AZURE_STATIC_WEB_APPS_API_TOKEN is available"
             echo "Deployment to azure will be executed"
             echo "result=true" >> "$GITHUB_OUTPUT"
           fi
   test-azure:
     environment: development
+    concurrency: test-azure-${{ github.workflow }}-${{ github.event.number || github.ref_name }}
     needs:
       - do-test-azure
       - define-matrix
@@ -169,7 +170,7 @@ jobs:
           NODE_API_RUNTIME: node:${{ steps.api-runtime.outputs.major }}
         with:
           deployment_environment: ${{ steps.deployment-environment.outputs.environment }}
-          azure_static_web_apps_api_token: ${{ secrets.CI_AZURE_STATIC_WEB_APPS_API_TOKEN }}
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
           repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for Github integrations (i.e. PR comments)
           action: "upload"
           ###### Repository/Build Configurations - These values can be configured to match your app requirements. ######
@@ -197,6 +198,9 @@ jobs:
       needs.do-test-azure.outputs.do-test == 'true' &&
       (github.event_name == 'pull_request' && github.event.action == 'closed')
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: ${{ fromJson(needs.define-matrix.outputs.node-versions) }}
     steps:
       - uses: actions/checkout@v4
       - id: deployment-environment
@@ -207,7 +211,7 @@ jobs:
       - uses: ./.github/actions/static-web-apps-deploy-wrapper
         with:
           deployment_environment: ${{ steps.deployment-environment.outputs.environment }}
-          azure_static_web_apps_api_token: ${{ secrets.CI_AZURE_STATIC_WEB_APPS_API_TOKEN }}
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
           repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for Github integrations (i.e. PR comments)
           action: "close"
   # sonar:
