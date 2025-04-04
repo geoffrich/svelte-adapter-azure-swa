@@ -214,6 +214,7 @@ jobs:
   #   uses: ./.github/workflows/sonar.yml
   #   secrets: inherit
   codeql:
+    if: ${{ !(github.event_name == 'pull_request' && github.event.action == 'closed') }}
     uses: ./.github/workflows/codeql.yml
     secrets: inherit
     permissions:
