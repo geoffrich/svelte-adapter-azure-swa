@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.21.12
+
+### Patch Changes
+
+- 6057007: Checking azure close
+
 ## 0.21.11
 
 ### Patch Changes
