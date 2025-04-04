@@ -128,7 +128,6 @@ jobs:
           fi
   test-azure:
     environment: development
-    concurrency: test-azure-${{ github.workflow }}-${{ github.event.number || github.ref_name }}
     needs:
       - do-test-azure
       - define-matrix
@@ -192,6 +191,7 @@ jobs:
         env:
           PLAYWRIGHT_TEST_BASE_URL: ${{ steps.build-deploy.outputs.static_web_app_url }}
   close-azure:
+    environment: development
     needs: do-test-azure
     if: |
       needs.do-test-azure.outputs.do-test == 'true' &&
