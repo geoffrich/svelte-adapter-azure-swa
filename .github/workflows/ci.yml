@@ -193,7 +193,9 @@ jobs:
           PLAYWRIGHT_TEST_BASE_URL: ${{ steps.build-deploy.outputs.static_web_app_url }}
   close-azure:
     environment: development
-    needs: do-test-azure
+    needs:
+      - do-test-azure
+      - define-matrix
     if: |
       needs.do-test-azure.outputs.do-test == 'true' &&
       (github.event_name == 'pull_request' && github.event.action == 'closed')
