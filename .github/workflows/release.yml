@@ -29,10 +29,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - id: app-token
-        uses: actions/create-github-app-token@v1
+        uses: kt-public/github-actions/create-github-app-token@v1
         with:
           app-id: ${{ secrets.WORKFLOW_APP_ID }}
           private-key: ${{ secrets.WORKFLOW_APP_PRIVATE_KEY }}
+          configure-git: false
 
       - uses: actions/checkout@v4
         with:
@@ -42,7 +43,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
           cache: npm
 
       - run: npm ci
