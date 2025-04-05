@@ -163,6 +163,13 @@ jobs:
             echo "environment=PR-${{ github.event.number }}-${{ matrix.node-version }}" >> "$GITHUB_OUTPUT"
           fi
 
+      - id: app-token
+        uses: kt-public/github-actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.WORKFLOW_APP_ID }}
+          private-key: ${{ secrets.WORKFLOW_APP_PRIVATE_KEY }}
+          configure-git: false
+
       - uses: ./.github/actions/static-web-apps-deploy-wrapper
         if: needs.do-test-azure.outputs.do-test == 'true'
         id: build-deploy
@@ -171,7 +178,7 @@ jobs:
         with:
           deployment_environment: ${{ steps.deployment-environment.outputs.environment }}
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
-          repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for Github integrations (i.e. PR comments)
+          repo_token: ${{ steps.app-token.outputs.token }} # Used for Github integrations (i.e. PR comments)
           action: "upload"
           ###### Repository/Build Configurations - These values can be configured to match your app requirements. ######
           # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
@@ -205,16 +212,25 @@ jobs:
         node-version: ${{ fromJson(needs.define-matrix.outputs.node-versions) }}
     steps:
       - uses: actions/checkout@v4
+
       - id: deployment-environment
         run: |
           if [ -n "${{ github.event.number }}" ]; then
             echo "environment=PR-${{ github.event.number }}-${{ matrix.node-version }}" >> "$GITHUB_OUTPUT"
           fi
+
+      - id: app-token
+        uses: kt-public/github-actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.WORKFLOW_APP_ID }}
+          private-key: ${{ secrets.WORKFLOW_APP_PRIVATE_KEY }}
+          configure-git: false
+
       - uses: ./.github/actions/static-web-apps-deploy-wrapper
         with:
           deployment_environment: ${{ steps.deployment-environment.outputs.environment }}
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
-          repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for Github integrations (i.e. PR comments)
+          repo_token: ${{ steps.app-token.outputs.token }} # Used for Github integrations (i.e. PR comments)
           action: "close"
   # sonar:
   #   uses: ./.github/workflows/sonar.yml
