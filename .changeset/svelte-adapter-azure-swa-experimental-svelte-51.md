@@ -1,5 +1,5 @@
 ---
-svelte-adapter-azure-swa-experimental: patch
+svelte-adapter-azure-swa-next: patch
 ---
 
 dependabot: update svelte
