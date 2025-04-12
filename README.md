@@ -6,7 +6,7 @@
 
 # svelte-adapter-azure-swa-next
 
-The experimental fork of the official adapter repo (see below)
+The experimental fork of [the original adapter repo](https://github.com/geoffrich/svelte-adapter-azure-swa)
 
 # svelte-adapter-azure-swa
 
