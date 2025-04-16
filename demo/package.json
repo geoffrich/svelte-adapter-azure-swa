@@ -21,7 +21,7 @@
 		"@sveltejs/adapter-auto": "^6.0.0",
 		"@sveltejs/kit": "^2.19.0",
 		"@sveltejs/vite-plugin-svelte": "^5.0.3",
-		"svelte": "^5.26.3",
+		"svelte": "^5.27.0",
 		"svelte-adapter-azure-swa-experimental": "file:..",
 		"svelte-check": "^4.1.6",
 		"typescript": "^5.8.2",
