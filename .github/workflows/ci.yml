@@ -67,6 +67,7 @@ jobs:
           cache: npm
           cache-dependency-path: ./**/package-lock.json
       - run: npm ci
+      - run: npm run build
       - run: npm test
   test-swa:
     needs: define-matrix
@@ -86,6 +87,7 @@ jobs:
           cache: npm
           cache-dependency-path: ./**/package-lock.json
       - run: npm ci
+      - run: npm run build
       - uses: actions/cache@v4
         id: playwright-cache
         with:
@@ -151,6 +153,9 @@ jobs:
           cache: npm
           cache-dependency-path: ./**/package-lock.json
       - run: npm ci
+        if: needs.do-test-azure.outputs.do-test == 'true'
+
+      - run: npm run build
         if: needs.do-test-azure.outputs.do-test == 'true'
 
       - id: api-runtime

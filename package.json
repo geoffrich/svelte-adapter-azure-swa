@@ -5,13 +5,15 @@
 	"main": "index.js",
 	"type": "module",
 	"scripts": {
+		"build": "npm run gen:swa-conig-ts",
 		"format": "npm run check-format -- --write",
 		"check-format": "prettier --check .",
 		"check-types": "tsc --skipLibCheck",
 		"test": "vitest",
 		"test:coverage": "vitest run --coverage",
 		"changeset:version": "changeset version && git add --all",
-		"changeset:publish": "changeset publish"
+		"changeset:publish": "changeset publish",
+		"gen:swa-conig-ts": "curl https://json.schemastore.org/staticwebapp.config.json | npx json-schema-to-typescript > ./types/swa-config-gen.d.ts"
 	},
 	"exports": {
 		".": {
@@ -41,6 +43,9 @@
 		"@sveltejs/kit": "^2.20.5",
 		"@types/node": "^22.0.0",
 		"@types/set-cookie-parser": "^2.4.7",
+		"install": "^0.13.0",
+		"json-schema-to-typescript": "^15.0.4",
+		"npm": "^11.3.0",
 		"prettier": "^3.1.1",
 		"typescript": "^5.0.0",
 		"vitest": "^3.0.0"

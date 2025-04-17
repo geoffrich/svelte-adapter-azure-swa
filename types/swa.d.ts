@@ -1,11 +1,9 @@
+import { AzureStaticWebAppsConfigurationFile } from './swa-config-gen';
 // types and documentation adapted from https://docs.microsoft.com/en-us/azure/static-web-apps/configuration
-export interface StaticWebAppConfig {
-	routes?: Route[];
-	navigationFallback?: NavigationFallback;
-	globalHeaders?: Record<string, string>;
-	responseOverrides?: Record<OverridableResponseCodes, ResponseOverride>;
-	mimeTypes?: Record<string, string>;
-	platform?: Platform;
+export interface StaticWebAppConfig extends AzureStaticWebAppsConfigurationFile {
+	platform?: {
+		apiRuntime?: 'node:20';
+	};
 }
 
 export type CustomStaticWebAppConfig = Omit<StaticWebAppConfig, 'navigationFallback'>;
