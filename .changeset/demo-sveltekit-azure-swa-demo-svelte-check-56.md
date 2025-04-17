@@ -1,5 +1,5 @@
 ---
-sveltekit-azure-swa-demo: patch
+svelte-adapter-azure-swa-next: patch
 ---
 
-dependabot: update svelte-check
+dependabot: directory /demo, update svelte-check
