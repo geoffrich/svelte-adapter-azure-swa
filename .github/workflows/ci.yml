@@ -128,6 +128,7 @@ jobs:
           fi
   test-azure:
     environment: development
+    # Make sure to set concurrency to the same job, so if multiple matrix jobs are wating in queue
     concurrency: test-azure-${{ github.workflow }}-${{ github.event.number || github.ref_name }}
     needs:
       - do-test-azure
@@ -156,13 +157,6 @@ jobs:
         if: needs.do-test-azure.outputs.do-test == 'true'
         run: echo "major=$(node -v | cut -d. -f1 | cut -dv -f2)" >> "$GITHUB_OUTPUT"
 
-      - id: deployment-environment
-        if: needs.do-test-azure.outputs.do-test == 'true'
-        run: |
-          if [ -n "${{ github.event.number }}" ]; then
-            echo "environment=PR-${{ github.event.number }}-${{ matrix.node-version }}" >> "$GITHUB_OUTPUT"
-          fi
-
       - id: app-token
         uses: kt-public/github-actions/create-github-app-token@v1
         with:
@@ -176,7 +170,6 @@ jobs:
         env:
           NODE_API_RUNTIME: node:${{ steps.api-runtime.outputs.major }}
         with:
-          deployment_environment: ${{ steps.deployment-environment.outputs.environment }}
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
           repo_token: ${{ steps.app-token.outputs.token }} # Used for Github integrations (i.e. PR comments)
           action: "upload"
@@ -213,12 +206,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - id: deployment-environment
-        run: |
-          if [ -n "${{ github.event.number }}" ]; then
-            echo "environment=PR-${{ github.event.number }}-${{ matrix.node-version }}" >> "$GITHUB_OUTPUT"
-          fi
-
       - id: app-token
         uses: kt-public/github-actions/create-github-app-token@v1
         with:
@@ -228,7 +215,6 @@ jobs:
 
       - uses: ./.github/actions/static-web-apps-deploy-wrapper
         with:
-          deployment_environment: ${{ steps.deployment-environment.outputs.environment }}
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
           repo_token: ${{ steps.app-token.outputs.token }} # Used for Github integrations (i.e. PR comments)
           action: "close"
