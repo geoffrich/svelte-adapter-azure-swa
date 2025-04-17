@@ -14,7 +14,6 @@
 		"changeset:version": "changeset version && git add --all",
 		"changeset:publish": "changeset publish",
 		"gen:swa-conig-ts": "curl https://json.schemastore.org/staticwebapp.config.json | npx json-schema-to-typescript > ./types/swa-config-gen.d.ts && prettier --write ./types/swa-config-gen.d.ts"
-		
 	},
 	"exports": {
 		".": {
