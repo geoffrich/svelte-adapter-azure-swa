@@ -81,20 +81,29 @@ jobs:
         working-directory: demo
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
           cache: npm
           cache-dependency-path: ./**/package-lock.json
+
       - run: npm ci
+
       - run: npm run build
+
+      - id: playwright-version
+        run: echo "version=$(npx playwright --version)" >> "$GITHUB_OUTPUT"
+
       - uses: actions/cache@v4
         id: playwright-cache
         with:
           path: /home/runner/.cache/ms-playwright
-          key: cache-playwright-${{ matrix.node-version }}
+          key: cache-playwright-${{ matrix.node-version }}-${{ steps.playwright-version.outputs.version }}
+
       - run: npx playwright install chromium --with-deps
         if: steps.playwright-cache.outputs.cache-hit != 'true'
+
       - run: npm run test:swa
   do-test-azure:
     environment: development
@@ -146,12 +155,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         if: needs.do-test-azure.outputs.do-test == 'true'
+
       - uses: actions/setup-node@v4
         if: needs.do-test-azure.outputs.do-test == 'true'
         with:
           node-version: ${{ matrix.node-version }}
           cache: npm
           cache-dependency-path: ./**/package-lock.json
+
       - run: npm ci
         if: needs.do-test-azure.outputs.do-test == 'true'
 
@@ -184,14 +195,21 @@ jobs:
           api_location: "demo/func" # Api source code path - optional
           output_location: "build/static" # Built app content directory - optional
           ###### End of Repository/Build Configurations ######
+
+      - id: playwright-version
+        if: needs.do-test-azure.outputs.do-test == 'true'
+        run: echo "version=$(npx playwright --version)" >> "$GITHUB_OUTPUT"
+
       - uses: actions/cache@v4
         id: playwright-cache
         if: needs.do-test-azure.outputs.do-test == 'true'
         with:
           path: /home/runner/.cache/ms-playwright
-          key: cache-playwright-${{ matrix.node-version }}
+          key: cache-playwright-${{ matrix.node-version }}-${{ steps.playwright-version.outputs.version }}
+      
       - run: npx playwright install chromium --with-deps
         if: steps.playwright-cache.outputs.cache-hit != 'true' && needs.do-test-azure.outputs.do-test == 'true'
+      
       - run: npm test
         if: needs.do-test-azure.outputs.do-test == 'true'
         env:
