@@ -1,5 +1,5 @@
 /** @type {import('@playwright/test').PlaywrightTestConfig['webServer']} */
-let webServer = undefined;
+let webServer;
 if (process.env.SWA) {
 	webServer = {
 		timeout: 120 * 1000,
