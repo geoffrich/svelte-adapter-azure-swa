@@ -8,5 +8,5 @@ export default defineConfig({
 			exclude: [...configDefaults.exclude, 'demo/**'],
 			reporter: ['text', 'html', 'clover', 'json', 'lcov']
 		}
-	},
+	}
 });
