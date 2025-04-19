@@ -28,9 +28,9 @@
 		"azure",
 		"staticwebapp"
 	],
-	"homepage": "https://github.com/geoffrich/svelte-adapter-azure-swa#readme",
+	"homepage": "https://github.com/kt-public/svelte-adapter-azure-swa#readme",
 	"bugs": {
-		"url": "https://github.com/geoffrich/svelte-adapter-azure-swa/issues"
+		"url": "https://github.com/kt-public/svelte-adapter-azure-swa/issues"
 	},
 	"peerDependencies": {
 		"@sveltejs/kit": "^2.0.0"
