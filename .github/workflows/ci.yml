@@ -99,7 +99,7 @@ jobs:
         id: playwright-cache
         with:
           path: /home/runner/.cache/ms-playwright
-          key: cache-playwright-${{ matrix.node-version }}-${{ steps.playwright-version.outputs.version }}
+          key: "cache-playwright-${{ matrix.node-version }}-${{ steps.playwright-version.outputs.version }}"
 
       - run: npx playwright install chromium --with-deps
         if: steps.playwright-cache.outputs.cache-hit != 'true'
@@ -205,7 +205,7 @@ jobs:
         if: needs.do-test-azure.outputs.do-test == 'true'
         with:
           path: /home/runner/.cache/ms-playwright
-          key: cache-playwright-${{ matrix.node-version }}-${{ steps.playwright-version.outputs.version }}
+          key: "cache-playwright-${{ matrix.node-version }}-${{ steps.playwright-version.outputs.version }}"
       
       - run: npx playwright install chromium --with-deps
         if: steps.playwright-cache.outputs.cache-hit != 'true' && needs.do-test-azure.outputs.do-test == 'true'
