@@ -1,5 +1,27 @@
 # Changelog
 
+## 0.21.14
+
+### Patch Changes
+
+- a0e3cfb: dependabot: directory '/', update @vitest/coverage-istanbul
+- a0e3cfb: dependabot: directory '/', update vitest
+- 31b7020: dependabot: directory '/', update svelte
+- d1f8dc1: dependabot: directory '/', update esbuild
+- 7216c3e: dependabot: directory /demo, update svelte-check
+- b502cd8: dependabot: update @changesets/cli
+- bed92a1: dependabot: update @changesets/cli
+- 9ed7464: dependabot: update @changesets/cli
+- a5ed849: dependabot: update @playwright/test
+- b502cd8: dependabot: update @sveltejs/kit
+- 745993b: dependabot: update @types/node
+- 745993b: dependabot: update svelte
+- b502cd8: dependabot: update svelte
+- bed92a1: dependabot: update svelte
+- a5ed849: dependabot: update svelte
+- 9ed7464: dependabot: update vite
+- a5ed849: dependabot: update vite
+
 ## 0.21.13
 
 ### Patch Changes
