@@ -1,5 +1,5 @@
 {
-	"name": "svelte-adapter-azure-swa-next",
+	"name": "@ktarmyshov/svelte-adapter-azure-swa",
 	"description": "SvelteKit adapter for Azure Static Web Apps.",
 	"version": "0.21.13",
 	"main": "index.js",
