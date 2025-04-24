@@ -32,6 +32,10 @@
 		"staticwebapp"
 	],
 	"homepage": "https://github.com/kt-public/svelte-adapter-azure-swa#readme",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/kt-public/svelte-adapter-azure-swa.git"
+	},
 	"bugs": {
 		"url": "https://github.com/kt-public/svelte-adapter-azure-swa/issues"
 	},
