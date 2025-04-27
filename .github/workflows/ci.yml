@@ -18,11 +18,11 @@ permissions:
   pull-requests: write # to create comments (actions/github-script)
 
 jobs:
-  # echo:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - run: ${{ tojson(github) }}
-  #       shell: cat {0}
+  echo:
+    runs-on: ubuntu-latest
+    steps:
+      - run: ${{ tojson(github) }}
+        shell: cat {0}
   ci:
     uses: kt-workflows/npm-ci/.github/workflows/main.yml@v1
     with:
