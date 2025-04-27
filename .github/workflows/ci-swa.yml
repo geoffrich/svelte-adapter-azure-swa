@@ -118,7 +118,6 @@ jobs:
           working-directory: ./demo
 
       - uses: ./.github/actions/static-web-apps-deploy-wrapper
-        if: needs.do-test-azure.outputs.do-test == 'true'
         id: build-deploy
         env:
           NODE_API_RUNTIME: node:${{ steps.api-runtime.outputs.major }}
@@ -134,6 +133,5 @@ jobs:
           ###### End of Repository/Build Configurations ######
 
       - run: npm test
-        if: needs.do-test-azure.outputs.do-test == 'true'
         env:
           PLAYWRIGHT_TEST_BASE_URL: ${{ steps.build-deploy.outputs.static_web_app_url }}
