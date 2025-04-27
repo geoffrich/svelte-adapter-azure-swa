@@ -5,10 +5,17 @@ on:
     workflows: ['CI']
     types:
       - completed
+  workflow_dispatch:
 
-concurrency: ${{ github.workflow }}-${{ github.ref }}
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
-permissions: {}
+permissions:
+  contents: write # to create release (changesets/action)
+  id-token: write # OpenID Connect token needed for provenance
+  pull-requests: write # to create pull request (changesets/action)
+
 jobs:
   # echo:
   #   runs-on: ubuntu-latest
@@ -18,43 +25,14 @@ jobs:
   release:
     # prevents this action from running on forks
     if: >-
-      github.repository == 'kt-public/svelte-adapter-azure-swa' && 
+      github.repository == 'kt-npm-modules/npm-typescript-template' && 
       github.ref == 'refs/heads/main' && 
       github.event.workflow_run.event == 'push' && 
       github.event.workflow_run.conclusion == 'success'
-    permissions:
-      contents: write # to create release (changesets/action)
-      id-token: write # OpenID Connect token needed for provenance
-      pull-requests: write # to create pull request (changesets/action)
-    runs-on: ubuntu-latest
-    steps:
-      - id: app-token
-        uses: kt-public/github-actions/create-github-app-token@v1
-        with:
-          app-id: ${{ secrets.WORKFLOW_APP_ID }}
-          private-key: ${{ secrets.WORKFLOW_APP_PRIVATE_KEY }}
-          configure-git: false
-
-      - uses: actions/checkout@v4
-        with:
-          # This makes Actions fetch all Git history so that Changesets can generate changelogs with the correct commits
-          fetch-depth: 0
-          token: ${{ steps.app-token.outputs.token }}
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: npm
-
-      - run: npm ci
-
-      - id: changesets
-        uses: changesets/action@v1
-        with:
-          #   # This expects you to have a script called release which does a build for your packages and calls changeset publish
-          publish: npm run changeset:publish
-          version: npm run changeset:version
-        env:
-          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
-          NPM_CONFIG_PROVENANCE: true
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+    uses: kt-workflows/npm-release/.github/workflows/main.yml@v1
+    with:
+      matrix-node-version: ${{ vars.MATRIX_NODE_VERSION }}
+    secrets:
+      WORKFLOW_APP_ID: ${{ secrets.WORKFLOW_APP_ID }}
+      WORKFLOW_APP_PRIVATE_KEY: ${{ secrets.WORKFLOW_APP_PRIVATE_KEY }}
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

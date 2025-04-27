@@ -1,0 +1,23 @@
+name: Dependabot auto-release
+
+on:
+  schedule:
+    - cron: '09 4 1 * *' # At 04:XX on day-of-month 1 (UTC)
+    # Just for testing purposes - run every 5 minutes
+    # - cron: '*/5 * * * *' # Every 5 minutes
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  # echo:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - run: ${{ tojson(github) }}
+  #       shell: cat {0}
+  auto-release:
+    uses: kt-workflows/dependabot-auto-release/.github/workflows/main.yml@v1
+    secrets:
+      WORKFLOW_APP_ID: ${{ secrets.WORKFLOW_APP_ID }}
+      WORKFLOW_APP_PRIVATE_KEY: ${{ secrets.WORKFLOW_APP_PRIVATE_KEY }}
