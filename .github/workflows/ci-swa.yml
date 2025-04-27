@@ -50,6 +50,8 @@ jobs:
           working-directory: ./demo
 
   swa-azure:
+    environment: development
+    if: $${ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN != '' }
     runs-on: ubuntu-latest
     strategy:
       matrix:
