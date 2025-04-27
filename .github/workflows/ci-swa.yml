@@ -55,10 +55,7 @@ jobs:
       result: ${{ steps.event.outputs.result || steps.token.outputs.result || 'false' }}
     steps:
       - id: event
-        if: >-
-          (github.event_name == 'pull_request' && github.repository == github.event.pull_request.head.repo.full_name) ||
-          github.event_name == 'push' &&
-          ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN != '' }}
+        if: secrets.AZURE_STATIC_WEB_APPS_API_TOKEN != ''
         run: |
           echo "github.repository: ${{ github.repository }}"
           echo "github.event.pull_request.head.repo.full_name: ${{ github.event.pull_request.head.repo.full_name }}"
