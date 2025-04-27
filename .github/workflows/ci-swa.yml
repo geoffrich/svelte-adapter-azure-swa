@@ -20,6 +20,7 @@ env:
 
 permissions:
   contents: read # to fetch code (actions/checkout)
+  actions: write # to create a comment (actions/github-script)
 
 jobs:
   swa-cli:
