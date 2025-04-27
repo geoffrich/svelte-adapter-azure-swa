@@ -18,15 +18,8 @@ env:
   # we call `pnpm playwright install` instead
   PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
 
-# cancel in-progress runs on new commits to same PR (gitub.event.number)
-concurrency:
-  # group: ${{ github.workflow }}-${{ github.event.number || github.sha }}
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
 permissions:
   contents: read # to fetch code (actions/checkout)
-  pull-requests: write # to create comments (actions/github-script)
 
 jobs:
   swa-cli:
