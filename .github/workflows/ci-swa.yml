@@ -14,10 +14,6 @@ on:
         required: false
         type: boolean
 
-env:
-  # we call `pnpm playwright install` instead
-  PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
-
 permissions:
   contents: read # to fetch code (actions/checkout)
   actions: write # to create a comment (actions/github-script)
