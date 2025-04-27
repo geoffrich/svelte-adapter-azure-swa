@@ -87,7 +87,6 @@ jobs:
   swa-azure:
     needs: do-swa-azure
     environment: development
-    if: ${{ needs.do-swa-azure.outputs.result == 'true' }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -97,6 +96,7 @@ jobs:
         working-directory: demo
     steps:
       - id: app-token
+        if: ${{ needs.do-swa-azure.outputs.result == 'true' }}
         uses: kt-actions/create-github-app-token@v1
         with:
           app-id: ${{ secrets.WORKFLOW_APP_ID }}
@@ -104,10 +104,12 @@ jobs:
           configure-git: false
 
       - uses: actions/checkout@v4
+        if: ${{ needs.do-swa-azure.outputs.result == 'true' }}
         with:
           token: ${{ steps.app-token.outputs.token }}
 
       - uses: kt-actions/npm-run-script@v1
+        if: ${{ needs.do-swa-azure.outputs.result == 'true' }}
         with:
           node-version: ${{ matrix.node-version }}
           cache-additional-path: ${{ inputs.cache-additional-path }}
@@ -118,6 +120,7 @@ jobs:
           working-directory: ./demo
 
       - uses: ./.github/actions/static-web-apps-deploy-wrapper
+        if: ${{ needs.do-swa-azure.outputs.result == 'true' }}
         id: build-deploy
         env:
           NODE_API_RUNTIME: node:${{ steps.api-runtime.outputs.major }}
@@ -133,5 +136,6 @@ jobs:
           ###### End of Repository/Build Configurations ######
 
       - run: npm test
+        if: ${{ needs.do-swa-azure.outputs.result == 'true' }}
         env:
           PLAYWRIGHT_TEST_BASE_URL: ${{ steps.build-deploy.outputs.static_web_app_url }}
