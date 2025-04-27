@@ -25,7 +25,7 @@ jobs:
   release:
     # prevents this action from running on forks
     if: >-
-      github.repository == 'kt-npm-modules/npm-typescript-template' && 
+      github.repository == 'kt-npm-modules/svelte-adapter-azure-swa' && 
       github.ref == 'refs/heads/main' && 
       github.event.workflow_run.event == 'push' && 
       github.event.workflow_run.conclusion == 'success'
