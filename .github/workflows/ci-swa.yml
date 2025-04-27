@@ -38,5 +38,8 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache-additional-path: ${{ inputs.cache-additional-path }}
           cache-reset: ${{ inputs.cache-reset }}
+          install-script: |
+            npm ci
+            npx playwright install
           run-script: npm run test:swa
           working-directory: ./demo
