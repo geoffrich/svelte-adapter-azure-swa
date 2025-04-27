@@ -1,9 +1,8 @@
 import adapter from 'svelte-adapter-azure-swa';
 const [major] = process.versions.node.split('.').map(Number);
-let NODE_API_RUNTIME = process.env.NODE_API_RUNTIME;
+let NODE_API_RUNTIME = (process.env.NODE_API_RUNTIME || '').trim();
 console.warn('#'.repeat(100));
 if (
-	!NODE_API_RUNTIME ||
 	NODE_API_RUNTIME.length === 0 ||
 	!NODE_API_RUNTIME.startsWith('node:') ||
 	NODE_API_RUNTIME.split(':')[1] !== ''
