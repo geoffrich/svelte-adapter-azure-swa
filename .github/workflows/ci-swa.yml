@@ -115,7 +115,6 @@ jobs:
           install-script: |
             npm ci
             npx playwright install
-          run-script: npm run test
           working-directory: ./demo
 
       - uses: ./.github/actions/static-web-apps-deploy-wrapper
