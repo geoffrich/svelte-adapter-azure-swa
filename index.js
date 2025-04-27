@@ -1,7 +1,7 @@
-import { writeFileSync, existsSync } from 'fs';
+import esbuild from 'esbuild';
+import { existsSync, writeFileSync } from 'fs';
 import { join, posix } from 'path';
 import { fileURLToPath } from 'url';
-import esbuild from 'esbuild';
 
 /**
  * @typedef {import('esbuild').BuildOptions} BuildOptions
