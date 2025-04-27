@@ -4,7 +4,7 @@
 	"type": "module",
 	"scripts": {
 		"prepare": "(cd .. && npm ci) && ../scripts/npm-link.sh && (svelte-kit sync || echo '')",
-		"build": "vite build",
+		"build": "svelte-kit sync && vite build",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json --watch",
 		"dev": "vite dev",
