@@ -1,8 +1,12 @@
-CHANGELOG.md
-coverage/
-build/
-.svelte-kit/
-sk_render/
-.github/
-demo/test-results/
-.changeset/
+# Package Managers
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+bun.lock
+bun.lockb
+
+# Demo subfolder - quick fix
+demo/.svelte-kit
+demo/build
+demo/func/sk_render
+demo/test-results

@@ -1,6 +1,10 @@
 {
+	"editor.codeActionsOnSave": {
+		"source.organizeImports": "explicit"
+	},
 	"editor.formatOnSave": true,
-	"[json]": {
-		"editor.formatOnSave": false
-	}
+	"editor.detectIndentation": false,
+	"editor.tabSize": 2,
+	"editor.defaultFormatter": "esbenp.prettier-vscode",
+	"eslint.workingDirectories": [".", ".demo"]
 }
