@@ -54,9 +54,11 @@ jobs:
     outputs:
       result: ${{ steps.token.outputs.result || 'false' }}
     steps:
+      # We only run azure SWA deployment if we push to the default branch or create a PR into the default branch from our own org!
+
       # Check that it's a push into the default branch
       - id: main-push
-        if: github.event_name == 'push' && github.ref == 'refs/heads/${{ github.event.repository.default_branch }}'
+        if: github.event_name == "push" && github.ref == "refs/heads/${{ github.event.repository.default_branch }}""
         run: |
           echo "github.ref: ${{ github.ref }}"
           echo "compare ref: refs/heads/${{ github.event.repository.default_branch }}"
