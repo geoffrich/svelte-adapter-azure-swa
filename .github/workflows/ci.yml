@@ -38,7 +38,7 @@ jobs:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   ci-swa:
-    uses: ./github/workflows/ci-swa.yml
+    uses: ./github/workflows/ci-swa.yml@main
     with:
       # pass the matrix node version to the called workflow
       matrix-node-version: ${{ vars.MATRIX_NODE_VERSION }}
