@@ -1,7 +1,8 @@
-import { app, HttpResponse } from '@azure/functions';
+import { app } from '@azure/functions';
 import { installPolyfills } from '@sveltejs/kit/node/polyfills';
 import { manifest } from 'MANIFEST';
 import { Server } from 'SERVER';
+import { Headers as HeadersUndici, Request as RequestUndici } from 'undici';
 import {
 	getClientIPFromHeaders,
 	getClientPrincipalFromHeaders,
@@ -9,7 +10,7 @@ import {
 } from './headers';
 
 // replaced at build time
-// @ts-expect-error
+// @ts-expect-error DEBUG is replaced at build time and may not be recognized by TypeScript
 // eslint-disable-next-line no-undef
 const debug = DEBUG;
 
@@ -21,6 +22,9 @@ const initialized = server.init({ env: process.env });
 /**
  * @typedef {import('@azure/functions').InvocationContext} InvocationContext
  * @typedef {import('@azure/functions').HttpRequest} HttpRequest
+ * @typedef {import('@azure/functions').HttpResponseInit} HttpResponseInit
+ * @typedef {import('undici').BodyInit} BodyInitUndici
+ * @typedef {import('undici').HeadersInit} HeadersInitUndici
  */
 
 app.setup({
@@ -62,11 +66,17 @@ app.http('sk_render', {
 		});
 
 		if (debug) {
-			context.log(`SK headers: ${JSON.stringify(Object.fromEntries(rendered.headers.entries()))}`);
+			// context.log(`SK headers: ${JSON.stringify(Object.fromEntries(rendered.headers.entries()))}`);
+			/** @type {Record<string, string>} */
+			const headers = {};
+			rendered.headers.forEach((value, key) => {
+				headers[key] = value;
+			});
+			context.log(`SK headers: ${JSON.stringify(headers)}`);
 			context.log(`Response: ${JSON.stringify(rendered)}`);
 		}
 
-		return toResponse(rendered);
+		return toResponseInit(rendered);
 	}
 });
 
@@ -79,6 +89,13 @@ function toRequest(httpRequest) {
 	// this header contains the URL the user requested
 	const originalUrl = httpRequest.headers.get('x-ms-original-url');
 
+	const headers = new HeadersUndici();
+	httpRequest.headers.forEach((value, key) => {
+		if (key !== 'x-ms-original-url') {
+			headers.set(key, value);
+		}
+	});
+
 	// SWA strips content-type headers from empty POST requests, but SK form actions require the header
 	// https://github.com/geoffrich/svelte-adapter-azure-swa/issues/178
 	if (
@@ -86,37 +103,60 @@ function toRequest(httpRequest) {
 		!httpRequest.body &&
 		!httpRequest.headers.get('content-type')
 	) {
-		httpRequest.headers.set('content-type', 'application/x-www-form-urlencoded');
+		headers.set('content-type', 'application/x-www-form-urlencoded');
 	}
 
-	/** @type {Record<string, string>} */
-	const headers = {};
-	httpRequest.headers.forEach((value, key) => {
-		if (key !== 'x-ms-original-url') {
-			headers[key] = value;
-		}
-	});
-
-	return new Request(originalUrl, {
+	/** @type any */
+	const request = new RequestUndici(originalUrl, {
 		method: httpRequest.method,
-		headers: new Headers(headers),
+		headers,
 		body: httpRequest.body,
 		duplex: 'half'
 	});
+	return request;
+}
+
+/**
+ * Converts a ReadableStream<Uint8Array> to an AsyncIterable<Uint8Array>.
+ * @param {ReadableStream<Uint8Array>} stream
+ * @returns {AsyncIterable<Uint8Array>}
+ */
+function readableStreamToAsyncIterable(stream) {
+	const reader = stream.getReader();
+	return {
+		[Symbol.asyncIterator]() {
+			return {
+				async next() {
+					const { done, value } = await reader.read();
+					return { done, value };
+				}
+			};
+		}
+	};
 }
 
 /**
  * @param {Response} rendered
- * @returns {Promise<HttpResponse>}
+ * @returns {HttpResponseInit}
  */
-async function toResponse(rendered) {
+function toResponseInit(rendered) {
 	const { headers, cookies } = splitCookiesFromHeaders(rendered.headers);
 
-	return new HttpResponse({
+	/** @type BodyInitUndici */
+	const bodyInit = rendered.body ? readableStreamToAsyncIterable(rendered.body) : undefined;
+	/** @type HeadersInitUndici */
+	const headersInit = {};
+	headers.forEach((value, key) => {
+		if (key !== 'set-cookie') {
+			headersInit[key] = value;
+		}
+	});
+
+	return {
 		status: rendered.status,
-		body: rendered.body,
-		headers,
+		body: bodyInit,
+		headers: headersInit,
 		cookies,
 		enableContentNegotiation: false
-	});
+	};
 }

@@ -83,7 +83,7 @@ export function jsonMatching(received, expected) {
 	try {
 		received = JSON.parse(received);
 		pass = this.equals(received, expected);
-		// eslint-disable-next-line no-unused-vars, no-empty
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars, no-empty
 	} catch (err) {}
 	return { pass };
 }

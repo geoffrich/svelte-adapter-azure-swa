@@ -1,4 +1,4 @@
-name: CI
+name: CI-SWA
 
 on:
   workflow_call:

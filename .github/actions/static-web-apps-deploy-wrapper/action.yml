@@ -42,3 +42,11 @@ runs:
         output_location: ${{ inputs.output_location }}
         verbose: true
         deployment_environment: ${{ inputs.deployment_environment }}
+
+    # Bloody azure swa deployment changes the permissions of the app directory
+    # Reset the permissions to the original user
+    - run: |
+        sudo chown -R $USER:$USER .
+        sudo chmod -R 755 .
+      shell: bash
+      working-directory: ${{ inputs.app_location }}
