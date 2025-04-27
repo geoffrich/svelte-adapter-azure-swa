@@ -58,7 +58,7 @@ jobs:
 
       # Check that it's a push into the default branch
       - id: main-push
-        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+        if: ${{ github.event_name }} == 'push' && ${{ github.ref }} == 'refs/heads/main'
         run: |
           echo "Push to main branch detected."
           echo "result=true" >> "$GITHUB_OUTPUT"
