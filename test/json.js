@@ -83,7 +83,8 @@ export function jsonMatching(received, expected) {
 	try {
 		received = JSON.parse(received);
 		pass = this.equals(received, expected);
-	} catch (err) {} // eslint-disable-line no-empty
+		// eslint-disable-next-line no-unused-vars, no-empty
+	} catch (err) {}
 	return { pass };
 }
 

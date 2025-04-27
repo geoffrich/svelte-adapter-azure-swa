@@ -1,15 +1,16 @@
+import { app, HttpResponse } from '@azure/functions';
 import { installPolyfills } from '@sveltejs/kit/node/polyfills';
-import { Server } from 'SERVER';
 import { manifest } from 'MANIFEST';
+import { Server } from 'SERVER';
 import {
 	getClientIPFromHeaders,
 	getClientPrincipalFromHeaders,
 	splitCookiesFromHeaders
 } from './headers';
-import { app, HttpResponse } from '@azure/functions';
 
 // replaced at build time
 // @ts-expect-error
+// eslint-disable-next-line no-undef
 const debug = DEBUG;
 
 installPolyfills();
