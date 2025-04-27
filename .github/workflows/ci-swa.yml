@@ -13,9 +13,17 @@ on:
       cache-reset:
         required: false
         type: boolean
+    secrets:
+      AZURE_STATIC_WEB_APPS_API_TOKEN:
+        required: true
+      WORKFLOW_APP_ID:
+        required: true
+      WORKFLOW_APP_PRIVATE_KEY:
+        required: true
 
 permissions:
   contents: read # to fetch code (actions/checkout)
+  pull-requests: write # to create comments (actions/github-script)
   actions: write # to create a comment (actions/github-script)
 
 jobs:
