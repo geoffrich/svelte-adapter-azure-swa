@@ -1,9 +1,9 @@
 import adapter from 'svelte-adapter-azure-swa';
-
 const [major] = process.versions.node.split('.').map(Number);
-const apiRuntime = process.env.NODE_API_RUNTIME || `node:${major}`;
+const NODE_API_RUNTIME =
+	(process.env.NODE_API_RUNTIME && process.env.NODE_API_RUNTIME.length > 0) || major;
 console.warn('#'.repeat(100));
-console.warn(`Using API runtime: ${apiRuntime}`);
+console.warn(`Using API runtime: ${NODE_API_RUNTIME}`);
 console.warn('#'.repeat(100));
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
@@ -12,7 +12,7 @@ const config = {
 			apiDir: './func',
 			customStaticWebAppConfig: {
 				platform: {
-					apiRuntime
+					apiRuntime: NODE_API_RUNTIME
 				}
 			}
 		})
