@@ -5,13 +5,14 @@
 	"main": "index.js",
 	"type": "module",
 	"scripts": {
+		"prepare": "bash ./scripts/npm-link.sh",
 		"build": "npm run gen:swa-conig-ts",
 		"format": "npm run check-format -- --write",
 		"check-format": "prettier --check .",
 		"check-types": "tsc --skipLibCheck",
+		"check": "npm run check-types && npm run check-format",
 		"test": "vitest",
 		"coverage": "vitest --coverage",
-		"test:coverage": "vitest run --coverage",
 		"changeset:version": "changeset version && git add --all",
 		"changeset:publish": "changeset publish",
 		"gen:swa-conig-ts": "curl https://json.schemastore.org/staticwebapp.config.json | npx json-schema-to-typescript > ./types/swa-config-gen.d.ts && prettier --write ./types/swa-config-gen.d.ts"

@@ -3,15 +3,15 @@
 	"version": "0.1.0",
 	"type": "module",
 	"scripts": {
-		"prepare": "(cd .. && npm i) && (svelte-kit sync || echo '')",
-		"dev": "vite dev",
-		"swa": "swa start",
+		"prepare": "(cd .. && npm ci) && ../scripts/npm-link.sh && (svelte-kit sync || echo '')",
 		"build": "vite build",
-		"preview": "vite preview",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json --watch",
+		"dev": "vite dev",
+		"swa": "swa start",
+		"preview": "vite preview",
 		"test": "playwright test",
-		"test:swa": "SWA=true npm test"
+		"test:swa": "concurrently --kill-others \"npm run swa\" \"SWA=true npm run test\""
 	},
 	"devDependencies": {
 		"@azure/static-web-apps-cli": "^2.0.5",
@@ -20,6 +20,7 @@
 		"@playwright/test": "^1.51.1",
 		"@sveltejs/kit": "^2.19.0",
 		"@sveltejs/vite-plugin-svelte": "^5.0.3",
+		"concurrently": "^9.1.2",
 		"svelte": "^5.28.2",
 		"svelte-adapter-azure-swa": "file:..",
 		"svelte-check": "^4.1.5",

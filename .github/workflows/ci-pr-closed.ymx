@@ -1,0 +1,269 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [closed]
+
+env:
+  # we call `pnpm playwright install` instead
+  PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
+
+# cancel in-progress runs on new commits to same PR (gitub.event.number)
+# cancel in-progress runs on new pushes to same branch (github.ref_name)
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.number || github.ref_name }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read # to fetch code (actions/checkout)
+  pull-requests: write # to create comments (actions/github-script)
+
+jobs:
+  # echo:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - run: ${{ tojson(github) }}
+  #       shell: cat {0}
+  check:
+    if: ${{ !(github.event_name == 'pull_request' && github.event.action == 'closed') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: ./**/package-lock.json
+      - run: npm ci
+      - run: npm run check-types
+      - run: npm run check-format
+      - run: npm ci
+        working-directory: demo
+      - run: npm run check
+        working-directory: demo
+  define-matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      node-versions: ${{ steps.node.outputs.node-versions }}
+    steps:
+      - id: node
+        run: echo "node-versions=$NODE_MATRIX" >> "$GITHUB_OUTPUT"
+  test:
+    needs: define-matrix
+    if: ${{ !(github.event_name == 'pull_request' && github.event.action == 'closed') }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: ${{ fromJson(needs.define-matrix.outputs.node-versions) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+          cache-dependency-path: ./**/package-lock.json
+      - run: npm ci
+      - run: npm run build
+      - run: npm test
+  test-swa:
+    needs: define-matrix
+    if: ${{ !(github.event_name == 'pull_request' && github.event.action == 'closed') }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: ${{ fromJson(needs.define-matrix.outputs.node-versions) }}
+    defaults:
+      run:
+        working-directory: demo
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+          cache-dependency-path: ./**/package-lock.json
+
+      - run: npm ci
+
+      - run: npm run build
+
+      - id: playwright-version
+        run: echo "version=$(npx playwright --version)" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/cache@v4
+        id: playwright-cache
+        with:
+          path: /home/runner/.cache/ms-playwright
+          key: "cache-playwright-${{ matrix.node-version }}-${{ steps.playwright-version.outputs.version }}"
+
+      - run: npx playwright install chromium --with-deps
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+
+      - run: npm run test:swa
+  do-test-azure:
+    environment: development
+    runs-on: ubuntu-latest
+    outputs:
+      do-test: ${{ steps.event.outputs.result || steps.token.outputs.result || 'false' }}
+    steps:
+      - id: event
+        if: |
+          github.repository != github.event.pull_request.head.repo.full_name &&
+          github.event_name != 'push'
+        run: |
+          echo "github.repository: ${{ github.repository }}"
+          echo "github.event.pull_request.head.repo.full_name: ${{ github.event.pull_request.head.repo.full_name }}"
+          echo "No deployment to azure will be executed"
+          echo "result=false" >> "$GITHUB_OUTPUT"
+
+      - id: azure-token
+        if: steps.event.outputs.result != 'false'
+        run: echo "token=${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}" >> "$GITHUB_OUTPUT"
+
+      - id: token
+        if: steps.event.outputs.result != 'false'
+        run: |
+          if [ -z "${{ steps.azure-token.outputs.token }}" ]; then
+            echo "secrets.AZURE_STATIC_WEB_APPS_API_TOKEN is NOT available"
+            echo "No deployment to azure will be executed"
+            # echo "result=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "secrets.AZURE_STATIC_WEB_APPS_API_TOKEN is available"
+            echo "Deployment to azure will be executed"
+            echo "result=true" >> "$GITHUB_OUTPUT"
+          fi
+  test-azure:
+    environment: development
+    # Make sure to set concurrency to the same job, so if multiple matrix jobs are wating in queue
+    concurrency: test-azure-${{ github.workflow }}-${{ github.event.number || github.ref_name }}
+    needs:
+      - do-test-azure
+      - define-matrix
+    if: ${{ !(github.event_name == 'pull_request' && github.event.action == 'closed') }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: ${{ fromJson(needs.define-matrix.outputs.node-versions) }}
+    defaults:
+      run:
+        working-directory: demo
+    steps:
+      - uses: actions/checkout@v4
+        if: needs.do-test-azure.outputs.do-test == 'true'
+
+      - uses: actions/setup-node@v4
+        if: needs.do-test-azure.outputs.do-test == 'true'
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+          cache-dependency-path: ./**/package-lock.json
+
+      - run: npm ci
+        if: needs.do-test-azure.outputs.do-test == 'true'
+
+      - run: npm run build
+        if: needs.do-test-azure.outputs.do-test == 'true'
+
+      - id: api-runtime
+        if: needs.do-test-azure.outputs.do-test == 'true'
+        run: echo "major=$(node -v | cut -d. -f1 | cut -dv -f2)" >> "$GITHUB_OUTPUT"
+
+      - id: app-token
+        uses: kt-public/github-actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.WORKFLOW_APP_ID }}
+          private-key: ${{ secrets.WORKFLOW_APP_PRIVATE_KEY }}
+          configure-git: false
+
+      - uses: ./.github/actions/static-web-apps-deploy-wrapper
+        if: needs.do-test-azure.outputs.do-test == 'true'
+        id: build-deploy
+        env:
+          NODE_API_RUNTIME: node:${{ steps.api-runtime.outputs.major }}
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+          repo_token: ${{ steps.app-token.outputs.token }} # Used for Github integrations (i.e. PR comments)
+          action: "upload"
+          ###### Repository/Build Configurations - These values can be configured to match your app requirements. ######
+          # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
+          app_location: "/demo" # App source code path
+          api_location: "demo/func" # Api source code path - optional
+          output_location: "build/static" # Built app content directory - optional
+          ###### End of Repository/Build Configurations ######
+
+      - id: playwright-version
+        if: needs.do-test-azure.outputs.do-test == 'true'
+        run: echo "version=$(npx playwright --version)" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/cache@v4
+        id: playwright-cache
+        if: needs.do-test-azure.outputs.do-test == 'true'
+        with:
+          path: /home/runner/.cache/ms-playwright
+          key: "cache-playwright-${{ matrix.node-version }}-${{ steps.playwright-version.outputs.version }}"
+      
+      - run: npx playwright install chromium --with-deps
+        if: steps.playwright-cache.outputs.cache-hit != 'true' && needs.do-test-azure.outputs.do-test == 'true'
+      
+      - run: npm test
+        if: needs.do-test-azure.outputs.do-test == 'true'
+        env:
+          PLAYWRIGHT_TEST_BASE_URL: ${{ steps.build-deploy.outputs.static_web_app_url }}
+  close-azure:
+    environment: development
+    needs:
+      - do-test-azure
+      - define-matrix
+    if: |
+      needs.do-test-azure.outputs.do-test == 'true' &&
+      (github.event_name == 'pull_request' && github.event.action == 'closed')
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: ${{ fromJson(needs.define-matrix.outputs.node-versions) }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: app-token
+        uses: kt-public/github-actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.WORKFLOW_APP_ID }}
+          private-key: ${{ secrets.WORKFLOW_APP_PRIVATE_KEY }}
+          configure-git: false
+
+      - uses: ./.github/actions/static-web-apps-deploy-wrapper
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+          repo_token: ${{ steps.app-token.outputs.token }} # Used for Github integrations (i.e. PR comments)
+          action: "close"
+  # sonar:
+  #   uses: ./.github/workflows/sonar.yml
+  #   secrets: inherit
+  codeql:
+    if: ${{ !(github.event_name == 'pull_request' && github.event.action == 'closed') }}
+    uses: ./.github/workflows/codeql.yml
+    secrets: inherit
+    permissions:
+      # required for all workflows
+      security-events: write
+      # required to fetch internal or private CodeQL packs
+      packages: read
+      # only required for workflows in private repositories
+      actions: read
+      contents: read
+  retry-failed:
+    runs-on: ubuntu-latest
+    needs: [test-azure, test-swa]
+    if: failure() && fromJSON(github.run_attempt) < 3
+    permissions:
+      actions: write
+    steps:
+      - env:
+          GH_REPO: ${{ github.repository }}
+          GH_TOKEN: ${{ github.token }}
+          GH_DEBUG: api
+        run: gh workflow run ci-retry.yml -F run_id=${{ github.run_id }} -F concurrency=${{ github.workflow }}-${{ github.event.number || github.ref_name }}
