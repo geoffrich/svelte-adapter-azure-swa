@@ -116,13 +116,13 @@ jobs:
         with:
           token: ${{ steps.app-token.outputs.token }}
 
-      - id: api-runtime
-        if: ${{ needs.do-swa-azure.outputs.result == 'true' }}
-        run: |
-          NODE_API_RUNTIME_MAJOR=$(node -v | cut -d. -f1 | cut -dv -f2)
-          echo "NODE_API_RUNTIME_MAJOR=$NODE_API_RUNTIME_MAJOR" >> "$GITHUB_ENV"
-          NODE_API_RUNTIME=node:$NODE_API_RUNTIME_MAJOR
-          echo "NODE_API_RUNTIME=$NODE_API_RUNTIME" >> "$GITHUB_ENV"
+      # - id: api-runtime
+      #   if: ${{ needs.do-swa-azure.outputs.result == 'true' }}
+      #   run: |
+      #     NODE_API_RUNTIME_MAJOR=$(node -v | cut -d. -f1 | cut -dv -f2)
+      #     echo "NODE_API_RUNTIME_MAJOR=$NODE_API_RUNTIME_MAJOR" >> "$GITHUB_ENV"
+      #     NODE_API_RUNTIME=node:$NODE_API_RUNTIME_MAJOR
+      #     echo "NODE_API_RUNTIME=$NODE_API_RUNTIME" >> "$GITHUB_ENV"
 
       - uses: kt-actions/npm-run-script@v1
         if: ${{ needs.do-swa-azure.outputs.result == 'true' }}

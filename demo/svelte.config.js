@@ -8,9 +8,9 @@ if (
 	NODE_API_RUNTIME.split(':')[1] !== ''
 ) {
 	console.warn(
-		`NODE_API_RUNTIME is not set or not set properly (${NODE_API_RUNTIME}). Defaulting to Node.js ${major} runtime.`
+		`NODE_API_RUNTIME is not set or not set properly (${NODE_API_RUNTIME}). Defaulting to Node.js node:${major} runtime.`
 	);
-	NODE_API_RUNTIME = major;
+	NODE_API_RUNTIME = `node:${major}`;
 }
 console.warn(`Using API runtime: ${NODE_API_RUNTIME}`);
 console.warn('#'.repeat(100));
