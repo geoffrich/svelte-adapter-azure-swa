@@ -5,7 +5,7 @@ console.warn('#'.repeat(100));
 if (
 	NODE_API_RUNTIME.length === 0 ||
 	!NODE_API_RUNTIME.startsWith('node:') ||
-	NODE_API_RUNTIME.split(':')[1] !== ''
+	NODE_API_RUNTIME.split(':')[1] === ''
 ) {
 	console.warn(
 		`NODE_API_RUNTIME is not set or not set properly ('${NODE_API_RUNTIME}'). Defaulting to Node.js node:${major} runtime.`
