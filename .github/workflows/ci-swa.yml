@@ -116,9 +116,9 @@ jobs:
         with:
           token: ${{ steps.app-token.outputs.token }}
 
-      # - id: api-runtime
-      #   if: ${{ needs.do-swa-azure.outputs.result == 'true' }}
-      #   run: echo "NODE_API_RUNTIME=node:$(node -v | cut -d. -f1 | cut -dv -f2)" >> "$GITHUB_ENV"
+      - id: api-runtime
+        if: ${{ needs.do-swa-azure.outputs.result == 'true' }}
+        run: echo "NODE_API_RUNTIME=node:$(node -v | cut -d. -f1 | cut -dv -f2)" >> "$GITHUB_ENV"
 
       - uses: kt-actions/npm-run-script@v1
         if: ${{ needs.do-swa-azure.outputs.result == 'true' }}
