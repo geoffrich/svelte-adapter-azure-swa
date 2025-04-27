@@ -39,4 +39,4 @@ jobs:
       # pass the matrix node version to the called workflow
       matrix-node-version: ${{ vars.MATRIX_NODE_VERSION }}
       cache-additional-path: ${{ vars.CACHE_ADDITIONAL_PATH }}
-      cache-reset: true
+      # cache-reset: true
