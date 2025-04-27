@@ -36,3 +36,11 @@ jobs:
       # cache-reset: true
     secrets:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  ci-swa:
+    uses: ./github/workflows/ci-swa.yml
+    with:
+      # pass the matrix node version to the called workflow
+      matrix-node-version: ${{ vars.MATRIX_NODE_VERSION }}
+      cache-additional-path: ${{ vars.CACHE_ADDITIONAL_PATH }}
+      # cache-reset: true

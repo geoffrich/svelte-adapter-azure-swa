@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  workflow_call:
+    inputs:
+      # pass the matrix node version to the called workflow
+      matrix-node-version:
+        required: true
+        type: string
+      cache-additional-path:
+        required: false
+        type: string
+      cache-reset:
+        required: false
+        type: boolean
+
+env:
+  # we call `pnpm playwright install` instead
+  PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
+
+# cancel in-progress runs on new commits to same PR (gitub.event.number)
+concurrency:
+  # group: ${{ github.workflow }}-${{ github.event.number || github.sha }}
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read # to fetch code (actions/checkout)
+  pull-requests: write # to create comments (actions/github-script)
+
+jobs:
+  swa-cli:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: ${{ fromJson(inputs.matrix-node-version) }}
+    defaults:
+      run:
+        working-directory: demo
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: kt-actions/npm-run-script@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache-additional-path: ${{ inputs.cache-additional-path }}
+          cache-reset: ${{ inputs.cache-reset }}
+          run-script: npm run test:swa
+          working-directory: ./demo
