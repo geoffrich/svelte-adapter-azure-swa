@@ -4,32 +4,32 @@ description: Wrapper for Azure/static-web-apps-deploy so build of action is not 
 inputs:
   azure_static_web_apps_api_token:
     required: true
-    description: "Azure Static Web Apps API token"
+    description: 'Azure Static Web Apps API token'
   action:
     required: true
-    description: "Action command"
+    description: 'Action command'
   repo_token:
     required: false
-    description: "Repo token"
+    description: 'Repo token'
   app_location:
     required: false
-    description: "App source code path"
+    description: 'App source code path'
   api_location:
     required: false
-    description: "Api source code path"
+    description: 'Api source code path'
   output_location:
     required: false
-    description: "Built app content directory"
+    description: 'Built app content directory'
   deployment_environment:
-    description: "Name of the Azure Static Web Apps environment to deploy to."
+    description: 'Name of the Azure Static Web Apps environment to deploy to.'
     required: false
 outputs:
   static_web_app_url:
-    description: "The URL of the deployed static web app"
+    description: 'The URL of the deployed static web app'
     value: ${{ steps.build-deploy.outputs.static_web_app_url }}
 
 runs:
-  using: "composite"
+  using: 'composite'
   steps:
     - uses: Azure/static-web-apps-deploy@v1
       id: build-deploy

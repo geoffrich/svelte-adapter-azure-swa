@@ -5,10 +5,10 @@ on:
     inputs:
       run_id:
         required: true
-        description: "The run ID of the workflow to rerun"
+        description: 'The run ID of the workflow to rerun'
       concurrency:
         required: true
-        description: "The concurrency group to use for the rerun"
+        description: 'The concurrency group to use for the rerun'
 
 concurrency:
   group: ${{ github.workflow }}-${{ inputs.concurrency }}

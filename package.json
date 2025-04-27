@@ -7,7 +7,7 @@
 	"scripts": {
 		"prepare": "bash ./scripts/npm-link.sh",
 		"build": "npm run gen:swa-conig-ts",
-		"format": "npm run check-format -- --write",
+		"format": "prettier --write .",
 		"check": "tsc --skipLibCheck",
 		"lint": "prettier --check . && eslint .",
 		"test": "vitest",
