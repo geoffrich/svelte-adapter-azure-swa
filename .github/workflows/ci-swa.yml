@@ -58,10 +58,9 @@ jobs:
 
       # Check that it's a push into the default branch
       - id: main-push
-        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/' + github.event.repository.default_branch }}
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
         run: |
-          echo "github.ref: ${{ github.ref }}"
-          echo "compare ref: ${{'refs/heads/' + github.event.repository.default_branch }}"
+          echo "Push to main branch detected."
           echo "result=true" >> "$GITHUB_OUTPUT"
 
       # Check that it's a pull request into the default branch from within the same organization
