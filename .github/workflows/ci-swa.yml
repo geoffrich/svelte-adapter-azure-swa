@@ -127,6 +127,8 @@ jobs:
             npx playwright install
           working-directory: ./demo
 
+      - run: exit 1
+
       - uses: ./.github/actions/static-web-apps-deploy-wrapper
         if: ${{ needs.do-swa-azure.outputs.result == 'true' }}
         id: build-deploy
