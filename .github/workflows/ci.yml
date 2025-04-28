@@ -19,6 +19,7 @@ permissions:
 
 env:
   PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: true
+  # CACHE_RESET: true # Uncomment to reset cache
 
 jobs:
   # echo:
@@ -33,7 +34,7 @@ jobs:
       # pass the matrix node version to the called workflow
       matrix-node-version: ${{ vars.MATRIX_NODE_VERSION }}
       cache-additional-path: ${{ vars.CACHE_ADDITIONAL_PATH }}
-      # cache-reset: true
+      cache-reset: ${{ env.CACHE_RESET }}
     secrets:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
@@ -52,7 +53,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache-additional-path: ${{ inputs.cache-additional-path }}
-          cache-reset: ${{ inputs.cache-reset }}
+          cache-reset: ${{ env.CACHE_RESET }}
           install-script: |
             npm ci
             npx playwright install
@@ -142,7 +143,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache-additional-path: ${{ inputs.cache-additional-path }}
-          cache-reset: ${{ inputs.cache-reset }}
+          cache-reset: ${{ env.CACHE_RESET }}
           install-script: |
             npm ci
             npx playwright install
