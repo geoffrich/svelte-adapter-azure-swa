@@ -74,7 +74,7 @@ jobs:
 
   ci-swa:
     needs: config
-    uses: ./.github/workflows/ci-swa.yml@v1
+    uses: ./.github/workflows/ci-swa.yml
     with:
       matrix-node-version: ${{ needs.config.outputs.matrix-node-version }}
       cache-additional-path: ${{ needs.config.outputs.cache-additional-path }}
