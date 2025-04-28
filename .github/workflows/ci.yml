@@ -60,7 +60,7 @@ jobs:
           working-directory: ./demo
 
   do-test-swa-azure:
-    environment: development
+    # environment: development
     runs-on: ubuntu-latest
     outputs:
       result: ${{ steps.token.outputs.result || 'false' }}
@@ -105,7 +105,7 @@ jobs:
 
   test-swa-azure:
     needs: do-test-swa-azure
-    environment: development
+    # environment: development
     runs-on: ubuntu-latest
     strategy:
       matrix:
