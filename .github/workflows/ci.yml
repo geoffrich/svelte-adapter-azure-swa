@@ -72,6 +72,15 @@ jobs:
     secrets:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
+  ci-swa:
+    needs: config
+    uses: ./.github/workflows/ci-swa.yml@v1
+    with:
+      matrix-node-version: ${{ needs.config.outputs.matrix-node-version }}
+      cache-additional-path: ${{ needs.config.outputs.cache-additional-path }}
+      cache-reset: ${{ needs.config.outputs.cache-reset == 'true' }}
+    secrets: inherit
+
   test-swa-cli:
     needs: config
     runs-on: ubuntu-latest
@@ -140,6 +149,7 @@ jobs:
           fi
 
   test-swa-azure:
+    if: ${{ 'true' == 'false' }} # Disable by for now
     needs: [config, do-test-swa-azure]
     environment: development
     runs-on: ubuntu-latest

@@ -94,6 +94,8 @@ jobs:
     needs: do-swa-azure
     environment: development
     runs-on: ubuntu-latest
+    concurrency:
+      group: swa-azure-${{ github.workflow }}-${{ github.ref }}
     strategy:
       matrix:
         node-version: ${{ fromJson(inputs.matrix-node-version) }}
