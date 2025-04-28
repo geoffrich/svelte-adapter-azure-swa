@@ -68,7 +68,7 @@ jobs:
     with:
       matrix-node-version: ${{ needs.config.outputs.matrix-node-version }}
       cache-additional-path: ${{ needs.config.outputs.cache-additional-path }}
-      cache-reset: ${{ needs.config.outputs.cache-reset }}
+      cache-reset: ${{ needs.config.outputs.cache-reset == 'true' }}
     secrets:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
