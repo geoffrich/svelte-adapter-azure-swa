@@ -9,7 +9,7 @@ on:
 # cancel in-progress runs on new commits to same PR (gitub.event.number)
 concurrency:
   # group: ${{ github.workflow }}-${{ github.event.number || github.sha }}
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.repository }}-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 permissions:
