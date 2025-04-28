@@ -46,11 +46,17 @@ jobs:
           run-script: npm run test:swa
           working-directory: ./demo
 
-  do-swa-azure:
+  swa-azure:
     environment: development
     runs-on: ubuntu-latest
-    outputs:
-      result: ${{ steps.token.outputs.result || 'false' }}
+    concurrency:
+      group: swa-azure-${{ github.workflow }}-${{ github.ref }}
+    strategy:
+      matrix:
+        node-version: ${{ fromJson(inputs.matrix-node-version) }}
+    defaults:
+      run:
+        working-directory: demo
     steps:
       # We only run azure SWA deployment if we push to the default branch or create a PR into the default branch from our own org!
 
@@ -79,7 +85,7 @@ jobs:
           echo "result=true" >> "$GITHUB_OUTPUT"
 
       # Check if AZURE_STATIC_WEB_APPS_API_TOKEN is set
-      - id: token
+      - id: do-swa-azure
         if: ${{ steps.main-push.outputs.result == 'true' || steps.pr-to-main.outputs.result == 'true' }}
         run: |
           if [[ -z "${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}" ]]; then
@@ -90,21 +96,8 @@ jobs:
             echo "result=true" >> "$GITHUB_OUTPUT"
           fi
 
-  swa-azure:
-    needs: do-swa-azure
-    environment: development
-    runs-on: ubuntu-latest
-    concurrency:
-      group: swa-azure-${{ github.workflow }}-${{ github.ref }}
-    strategy:
-      matrix:
-        node-version: ${{ fromJson(inputs.matrix-node-version) }}
-    defaults:
-      run:
-        working-directory: demo
-    steps:
       - id: app-token
-        if: ${{ needs.do-swa-azure.outputs.result == 'true' }}
+        if: ${{ steps.do-swa-azure.outputs.result == 'true' }}
         uses: kt-actions/create-github-app-token@v1
         with:
           app-id: ${{ secrets.WORKFLOW_APP_ID }}
@@ -114,12 +107,12 @@ jobs:
           default-to-github-token: true
 
       - uses: actions/checkout@v4
-        if: ${{ needs.do-swa-azure.outputs.result == 'true' }}
+        if: ${{ steps.do-swa-azure.outputs.result == 'true' }}
         with:
           token: ${{ steps.app-token.outputs.token }}
 
       - id: node-api-runtime
-        if: ${{ needs.do-swa-azure.outputs.result == 'true' }}
+        if: ${{ steps.do-swa-azure.outputs.result == 'true' }}
         run: |
           NODE_API_RUNTIME_MAJOR=$(node -v | cut -d. -f1 | cut -dv -f2)
           echo "NODE_API_RUNTIME_MAJOR=$NODE_API_RUNTIME_MAJOR" >> "$GITHUB_ENV"
@@ -127,7 +120,7 @@ jobs:
           echo "NODE_API_RUNTIME=$NODE_API_RUNTIME" >> "$GITHUB_ENV"
 
       - uses: kt-actions/npm-run-script@v1
-        if: ${{ needs.do-swa-azure.outputs.result == 'true' }}
+        if: ${{ steps.do-swa-azure.outputs.result == 'true' }}
         with:
           node-version: ${{ matrix.node-version }}
           cache-additional-path: ${{ inputs.cache-additional-path }}
@@ -138,7 +131,7 @@ jobs:
           working-directory: ./demo
 
       - uses: ./.github/actions/static-web-apps-deploy-wrapper
-        if: ${{ needs.do-swa-azure.outputs.result == 'true' }}
+        if: ${{ steps.do-swa-azure.outputs.result == 'true' }}
         id: build-deploy
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
@@ -152,6 +145,6 @@ jobs:
           ###### End of Repository/Build Configurations ######
 
       - run: npm test
-        if: ${{ needs.do-swa-azure.outputs.result == 'true' }}
+        if: ${{ steps.do-swa-azure.outputs.result == 'true' }}
         env:
           PLAYWRIGHT_TEST_BASE_URL: ${{ steps.build-deploy.outputs.static_web_app_url }}
