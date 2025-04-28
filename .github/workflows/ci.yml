@@ -41,7 +41,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: ${{ fromJson(inputs.matrix-node-version) }}
+        node-version: ${{ fromJson(vars.MATRIX_NODE_VERSION) }}
     defaults:
       run:
         working-directory: demo
@@ -60,7 +60,7 @@ jobs:
           working-directory: ./demo
 
   do-test-swa-azure:
-    # environment: development
+    environment: development
     runs-on: ubuntu-latest
     outputs:
       result: ${{ steps.token.outputs.result || 'false' }}
@@ -105,11 +105,11 @@ jobs:
 
   test-swa-azure:
     needs: do-test-swa-azure
-    # environment: development
+    environment: development
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: ${{ fromJson(inputs.matrix-node-version) }}
+        node-version: ${{ fromJson(vars.MATRIX_NODE_VERSION) }}
     defaults:
       run:
         working-directory: demo
