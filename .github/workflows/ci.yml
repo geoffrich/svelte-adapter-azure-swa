@@ -19,6 +19,9 @@ permissions:
 
 env:
   PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: true
+  DEFAULT_MATRIX_NODE_VERSION: '[20]'
+  DEFAULT_CACHE_ADDITIONAL_PATH: /home/runner/.cache/ms-playwright
+  DEFAULT_CACHE_RESET: false
 
 jobs:
   # echo:
@@ -27,21 +30,36 @@ jobs:
   #     - run: ${{ tojson(github) }}
   #       shell: cat {0}
 
+  config:
+    # prepare the configuration for the workflow from different sources of variables
+    runs-on: ubuntu-latest
+    outputs:
+      matrix-node-version: ${{ steps.config.outputs.MATRIX_NODE_VERSION }}
+      cache-additional-path: ${{ steps.config.outputs.CACHE_ADDITIONAL_PATH }}
+      cache-reset: ${{ steps.config.outputs.CACHE_RESET }}
+    steps:
+      - id: config
+        run: |
+          echo "MATRIX_NODE_VERSION=${{ vars.MATRIX_NODE_VERSION || $DEFAULT_MATRIX_NODE_VERSION }}" >> "$GITHUB_OUTPUT"
+          echo "CACHE_ADDITIONAL_PATH=${{ vars.CACHE_ADDITIONAL_PATH || $DEFAULT_CACHE_ADDITIONAL_PATH }}" >> "$GITHUB_OUTPUT"
+          echo "CACHE_RESET=${{ vars.CACHE_RESET || $DEFAULT_CACHE_RESET }}" >> "$GITHUB_OUTPUT"
+
   ci:
+    needs: config
     uses: kt-workflows/npm-ci/.github/workflows/main.yml@v1
     with:
-      # pass the matrix node version to the called workflow
-      matrix-node-version: ${{ vars.MATRIX_NODE_VERSION }}
-      cache-additional-path: ${{ vars.CACHE_ADDITIONAL_PATH }}
-      # cache-reset: true
+      matrix-node-version: ${{ needs.config.outputs.matrix-node-version }}
+      cache-additional-path: ${{ needs.config.outputs.cache-additional-path }}
+      cache-reset: ${{ needs.config.outputs.cache-reset }}
     secrets:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   test-swa-cli:
+    needs: config
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: ${{ fromJson(vars.MATRIX_NODE_VERSION) }}
+        node-version: ${{ fromJson(needs.config.outputs.matrix-node-version) }}
     defaults:
       run:
         working-directory: demo
@@ -51,7 +69,7 @@ jobs:
       - uses: kt-actions/npm-run-script@v1
         with:
           node-version: ${{ matrix.node-version }}
-          cache-additional-path: ${{ vars.CACHE_ADDITIONAL_PATH }}
+          cache-additional-path: ${{ needs.config.outputs.cache-additional-path }}
           # cache-reset: true
           install-script: |
             npm ci
@@ -104,12 +122,12 @@ jobs:
           fi
 
   test-swa-azure:
-    needs: do-test-swa-azure
+    needs: [config, do-test-swa-azure]
     environment: development
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: ${{ fromJson(vars.MATRIX_NODE_VERSION) }}
+        node-version: ${{ fromJson(needs.config.outputs.matrix-node-version) }}
     defaults:
       run:
         working-directory: demo
@@ -141,8 +159,8 @@ jobs:
         if: ${{ needs.do-test-swa-azure.outputs.result == 'true' }}
         with:
           node-version: ${{ matrix.node-version }}
-          cache-additional-path: ${{ vars.CACHE_ADDITIONAL_PATH }}
-          # cache-reset: true
+          cache-additional-path: ${{ needs.config.outputs.cache-additional-path }}
+          cache-reset: ${{ needs.config.outputs.cache-reset }}
           install-script: |
             npm ci
             npx playwright install
