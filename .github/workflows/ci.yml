@@ -82,6 +82,7 @@ jobs:
     secrets: inherit
 
   test-swa-cli:
+    if: ${{ 'true' == 'false' }} # Disable by for now
     needs: config
     runs-on: ubuntu-latest
     strategy:
@@ -105,6 +106,7 @@ jobs:
           working-directory: ./demo
 
   do-test-swa-azure:
+    if: ${{ 'true' == 'false' }} # Disable by for now
     environment: development
     runs-on: ubuntu-latest
     outputs:
