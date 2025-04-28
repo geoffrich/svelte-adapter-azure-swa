@@ -40,9 +40,27 @@ jobs:
     steps:
       - id: config
         run: |
-          echo "MATRIX_NODE_VERSION=${{ vars.MATRIX_NODE_VERSION }} || $DEFAULT_MATRIX_NODE_VERSION" >> "$GITHUB_OUTPUT"
-          echo "CACHE_ADDITIONAL_PATH=${{ vars.CACHE_ADDITIONAL_PATH }} || $DEFAULT_CACHE_ADDITIONAL_PATH" >> "$GITHUB_OUTPUT"
-          echo "CACHE_RESET=${{ vars.CACHE_RESET }} || $DEFAULT_CACHE_RESET" >> "$GITHUB_OUTPUT"
+          if [[ -z "${{ vars.MATRIX_NODE_VERSION }}" ]]; then
+            echo "MATRIX_NODE_VERSION is not set. Using default value to $DEFAULT_MATRIX_NODE_VERSION."
+            echo "MATRIX_NODE_VERSION=$DEFAULT_MATRIX_NODE_VERSION" >> "$GITHUB_OUTPUT"
+          else
+            echo "MATRIX_NODE_VERSION is set to '${{ vars.MATRIX_NODE_VERSION }}'."
+            echo "MATRIX_NODE_VERSION=${{ vars.MATRIX_NODE_VERSION }}" >> "$GITHUB_OUTPUT"
+          fi
+          if [[ -z "${{ vars.CACHE_ADDITIONAL_PATH }}" ]]; then
+            echo "CACHE_ADDITIONAL_PATH is not set. Using default value to $DEFAULT_CACHE_ADDITIONAL_PATH."
+            echo "CACHE_ADDITIONAL_PATH=$DEFAULT_CACHE_ADDITIONAL_PATH" >> "$GITHUB_OUTPUT"
+          else
+            echo "CACHE_ADDITIONAL_PATH is set to '${{ vars.CACHE_ADDITIONAL_PATH }}'."
+            echo "CACHE_ADDITIONAL_PATH=${{ vars.CACHE_ADDITIONAL_PATH }}" >> "$GITHUB_OUTPUT"
+          fi
+          if [[ -z "${{ vars.CACHE_RESET }}" ]]; then
+            echo "CACHE_RESET is not set. Using default value to $DEFAULT_CACHE_RESET."
+            echo "CACHE_RESET=$DEFAULT_CACHE_RESET" >> "$GITHUB_OUTPUT"
+          else
+            echo "CACHE_RESET is set to '${{ vars.CACHE_RESET }}'."
+            echo "CACHE_RESET=${{ vars.CACHE_RESET }}" >> "$GITHUB_OUTPUT"
+          fi
 
   ci:
     needs: config
