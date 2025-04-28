@@ -40,9 +40,9 @@ jobs:
     steps:
       - id: config
         run: |
-          echo "MATRIX_NODE_VERSION=${{ vars.MATRIX_NODE_VERSION || $DEFAULT_MATRIX_NODE_VERSION }}" >> "$GITHUB_OUTPUT"
-          echo "CACHE_ADDITIONAL_PATH=${{ vars.CACHE_ADDITIONAL_PATH || $DEFAULT_CACHE_ADDITIONAL_PATH }}" >> "$GITHUB_OUTPUT"
-          echo "CACHE_RESET=${{ vars.CACHE_RESET || $DEFAULT_CACHE_RESET }}" >> "$GITHUB_OUTPUT"
+          echo "MATRIX_NODE_VERSION=${{ vars.MATRIX_NODE_VERSION }} || $DEFAULT_MATRIX_NODE_VERSION" >> "$GITHUB_OUTPUT"
+          echo "CACHE_ADDITIONAL_PATH=${{ vars.CACHE_ADDITIONAL_PATH }} || $DEFAULT_CACHE_ADDITIONAL_PATH" >> "$GITHUB_OUTPUT"
+          echo "CACHE_RESET=${{ vars.CACHE_RESET }} || $DEFAULT_CACHE_RESET" >> "$GITHUB_OUTPUT"
 
   ci:
     needs: config
