@@ -19,7 +19,6 @@ permissions:
 
 env:
   PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: true
-  CACHE_RESET: false # set to true to force cache reset
 
 jobs:
   # echo:
@@ -34,7 +33,7 @@ jobs:
       # pass the matrix node version to the called workflow
       matrix-node-version: ${{ vars.MATRIX_NODE_VERSION }}
       cache-additional-path: ${{ vars.CACHE_ADDITIONAL_PATH }}
-      cache-reset: ${{ jobs.ci.env.CACHE_RESET }}
+      # cache-reset: true
     secrets:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
@@ -53,7 +52,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache-additional-path: ${{ vars.CACHE_ADDITIONAL_PATH }}
-          cache-reset: ${{ jobs.test-swa-cli.env.CACHE_RESET }}
+          # cache-reset: true
           install-script: |
             npm ci
             npx playwright install
@@ -143,7 +142,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache-additional-path: ${{ vars.CACHE_ADDITIONAL_PATH }}
-          cache-reset: ${{ jobs.test-swa-azure.env.CACHE_RESET }}
+          # cache-reset: true
           install-script: |
             npm ci
             npx playwright install
