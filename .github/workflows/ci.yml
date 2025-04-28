@@ -50,7 +50,7 @@ jobs:
   retry-failed:
     runs-on: ubuntu-latest
     needs: [ci, ci-swa]
-    if: failure() && !skipped() && fromJSON(github.run_attempt) < 3
+    if: failure() && fromJSON(github.run_attempt) < 3
     permissions:
       actions: write
     steps:
