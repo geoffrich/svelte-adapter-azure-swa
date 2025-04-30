@@ -49,8 +49,9 @@ jobs:
   swa-azure:
     environment: development
     runs-on: ubuntu-latest
+    # Deploy to the same environment and wait for the previous job to finish, if we have more than one node version to test
     concurrency:
-      group: swa-azure-${{ github.workflow }}-${{ github.ref }}
+      group: swa-azure-${{ github.repository }}-${{ github.workflow }}-${{ github.ref }}
     strategy:
       matrix:
         node-version: ${{ fromJson(inputs.matrix-node-version) }}
