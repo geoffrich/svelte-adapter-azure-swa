@@ -1,10 +1,10 @@
 import { installPolyfills } from '@sveltejs/kit/node/polyfills';
-import { expect, describe, test } from 'vitest';
+import { describe, expect, test } from 'vitest';
 import {
-	splitCookiesFromHeaders,
 	getClientIPFromHeaders,
-	getClientPrincipalFromHeaders
-} from '../files/headers';
+	getClientPrincipalFromHeaders,
+	splitCookiesFromHeaders
+} from '../../files/headers';
 
 installPolyfills();
 

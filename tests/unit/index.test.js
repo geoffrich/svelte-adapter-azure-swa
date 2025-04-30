@@ -1,8 +1,8 @@
-import { expect, describe, test, vi } from 'vitest';
-import azureAdapter, { generateConfig } from '../index';
-import { writeFileSync, existsSync } from 'fs';
-import { jsonMatching, toMatchJSON } from './json';
 import esbuild from 'esbuild';
+import { existsSync, writeFileSync } from 'fs';
+import { describe, expect, test, vi } from 'vitest';
+import azureAdapter, { generateConfig } from '../../index';
+import { jsonMatching, toMatchJSON } from './json';
 
 expect.extend({ jsonMatching, toMatchJSON });
 
