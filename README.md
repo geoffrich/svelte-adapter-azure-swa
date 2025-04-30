@@ -1,3 +1,4 @@
+[![NPM Version](https://img.shields.io/npm/v/%40ktarmyshov%2Fsvelte-adapter-azure-swa)](https://www.npmjs.com/package/@ktarmyshov/svelte-adapter-azure-swa)
 [![CI](https://github.com/kt-npm-modules/svelte-adapter-azure-swa/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/kt-npm-modules/svelte-adapter-azure-swa/actions/workflows/ci.yml)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=kt-npm-modules_svelte-adapter-azure-swa&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=kt-npm-modules_svelte-adapter-azure-swa)
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=kt-npm-modules_svelte-adapter-azure-swa&metric=bugs)](https://sonarcloud.io/summary/new_code?id=kt-npm-modules_svelte-adapter-azure-swa)
