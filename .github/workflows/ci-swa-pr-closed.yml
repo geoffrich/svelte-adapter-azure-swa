@@ -1,4 +1,4 @@
-name: CI-SWA-PR-CLOSE
+name: CI-SWA-PR-CLOSED
 
 on:
   pull_request:
@@ -30,7 +30,6 @@ jobs:
 
       # Check if AZURE_STATIC_WEB_APPS_API_TOKEN is set
       - id: do-swa-azure
-        if: ${{ steps.main-push.outputs.result == 'true' || steps.pr-to-main.outputs.result == 'true' }}
         run: |
           if [[ -z "${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}" ]]; then
             echo "Deploy token not set. Skipping deployment."
