@@ -73,6 +73,7 @@ jobs:
           # cache-reset: true
 
   test:
+    needs: config
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -97,19 +98,18 @@ jobs:
   #         cache-additional-path: ${{ vars.CACHE_ADDITIONAL_PATH }}
   #         # cache-reset: true
 
-  # ci-swa:
-  #   needs: config
-  #   uses: ./.github/workflows/ci-swa.yml
-  #   with:
-  #     matrix-node-version: ${{ needs.config.outputs.matrix-node-version }}
-  #     cache-additional-path: ${{ needs.config.outputs.cache-additional-path }}
-  #     cache-reset: ${{ needs.config.outputs.cache-reset == 'true' }}
-  #   secrets: inherit
+  ci-swa:
+    needs: config
+    uses: ./.github/workflows/ci-swa.yml
+    with:
+      matrix-node-version: ${{ needs.config.outputs.matrix-node-version }}
+      cache-additional-path: ${{ needs.config.outputs.cache-additional-path }}
+      cache-reset: ${{ needs.config.outputs.cache-reset == 'true' }}
+    secrets: inherit
 
   retry-failed:
     runs-on: ubuntu-latest
-    # needs: [check, test, ci-swa]
-    needs: [check, test]
+    needs: [check, test, ci-swa]
     if: failure() && fromJSON(github.run_attempt) < 2
     permissions:
       actions: write
