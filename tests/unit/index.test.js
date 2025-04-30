@@ -168,11 +168,13 @@ function getMockBuilder() {
 				appDir: '/app'
 			}
 		},
-		log: {
-			minor: vi.fn(),
+		log: Object.assign(vi.fn(), {
+			success: vi.fn(),
+			error: vi.fn(),
 			warn: vi.fn(),
-			error: vi.fn()
-		},
+			minor: vi.fn(),
+			info: vi.fn()
+		}),
 		prerendered: {
 			paths: ['/']
 		},
@@ -180,6 +182,7 @@ function getMockBuilder() {
 		generateManifest: vi.fn(),
 		getBuildDirectory: vi.fn((x) => x),
 		getServerDirectory: vi.fn(() => 'server'),
+		getClientDirectory: vi.fn(() => 'client'),
 		rimraf: vi.fn(),
 		writeClient: vi.fn(),
 		writePrerendered: vi.fn(),

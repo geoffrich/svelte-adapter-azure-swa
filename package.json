@@ -63,7 +63,12 @@
 		"vitest": "^3.0.0"
 	},
 	"dependencies": {
+		"@rollup/plugin-commonjs": "^28.0.3",
+		"@rollup/plugin-node-resolve": "^16.0.1",
 		"esbuild": "^0.25.0",
+		"lodash": "^4.17.21",
+		"rollup": "^4.40.1",
+		"rollup-plugin-sourcemaps2": "^0.5.1",
 		"set-cookie-parser": "^2.6.0"
 	},
 	"files": [

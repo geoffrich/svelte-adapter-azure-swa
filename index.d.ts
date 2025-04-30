@@ -1,16 +1,19 @@
+import { HttpRequestUser, InvocationContext } from '@azure/functions';
 import { Adapter } from '@sveltejs/kit';
 import { ClientPrincipal, CustomStaticWebAppConfig } from './types/swa';
-import { HttpRequestUser, InvocationContext } from '@azure/functions';
-import esbuild from 'esbuild';
 
 export * from './types/swa';
 
+// Extract string, string[], RegExp and RegExp[] types from ExternalOption
+
+type ExternalOption = (string | RegExp)[] | string | RegExp;
+
 export type Options = {
 	debug?: boolean;
-	customStaticWebAppConfig?: CustomStaticWebAppConfig;
-	esbuildOptions?: Pick<esbuild.BuildOptions, 'external' | 'keepNames' | 'loader'>;
 	apiDir?: string;
 	staticDir?: string;
+	external?: ExternalOption;
+	customStaticWebAppConfig?: CustomStaticWebAppConfig;
 	allowReservedSwaRoutes?: boolean;
 };
 
