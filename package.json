@@ -31,13 +31,13 @@
 		"azure",
 		"staticwebapp"
 	],
-	"homepage": "https://github.com/kt-public/svelte-adapter-azure-swa#readme",
+	"homepage": "https://github.com/kt-npm-modules/svelte-adapter-azure-swa#readme",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/kt-public/svelte-adapter-azure-swa.git"
+		"url": "git+https://github.com/kt-npm-modules/svelte-adapter-azure-swa.git"
 	},
 	"bugs": {
-		"url": "https://github.com/kt-public/svelte-adapter-azure-swa/issues"
+		"url": "https://github.com/kt-npm-modules/svelte-adapter-azure-swa/issues"
 	},
 	"peerDependencies": {
 		"@sveltejs/kit": "^2.0.0"

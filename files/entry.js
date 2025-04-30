@@ -9,7 +9,6 @@ import {
 	splitCookiesFromHeaders
 } from './headers';
 
-// replaced at build time
 // @ts-expect-error DEBUG is replaced at build time and may not be recognized by TypeScript
 // eslint-disable-next-line no-undef
 const debug = DEBUG;
@@ -23,8 +22,8 @@ const initialized = server.init({ env: process.env });
  * @typedef {import('@azure/functions').InvocationContext} InvocationContext
  * @typedef {import('@azure/functions').HttpRequest} HttpRequest
  * @typedef {import('@azure/functions').HttpResponseInit} HttpResponseInit
- * @typedef {import('undici').BodyInit} BodyInitUndici
- * @typedef {import('undici').HeadersInit} HeadersInitUndici
+ * @typedef {import('undici').BodyInit} ResponseBodyInitUndici
+ * @typedef {import('undici').HeadersInit} ResponseHeadersInitUndici
  */
 
 app.setup({
@@ -66,7 +65,6 @@ app.http('sk_render', {
 		});
 
 		if (debug) {
-			// context.log(`SK headers: ${JSON.stringify(Object.fromEntries(rendered.headers.entries()))}`);
 			/** @type {Record<string, string>} */
 			const headers = {};
 			rendered.headers.forEach((value, key) => {
@@ -142,9 +140,9 @@ function readableStreamToAsyncIterable(stream) {
 function toResponseInit(rendered) {
 	const { headers, cookies } = splitCookiesFromHeaders(rendered.headers);
 
-	/** @type BodyInitUndici */
+	/** @type ResponseBodyInitUndici */
 	const bodyInit = rendered.body ? readableStreamToAsyncIterable(rendered.body) : undefined;
-	/** @type HeadersInitUndici */
+	/** @type ResponseHeadersInitUndici */
 	const headersInit = {};
 	headers.forEach((value, key) => {
 		if (key !== 'set-cookie') {

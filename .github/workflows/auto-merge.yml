@@ -13,7 +13,9 @@ jobs:
   #       shell: cat {0}
   auto-merge:
     if: github.event.pull_request.user.login == 'dependabot[bot]'
-    uses: kt-workflows/dependabot-auto-merge/.github/workflows/main.yml@v1
-    secrets:
-      WORKFLOW_APP_ID: ${{ secrets.WORKFLOW_APP_ID }}
-      WORKFLOW_APP_PRIVATE_KEY: ${{ secrets.WORKFLOW_APP_PRIVATE_KEY }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: kt-workflows/actions/dependabot-auto-merge@main
+        with:
+          app-id: ${{ secrets.WORKFLOW_APP_ID }}
+          private-key: ${{ secrets.WORKFLOW_APP_PRIVATE_KEY }}

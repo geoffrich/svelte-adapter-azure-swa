@@ -1,8 +1,8 @@
-[![CI](https://github.com/kt-public/svelte-adapter-azure-swa/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/kt-public/svelte-adapter-azure-swa/actions/workflows/ci.yml)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=kt-public_svelte-adapter-azure-swa&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=kt-public_svelte-adapter-azure-swa)
-[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=kt-public_svelte-adapter-azure-swa&metric=bugs)](https://sonarcloud.io/summary/new_code?id=kt-public_svelte-adapter-azure-swa)
-[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=kt-public_svelte-adapter-azure-swa&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=kt-public_svelte-adapter-azure-swa)
-[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=kt-public_svelte-adapter-azure-swa&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=kt-public_svelte-adapter-azure-swa)
+[![CI](https://github.com/kt-npm-modules/svelte-adapter-azure-swa/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/kt-npm-modules/svelte-adapter-azure-swa/actions/workflows/ci.yml)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=kt-npm-modules_svelte-adapter-azure-swa&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=kt-npm-modules_svelte-adapter-azure-swa)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=kt-npm-modules_svelte-adapter-azure-swa&metric=bugs)](https://sonarcloud.io/summary/new_code?id=kt-npm-modules_svelte-adapter-azure-swa)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=kt-npm-modules_svelte-adapter-azure-swa&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=kt-npm-modules_svelte-adapter-azure-swa)
+[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=kt-npm-modules_svelte-adapter-azure-swa&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=kt-npm-modules_svelte-adapter-azure-swa)
 
 # @ktarmyshov/svelte-adapter-azure-swa
 

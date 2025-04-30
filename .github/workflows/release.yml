@@ -29,11 +29,26 @@ jobs:
       github.ref == 'refs/heads/main' && 
       github.event.workflow_run.event == 'push' && 
       github.event.workflow_run.conclusion == 'success'
-    uses: kt-workflows/npm-release/.github/workflows/main.yml@v1
-    with:
-      matrix-node-version: ${{ vars.MATRIX_NODE_VERSION }}
-      build-script: npm run build
-    secrets:
-      WORKFLOW_APP_ID: ${{ secrets.WORKFLOW_APP_ID }}
-      WORKFLOW_APP_PRIVATE_KEY: ${{ secrets.WORKFLOW_APP_PRIVATE_KEY }}
-      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+    runs-on: ubuntu-latest
+    outputs:
+      release-branch: ${{ steps.release.outputs.release-branch }}
+    steps:
+      - id: release
+        uses: kt-workflows/actions/npm-release@main
+        with:
+          app-id: ${{ secrets.WORKFLOW_APP_ID }}
+          private-key: ${{ secrets.WORKFLOW_APP_PRIVATE_KEY }}
+          matrix-node-version: ${{ vars.MATRIX_NODE_VERSION }}
+          cache-additional-path: ${{ vars.CACHE_ADDITIONAL_PATH }}
+          # cache-reset: true
+
+  update-pkg-lock:
+    needs: release
+    if: needs.release.outputs.release-branch != ''
+    runs-on: ubuntu-latest
+    steps:
+      - uses: kt-workflows/actions/npm-release-upd-pkg-lock@main
+        with:
+          app-id: ${{ secrets.WORKFLOW_APP_ID }}
+          private-key: ${{ secrets.WORKFLOW_APP_PRIVATE_KEY }}
+          release-branch: ${{ needs.release.outputs.release-branch }}
