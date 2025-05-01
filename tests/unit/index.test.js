@@ -1,7 +1,8 @@
-import esbuild from 'esbuild';
 import { existsSync, writeFileSync } from 'fs';
+import { rollup } from 'rollup';
 import { describe, expect, test, vi } from 'vitest';
-import azureAdapter, { generateConfig } from '../../index';
+import azureAdapter from '../../index';
+import { generateConfig } from '../../swa-config';
 import { jsonMatching, toMatchJSON } from './json';
 
 expect.extend({ jsonMatching, toMatchJSON });
@@ -11,10 +12,12 @@ vi.mock('fs', () => ({
 	existsSync: vi.fn(() => true)
 }));
 
-vi.mock('esbuild', () => ({
-	default: {
-		build: vi.fn(() => Promise.resolve())
-	}
+vi.mock('rollup', () => ({
+	rollup: vi.fn(() =>
+		Promise.resolve({
+			write: vi.fn(() => Promise.resolve())
+		})
+	)
 }));
 
 describe('generateConfig', () => {
@@ -78,9 +81,14 @@ describe('adapt', () => {
 		const adapter = azureAdapter({ apiDir: 'custom/api' });
 		const builder = getMockBuilder();
 		await adapter.adapt(builder);
-		expect(esbuild.build).toBeCalledWith(
+		expect(rollup).toBeCalledWith(
 			expect.objectContaining({
-				outfile: 'custom/api/sk_render/index.js'
+				output: {
+					file: 'custom/api/sk_render/index.js',
+					format: 'cjs',
+					inlineDynamicImports: true,
+					sourcemap: true
+				}
 			})
 		);
 

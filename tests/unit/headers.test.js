@@ -4,7 +4,7 @@ import {
 	getClientIPFromHeaders,
 	getClientPrincipalFromHeaders,
 	splitCookiesFromHeaders
-} from '../../files/headers';
+} from '../../entry/headers';
 
 installPolyfills();
 
