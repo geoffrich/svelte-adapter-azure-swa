@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.22.0](https://www.github.com/geoffrich/svelte-adapter-azure-swa/compare/v0.21.0...v0.22.0) (2025-05-01)
+
+
+### Features
+
+* use Node 20 by default ([53cf290](https://www.github.com/geoffrich/svelte-adapter-azure-swa/commit/53cf290df4ce90c349e2abc3f38966887cb23ab3))
+
 ## [0.21.0](https://www.github.com/geoffrich/svelte-adapter-azure-swa/compare/v0.20.1...v0.21.0) (2025-03-04)
 
 This is a breaking change if you are deploying your own Azure functions alongside the Static Web App (`apiDir`) - see [the release notes](https://github.com/geoffrich/svelte-adapter-azure-swa/releases/tag/v0.21.0) for a migration guide.
