@@ -63,6 +63,7 @@
 		"vitest": "^3.0.0"
 	},
 	"dependencies": {
+		"@rollup/plugin-alias": "^5.1.1",
 		"@rollup/plugin-commonjs": "^28.0.3",
 		"@rollup/plugin-node-resolve": "^16.0.1",
 		"lodash": "^4.17.21",
@@ -71,9 +72,11 @@
 		"set-cookie-parser": "^2.6.0"
 	},
 	"files": [
-		"files",
 		"index.js",
 		"index.d.ts",
+		"rollup-client.js",
+		"rollup-server.js",
+		"files",
 		"types"
 	]
 }

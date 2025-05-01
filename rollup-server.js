@@ -1,3 +1,4 @@
+import alias from '@rollup/plugin-alias';
 import commonjs from '@rollup/plugin-commonjs';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import { writeFileSync } from 'fs';
@@ -36,26 +37,80 @@ function defaultRollupOptions() {
 const apiServerDir = 'server';
 export const apiFunctionDir = 'sk_render';
 const apiFunctionFile = 'index.js';
+const files = fileURLToPath(new URL('./files', import.meta.url));
+const entry = fileURLToPath(new URL('./entry/index.js', import.meta.url));
 
 /**
  *
- * @param {string} outputDir
+ * @param {Builder} builder
+ * @param {string} outDir
+ * @param {string} tmpDir
+ * @returns {{
+ *   serverPath: string,
+ *   serverFile: string,
+ *   serverRelativePath: string,
+ *   manifestFile: string,
+ *   envFile: string
+ * }}
+ */
+function getPaths(builder, outDir, tmpDir) {
+	// use posix because of https://github.com/sveltejs/kit/pull/3200
+	const serverPath = builder.getServerDirectory();
+	const serverFile = join(serverPath, 'index.js');
+	const serverRelativePath = posix.relative(tmpDir, builder.getServerDirectory());
+	const manifestFile = join(tmpDir, 'manifest.js');
+	const envFile = join(tmpDir, 'env.js');
+	return {
+		serverPath,
+		serverFile,
+		serverRelativePath,
+		manifestFile,
+		envFile
+	};
+}
+/**
+ *
+ * @param {Builder} builder
+ * @param {string} outDir
  * @param {string} tmpDir
  * @param {Options} options
  * @returns {RollupOptions}
  */
-function prepareRollupOptions(outputDir, tmpDir, options) {
-	const _apiServerDir = options.apiDir || join(outputDir, apiServerDir);
+function prepareRollupOptions(builder, outDir, tmpDir, options) {
+	const _apiServerDir = options.apiDir || join(outDir, apiServerDir);
 	const outFile = join(_apiServerDir, apiFunctionDir, apiFunctionFile);
-	const entry = `${tmpDir}/entry.js`;
+	const { serverFile, manifestFile, envFile } = getPaths(builder, outDir, tmpDir);
+
 	/** @type RollupOptions */
 	let _options = {
 		input: entry,
 		output: {
 			file: outFile
-		}
+		},
+		plugins: [
+			alias({
+				entries: [
+					{
+						find: 'ENV',
+						replacement: envFile
+					},
+					{
+						find: 'MANIFEST',
+						replacement: manifestFile
+					},
+					{
+						find: 'SERVER',
+						replacement: serverFile
+					}
+				]
+			})
+		]
 	};
-	_options = _.merge(defaultRollupOptions(), _options);
+	_options = _.mergeWith(defaultRollupOptions(), _options, (objValue, srcValue) => {
+		if (Array.isArray(objValue) && Array.isArray(srcValue)) {
+			return objValue.concat(srcValue);
+		}
+	});
 
 	// add @azure/functions to options.external if not already set - this is needed by the Azure Functiions v4 runtime
 	// We only check strings, if the user is using something else, we assume they know what they are doing
@@ -71,28 +126,21 @@ function prepareRollupOptions(outputDir, tmpDir, options) {
 /**
  *
  * @param {Builder} builder
- * @param {string} outputDir
+ * @param {string} outDir
  * @param {string} tmpDir
  * @param {Options} options
  */
-export async function serverRollup(builder, outputDir, tmpDir, options) {
+export async function serverRollup(builder, outDir, tmpDir, options) {
 	builder.log(`Preparing serverless function in ${tmpDir}`);
 
-	const _outputApiServerDir = options.apiDir || join(outputDir, apiServerDir);
-	const files = fileURLToPath(new URL('./files', import.meta.url));
-	// use posix because of https://github.com/sveltejs/kit/pull/3200
-	const relativePath = posix.relative(tmpDir, builder.getServerDirectory());
+	const _outputApiServerDir = options.apiDir || join(outDir, apiServerDir);
+	const { serverRelativePath, manifestFile, envFile } = getPaths(builder, outDir, tmpDir);
+
 	const debug = options.debug || false;
 
-	builder.copy(files, tmpDir, {
-		replace: {
-			SERVER: `${relativePath}/index.js`,
-			MANIFEST: './manifest.js',
-			DEBUG: debug.toString()
-		}
-	});
+	builder.copy(files, tmpDir);
 
-	const rollupOptions = prepareRollupOptions(outputDir, tmpDir, options);
+	const rollupOptions = prepareRollupOptions(builder, outDir, tmpDir, options);
 	const isStandardOutput = options.apiDir === undefined;
 
 	if (!isStandardOutput) {
@@ -106,12 +154,15 @@ export async function serverRollup(builder, outputDir, tmpDir, options) {
 		builder.copy(join(files, 'api'), _outputApiServerDir);
 	}
 
+	// Write manifest
 	writeFileSync(
-		`${tmpDir}/manifest.js`,
+		manifestFile,
 		`export const manifest = ${builder.generateManifest({
-			relativePath
+			relativePath: serverRelativePath
 		})};\n`
 	);
+	// Write environment
+	writeFileSync(envFile, `export const debug = ${debug.toString()};\n`);
 
 	builder.log(`Building serverless function to ${_outputApiServerDir}`);
 	const bundle = await rollup(rollupOptions);

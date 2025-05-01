@@ -1,5 +1,6 @@
 import { app } from '@azure/functions';
 import { installPolyfills } from '@sveltejs/kit/node/polyfills';
+import { debug } from 'ENV';
 import { manifest } from 'MANIFEST';
 import { Server } from 'SERVER';
 import { Headers as HeadersUndici, Request as RequestUndici } from 'undici';
@@ -8,10 +9,6 @@ import {
 	getClientPrincipalFromHeaders,
 	splitCookiesFromHeaders
 } from './headers';
-
-// @ts-expect-error DEBUG is replaced at build time and may not be recognized by TypeScript
-// eslint-disable-next-line no-undef
-const debug = DEBUG;
 
 installPolyfills();
 

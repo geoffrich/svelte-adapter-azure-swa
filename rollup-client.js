@@ -1,4 +1,3 @@
-import { nodeResolve } from '@rollup/plugin-node-resolve';
 import { globSync } from 'glob';
 import _ from 'lodash';
 import path from 'node:path';
@@ -21,13 +20,7 @@ function defaultRollupOptions() {
 			format: 'esm',
 			sourcemap: true
 		},
-		plugins: [
-			sourcemaps(),
-			nodeResolve({
-				preferBuiltins: true,
-				browser: true
-			})
-		]
+		plugins: [sourcemaps()]
 	};
 }
 

@@ -10,5 +10,5 @@
 		"allowSyntheticDefaultImports": true,
 		"lib": ["es2023"]
 	},
-	"include": ["./index.js", "files"]
+	"include": ["./index.js", "rollup-server.js", "rollup-client.js", "entry", "files"]
 }
