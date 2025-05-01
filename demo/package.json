@@ -23,8 +23,5 @@
 		"svelte-check": "^4.0.0",
 		"typescript": "^5.0.0",
 		"vite": "^6.0.0"
-	},
-	"engines": {
-		"node": ">=18.13 <19"
 	}
 }
