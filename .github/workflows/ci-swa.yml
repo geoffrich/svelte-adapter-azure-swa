@@ -42,9 +42,9 @@ jobs:
           cache-reset: ${{ inputs.cache-reset }}
           install-script: |
             npm ci
-            npm ci --prefix ./tests/apps/demo
+            npm ci --prefix ./tests/demo
             npx playwright install
-          run-script: npm run test:swa --prefix ./tests/apps/demo
+          run-script: npm run test:swa --prefix ./tests/demo
           working-directory: .
 
   swa-azure:
