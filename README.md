@@ -43,16 +43,6 @@ If you use a custom API directory (see [below](#apiDir)), your `api_location` wi
 
 If your `app_location` is in a subfolder (e.g. `./my_app_location`), then your `api_location` should include the path to that subfolder (e.g. `my_app_location/build/server`.) `output_location` should still be `build/static`.
 
-### Building with the correct version of Node
-
-Oryx, Azure's build system, may attempt to build your application with an EOL version of Node that SvelteKit doesn't support. If you get an error like "Unsupported engine - Not compatible with your version of node/npm", you can force Oryx to use the correct version by setting an `engines` field in your app's `package.json`:
-
-```js
-"engines": {
-	"node": ">=18.13 <19"
-}
-```
-
 ### CUSTOM_BUILD_COMMAND considerations
 
 If you are setting a [`CUSTOM_BUILD_COMMAND`](https://github.com/microsoft/Oryx/blob/main/doc/configuration.md) in your build pipeline to customize how the API is built (e.g. to run `npm ci` instead of `npm install`), make sure to run `npm install` inside the API directory to install production dependencies. Otherwise, the SvelteKit render function will not be able to start up.
