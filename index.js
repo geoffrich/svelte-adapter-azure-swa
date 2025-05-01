@@ -2,28 +2,6 @@ import { clientRollup } from './rollup-client.js';
 import { serverRollup } from './rollup-server.js';
 import { buildConfig } from './swa-config.js';
 
-/**
- * @typedef {import('rollup').RollupOptions} RollupOptions
- * @typedef {import('.').Options} Options
- */
-
-const ssrFunctionRoute = '/api/sk_render';
-
-/**
- * Validate the static web app configuration does not override the minimum config for the adapter to work correctly.
- * @param config {import('./types/swa').CustomStaticWebAppConfig}
- * */
-function validateCustomConfig(config) {
-	if (config) {
-		if ('navigationFallback' in config) {
-			throw new Error('customStaticWebAppConfig cannot override navigationFallback.');
-		}
-		if (config.routes && config.routes.find((route) => route.route === '*')) {
-			throw new Error(`customStaticWebAppConfig cannot override '*' route.`);
-		}
-	}
-}
-
 /** @type {import('.').default} */
 export default function (options = {}) {
 	return {
