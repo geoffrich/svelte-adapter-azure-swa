@@ -6,7 +6,7 @@ bun.lock
 bun.lockb
 
 # Demo subfolder - quick fix
-demo/.svelte-kit
-demo/build
-demo/func/sk_render
-demo/test-results
+tests/demo/.svelte-kit
+tests/demo/build
+tests/demo/func/sk_render
+tests/demo/test-results
