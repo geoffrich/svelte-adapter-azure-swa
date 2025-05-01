@@ -6,7 +6,7 @@ import globals from 'globals';
 import { fileURLToPath } from 'node:url';
 import ts from 'typescript-eslint';
 const gitignorePath = fileURLToPath(new URL('./.gitignore', import.meta.url));
-const demoGitignorePath = fileURLToPath(new URL('./demo/.gitignore', import.meta.url));
+const demoGitignorePath = fileURLToPath(new URL('./tests/demo/.gitignore', import.meta.url));
 
 export default ts.config(
 	includeIgnoreFile(gitignorePath),
@@ -22,5 +22,5 @@ export default ts.config(
 		}
 	},
 	includeIgnoreFile(demoGitignorePath),
-	globalIgnores(['demo/build', 'demo/.svelte-kit'])
+	globalIgnores(['tests/demo/build', 'tests/demo/.svelte-kit'])
 );
