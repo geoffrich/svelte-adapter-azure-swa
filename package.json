@@ -30,6 +30,7 @@
 	"bugs": {
 		"url": "https://github.com/geoffrich/svelte-adapter-azure-swa/issues"
 	},
+	"repository": "github:geoffrich/svelte-adapter-azure-swa",
 	"peerDependencies": {
 		"@sveltejs/kit": "^2.0.0"
 	},
