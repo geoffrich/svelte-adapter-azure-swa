@@ -1,5 +1,12 @@
 # Changelog
 
+### [0.22.1](https://www.github.com/geoffrich/svelte-adapter-azure-swa/compare/v0.22.0...v0.22.1) (2025-11-26)
+
+
+### Bug Fixes
+
+* support PATCH verb ([#209](https://www.github.com/geoffrich/svelte-adapter-azure-swa/issues/209)) ([1fa034f](https://www.github.com/geoffrich/svelte-adapter-azure-swa/commit/1fa034f23b3372c5c8db135bf5faa35cd21b9d04))
+
 ## [0.22.0](https://www.github.com/geoffrich/svelte-adapter-azure-swa/compare/v0.21.0...v0.22.0) (2025-05-01)
 
 
