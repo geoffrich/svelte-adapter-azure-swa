@@ -27,7 +27,7 @@ app.setup({
 });
 
 app.http('sk_render', {
-	methods: ['HEAD', 'GET', 'POST', 'DELETE', 'PUT', 'OPTIONS'],
+	methods: ['HEAD', 'GET', 'POST', 'DELETE', 'PUT', 'OPTIONS', 'PATCH'],
 	/**
 	 *
 	 * @param {HttpRequest} httpRequest
