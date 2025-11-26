@@ -26,3 +26,13 @@ test('can call custom API azure function', async ({ request }) => {
 	});
 	expect(response.ok()).toBeTruthy();
 });
+
+for (const verb of ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']) {
+	test(`can call ${verb} method on server endpoint`, async ({ request }) => {
+		const response = await request.fetch(`/methods/`, {
+			method: verb
+		});
+		expect(response.ok()).toBeTruthy();
+		expect(await response.text()).toContain(verb.toLowerCase());
+	});
+}
