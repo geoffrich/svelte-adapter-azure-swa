@@ -32,19 +32,19 @@
 	},
 	"repository": "github:geoffrich/svelte-adapter-azure-swa",
 	"peerDependencies": {
-		"@sveltejs/kit": "^2.0.0"
+		"@sveltejs/kit": "^2.0.0 || ^3.0.0"
 	},
 	"devDependencies": {
 		"@azure/functions": "^4",
-		"@sveltejs/kit": "^2.17.3",
+		"@sveltejs/kit": "^3.0.0",
 		"@types/node": "^22.0.0",
 		"@types/set-cookie-parser": "^2.4.7",
 		"prettier": "^3.1.1",
-		"typescript": "^5.0.0",
+		"typescript": "^6.0.0",
 		"vitest": "^3.0.0"
 	},
 	"dependencies": {
-		"esbuild": "^0.19.9",
+		"esbuild": ">=0.19.9 <1",
 		"set-cookie-parser": "^2.6.0"
 	},
 	"files": [

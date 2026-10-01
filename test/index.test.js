@@ -65,13 +65,37 @@ describe('generateConfig', () => {
 });
 
 describe('adapt', () => {
-	test('runs', async () => {
+	test.each([
+		['SvelteKit 3 (generateServerInstance)', false],
+		['SvelteKit 2 (generateManifest)', true]
+	])('runs - %s', async (_label, legacy) => {
 		const adapter = azureAdapter();
-		const builder = getMockBuilder();
+		const builder = getMockBuilder({ legacy });
 		await adapter.adapt(builder);
 		expect(builder.writePrerendered).toBeCalled();
 		expect(builder.writeClient).toBeCalled();
 		expect(builder.copy).toBeCalledWith(expect.stringContaining('api'), 'build/server');
+	});
+
+	test('uses generateServerInstance to build the server module on SvelteKit 3', async () => {
+		const adapter = azureAdapter();
+		const builder = getMockBuilder();
+		await adapter.adapt(builder);
+		expect(builder.generateServerInstance).toBeCalledWith(
+			expect.stringContaining('server-instance.js')
+		);
+	});
+
+	test('falls back to generateManifest on SvelteKit 2', async () => {
+		const adapter = azureAdapter();
+		const builder = getMockBuilder({ legacy: true });
+		await adapter.adapt(builder);
+		expect(builder.generateManifest).toBeCalled();
+		expect(builder.copy).toBeCalledWith(
+			expect.stringContaining('server-instance-legacy.js'),
+			expect.stringContaining('server-instance.js'),
+			expect.objectContaining({ replace: expect.objectContaining({ MANIFEST: './manifest.js' }) })
+		);
 	});
 
 	test('writes to custom api directory', async () => {
@@ -160,14 +184,22 @@ describe('adapt', () => {
 	});
 });
 
-/** @returns {import('@sveltejs/kit').Builder} */
-function getMockBuilder() {
+/**
+ * @param {{ legacy?: boolean }} [opts] Set `legacy: true` to simulate SvelteKit 2.x,
+ * which lacks `generateServerInstance` and the flattened `config.appDir`.
+ * @returns {import('@sveltejs/kit').Builder}
+ */
+function getMockBuilder({ legacy = false } = {}) {
 	return {
-		config: {
-			kit: {
-				appDir: '/app'
-			}
-		},
+		config: legacy
+			? {
+					kit: {
+						appDir: '/app'
+					}
+				}
+			: {
+					appDir: '/app'
+				},
 		log: {
 			minor: vi.fn(),
 			warn: vi.fn(),
@@ -178,6 +210,7 @@ function getMockBuilder() {
 		},
 		copy: vi.fn(),
 		generateManifest: vi.fn(),
+		...(legacy ? {} : { generateServerInstance: vi.fn() }),
 		getBuildDirectory: vi.fn((x) => x),
 		getServerDirectory: vi.fn(() => 'server'),
 		rimraf: vi.fn(),

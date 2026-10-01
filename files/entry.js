@@ -1,6 +1,4 @@
-import { installPolyfills } from '@sveltejs/kit/node/polyfills';
-import { Server } from 'SERVER';
-import { manifest } from 'MANIFEST';
+import { server } from 'SERVER_INSTANCE';
 import {
 	getClientIPFromHeaders,
 	getClientPrincipalFromHeaders,
@@ -12,9 +10,9 @@ import { app, HttpResponse } from '@azure/functions';
 // @ts-expect-error
 const debug = DEBUG;
 
-installPolyfills();
+// Azure Functions' Node 20 runtime provides `crypto`, `File`, etc. natively, so
+// the `installPolyfills` helper (removed in SvelteKit 3) is no longer needed.
 
-const server = new Server(manifest);
 const initialized = server.init({ env: process.env });
 
 /**
@@ -77,6 +75,9 @@ function toRequest(httpRequest) {
 	// because we proxy all requests to the render function, the original URL in the request is /api/sk_render
 	// this header contains the URL the user requested
 	const originalUrl = httpRequest.headers.get('x-ms-original-url');
+	if (!originalUrl) {
+		throw new Error('Missing x-ms-original-url header');
+	}
 
 	// SWA strips content-type headers from empty POST requests, but SK form actions require the header
 	// https://github.com/geoffrich/svelte-adapter-azure-swa/issues/178

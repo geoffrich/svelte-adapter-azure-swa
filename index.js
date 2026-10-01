@@ -62,7 +62,13 @@ If you want to suppress this error, set allowReservedSwaRoutes to true in your a
 				throw new Error('Conflicting routes detected. Please rename the routes listed above.');
 			}
 
-			const swaConfig = generateConfig(customStaticWebAppConfig, builder.config.kit.appDir);
+			// SvelteKit 3 flattened `config.kit.*` onto `config.*`. Check the flattened location
+			// first so SvelteKit 3 builds never touch the deprecated `config.kit` accessor (which
+			// logs an `adapter_config_kit_deprecated` warning even when just read defensively).
+			const appDir =
+				builder.config.appDir ??
+				/** @type {{ kit?: { appDir?: string } }} */ (builder.config).kit?.appDir;
+			const swaConfig = generateConfig(customStaticWebAppConfig, appDir);
 
 			const tmp = builder.getBuildDirectory('azure-tmp');
 			const publish = 'build';
@@ -79,13 +85,9 @@ If you want to suppress this error, set allowReservedSwaRoutes to true in your a
 
 			builder.log.minor('Generating serverless function...');
 
-			// use posix because of https://github.com/sveltejs/kit/pull/3200
-			const relativePath = posix.relative(tmp, builder.getServerDirectory());
-
 			builder.copy(files, tmp, {
 				replace: {
-					SERVER: `${relativePath}/index.js`,
-					MANIFEST: './manifest.js',
+					SERVER_INSTANCE: './server-instance.js',
 					DEBUG: debug.toString()
 				}
 			});
@@ -97,12 +99,35 @@ If you want to suppress this error, set allowReservedSwaRoutes to true in your a
 				builder.copy(join(files, 'api'), apiDir);
 			}
 
-			writeFileSync(
-				`${tmp}/manifest.js`,
-				`export const manifest = ${builder.generateManifest({
-					relativePath
-				})};\n`
-			);
+			// `builder.generateServerInstance` (SvelteKit 3+) writes a module that exports a ready-made
+			// `server` instance. On SvelteKit 2.x it doesn't exist, so fall back to `generateManifest`
+			// and construct the `Server` ourselves.
+			if (typeof builder.generateServerInstance === 'function') {
+				builder.generateServerInstance(`${tmp}/server-instance.js`);
+			} else {
+				// use posix because of https://github.com/sveltejs/kit/pull/3200
+				const relativePath = posix.relative(tmp, builder.getServerDirectory());
+
+				if (!builder.generateManifest) {
+					// Unreachable in practice: `generateServerInstance` and `generateManifest` are
+					// mutually exclusive across SvelteKit 2.x/3.x, but the type is optional either way.
+					throw new Error('builder.generateManifest is not available');
+				}
+
+				builder.copy(join(files, 'server-instance-legacy.js'), `${tmp}/server-instance.js`, {
+					replace: {
+						SERVER: `${relativePath}/index.js`,
+						MANIFEST: './manifest.js'
+					}
+				});
+
+				writeFileSync(
+					`${tmp}/manifest.js`,
+					`export const manifest = ${builder.generateManifest({
+						relativePath
+					})};\n`
+				);
+			}
 
 			// add @azure/functions to esbuildOptions.external if not already set - this is needed by the Azure Functiions v4 runtime
 			if (!esbuildOptions.external?.includes('@azure/functions')) {
@@ -133,7 +158,8 @@ If you want to suppress this error, set allowReservedSwaRoutes to true in your a
 				// If the root was not pre-rendered, add a placeholder index.html
 				// Route all requests for the index to the SSR function
 				writeFileSync(`${staticDir}/index.html`, '');
-				swaConfig.routes.push(
+				// `generateConfig` always populates `routes` (see above), but the type keeps it optional.
+				swaConfig.routes?.push(
 					{
 						route: '/index.html',
 						rewrite: ssrFunctionRoute

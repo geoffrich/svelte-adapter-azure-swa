@@ -1,12 +1,9 @@
-import { installPolyfills } from '@sveltejs/kit/node/polyfills';
 import { expect, describe, test } from 'vitest';
 import {
 	splitCookiesFromHeaders,
 	getClientIPFromHeaders,
 	getClientPrincipalFromHeaders
 } from '../files/headers';
-
-installPolyfills();
 
 describe('header processing', () => {
 	test('no cookies', () => {
@@ -36,7 +33,9 @@ describe('header processing', () => {
 
 		const cookies = splitCookiesFromHeaders(headers);
 
-		expect(cookies).toStrictEqual({
+		// toEqual (not toStrictEqual): set-cookie-parser returns null-prototype
+		// cookie objects, which differ from plain object literal prototypes.
+		expect(cookies).toEqual({
 			headers: new Headers(),
 			cookies: [
 				{
